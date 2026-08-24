@@ -751,6 +751,7 @@
     <button class="tab-btn" id="tab-recipes" role="tab" aria-selected="true" aria-controls="panel-recipes">Recipes</button>
     <button class="tab-btn" id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">Grocery List</button>
     <button class="tab-btn" id="tab-pantry" role="tab" aria-selected="false" aria-controls="panel-pantry">Pantry Items</button>
+    <button class="tab-btn" id="tab-master" role="tab" aria-selected="false" aria-controls="panel-master">Master List</button>
     <button class="tab-btn" id="tab-builder" role="tab" aria-selected="false" aria-controls="panel-builder">Pantry Builder</button>
     <button class="tab-btn" id="tab-techniques" role="tab" aria-selected="false" aria-controls="panel-techniques">Techniques</button>
   </div>
@@ -805,6 +806,25 @@
       <button class="reset-btn" id="pantry-reset-btn" type="button">Reset</button>
     </div>
     <div id="pantry-groups"></div>
+  </section>
+
+  <section class="panel" id="panel-master" role="tabpanel" aria-labelledby="tab-master">
+    <div class="price-banner">
+      <div class="price-banner-top">
+        <span class="price-banner-label">Estimated total to buy</span>
+        <span class="price-banner-total" id="master-total">$0.00</span>
+      </div>
+      <p class="price-banner-note">Grocery List (from selected recipes) and Pantry Items, merged into one list by store section. Checking something off here means you already have it &mdash; same convention as the Grocery List tab. This has its own check-off state, separate from the Grocery List and Pantry Items tabs, so checking something off in one place doesn't check it off in another. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
+    </div>
+    <div class="progress-bar">
+      <span id="master-progress-label">0 / 0 checked</span>
+      <div class="progress-track"><div class="progress-fill" id="master-progress-fill"></div></div>
+      <button class="reset-btn" id="master-reset-btn" type="button">Reset</button>
+    </div>
+    <div id="master-groups"></div>
+    <div class="empty-state" id="master-empty-state" style="display:none;">
+      No recipes selected and no pantry items to show &mdash; there's nothing to shop for yet.
+    </div>
   </section>
 
   <section class="panel" id="panel-builder" role="tabpanel" aria-labelledby="tab-builder">
@@ -1662,47 +1682,50 @@
   ];
 
   var pantryItems = [
-    {n:"Eggs", q:"1 dozen", p:3.99},
-    {n:"Potatoes for baking (russet or your choice)", q:"as many as you want", p:1.99},
-    {n:"Russet potatoes, for mashing", q:"4 lb", p:4.99},
-    {n:"La Croix Sparkling Water", q:"8-pack cans", p:4.99},
-    {n:"Peet's Coffee", q:"12 oz bag", p:9.99},
-    {n:"Bacon", q:"1 lb", p:6.99},
-    {n:"Frozen pizza", q:"each", p:6.49},
+    {n:"Eggs", q:"1 dozen", p:3.99, sec:"Dairy & Refrigerated"},
+    {n:"Potatoes for baking (russet or your choice)", q:"as many as you want", p:1.99, sec:"Produce"},
+    {n:"Russet potatoes, for mashing", q:"4 lb", p:4.99, sec:"Produce"},
+    {n:"La Croix Sparkling Water", q:"8-pack cans", p:4.99, sec:"Beverages"},
+    {n:"Peet's Coffee", q:"12 oz bag", p:9.99, sec:"Beverages"},
+    {n:"Bacon", q:"1 lb", p:6.99, sec:"Meat & Poultry"},
+    {n:"Frozen pizza", q:"each", p:6.49, sec:"Frozen"},
 
-    {n:"Jarred minced garlic", q:"4.5 oz jar", p:3.49},
-    {n:"Jarred minced or grated ginger", q:"4.5 oz jar", p:3.99},
-    {n:"Onion powder", q:"jar", p:2.49},
-    {n:"Garlic powder", q:"jar", p:2.49},
-    {n:"Dried minced garlic", q:"jar", p:3.29},
-    {n:"Chicken bouillon, cubes or paste", q:"box or jar", p:4.49},
-    {n:"Beef bouillon, cubes or paste", q:"box or jar", p:4.79},
-    {n:"Canned diced tomatoes", q:"14.5 oz can", p:1.29},
-    {n:"Canned tomato sauce", q:"15 oz can", p:1.09},
-    {n:"Tomato paste", q:"6 oz can", p:0.89},
-    {n:"Canned black beans", q:"15 oz can", p:1.19},
-    {n:"Canned pinto beans", q:"15 oz can", p:1.19},
-    {n:"Canned kidney beans", q:"15 oz can", p:1.19},
-    {n:"Canned cannellini beans", q:"15 oz can", p:1.29},
-    {n:"Dry beans, a bag or two", q:"1&ndash;2 lb bag", p:3.49},
-    {n:"Neutral cooking oil", q:"48 oz bottle", p:5.49},
-    {n:"Olive oil", q:"16.9 oz bottle", p:5.99},
-    {n:"Soy sauce", q:"15 oz bottle", p:3.29},
-    {n:"Worcestershire sauce", q:"10 oz bottle", p:3.49},
-    {n:"Apple cider vinegar", q:"16 oz bottle", p:3.49},
-    {n:"Rice vinegar", q:"12 oz bottle", p:2.99},
-    {n:"Cornstarch", q:"16 oz box", p:2.49},
-    {n:"All-purpose flour", q:"5 lb bag", p:3.49},
-    {n:"Taco seasoning packet", q:"1 oz packet", p:1.19},
-    {n:"Ranch seasoning packet", q:"1 oz packet", p:1.29},
-    {n:"Italian seasoning packet", q:"1 oz packet", p:1.19},
-    {n:"Rice", q:"2 lb bag", p:2.99},
-    {n:"Short pasta shape", q:"16 oz box", p:1.79},
-    {n:"Frozen chicken breasts or thighs", q:"2.5&ndash;3 lb bag", p:8.99},
-    {n:"Frozen mixed vegetables", q:"12 oz bag", p:2.49},
-    {n:"Frozen mirepoix", q:"12 oz bag", p:3.49},
-    {n:"Frozen Hatch green chile, chopped", q:"1 lb tub", p:4.49}
+    {n:"Jarred minced garlic", q:"4.5 oz jar", p:3.49, sec:"Canned & Jarred"},
+    {n:"Jarred minced or grated ginger", q:"4.5 oz jar", p:3.99, sec:"Canned & Jarred"},
+    {n:"Onion powder", q:"jar", p:2.49, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Garlic powder", q:"jar", p:2.49, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Dried minced garlic", q:"jar", p:3.29, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Chicken bouillon, cubes or paste", q:"box or jar", p:4.49, sec:"Broth & Sauces"},
+    {n:"Beef bouillon, cubes or paste", q:"box or jar", p:4.79, sec:"Broth & Sauces"},
+    {n:"Canned diced tomatoes", q:"14.5 oz can", p:1.29, sec:"Canned & Jarred"},
+    {n:"Canned tomato sauce", q:"15 oz can", p:1.09, sec:"Canned & Jarred"},
+    {n:"Tomato paste", q:"6 oz can", p:0.89, sec:"Canned & Jarred"},
+    {n:"Canned black beans", q:"15 oz can", p:1.19, sec:"Canned & Jarred"},
+    {n:"Canned pinto beans", q:"15 oz can", p:1.19, sec:"Canned & Jarred"},
+    {n:"Canned kidney beans", q:"15 oz can", p:1.19, sec:"Canned & Jarred"},
+    {n:"Canned cannellini beans", q:"15 oz can", p:1.29, sec:"Canned & Jarred"},
+    {n:"Dry beans, a bag or two", q:"1&ndash;2 lb bag", p:3.49, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Neutral cooking oil", q:"48 oz bottle", p:5.49, sec:"Broth & Sauces"},
+    {n:"Olive oil", q:"16.9 oz bottle", p:5.99, sec:"Broth & Sauces"},
+    {n:"Soy sauce", q:"15 oz bottle", p:3.29, sec:"Broth & Sauces"},
+    {n:"Worcestershire sauce", q:"10 oz bottle", p:3.49, sec:"Broth & Sauces"},
+    {n:"Apple cider vinegar", q:"16 oz bottle", p:3.49, sec:"Broth & Sauces"},
+    {n:"Rice vinegar", q:"12 oz bottle", p:2.99, sec:"Broth & Sauces"},
+    {n:"Cornstarch", q:"16 oz box", p:2.49, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"All-purpose flour", q:"5 lb bag", p:3.49, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Taco seasoning packet", q:"1 oz packet", p:1.19, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Ranch seasoning packet", q:"1 oz packet", p:1.29, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Italian seasoning packet", q:"1 oz packet", p:1.19, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Rice", q:"2 lb bag", p:2.99, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Short pasta shape", q:"16 oz box", p:1.79, sec:"Spices, Seasoning Packets & Dry Goods"},
+    {n:"Frozen chicken breasts or thighs", q:"2.5&ndash;3 lb bag", p:8.99, sec:"Meat & Poultry"},
+    {n:"Frozen mixed vegetables", q:"12 oz bag", p:2.49, sec:"Frozen"},
+    {n:"Frozen mirepoix", q:"12 oz bag", p:3.49, sec:"Frozen"},
+    {n:"Frozen Hatch green chile, chopped", q:"1 lb tub", p:4.49, sec:"Frozen"}
   ];
+
+  var PANTRY_DEFAULT_SECTION = "Pantry Staples";
+  var MASTER_SECTION_ORDER = ["Meat & Poultry", "Produce", "Dairy & Refrigerated", "Canned & Jarred", "Frozen", "Broth & Sauces", "Spices, Seasoning Packets & Dry Goods", "Beverages", "Pantry Staples"];
 
 
   var techniques = [
@@ -2452,6 +2475,98 @@
     updateCombinedTotal();
   }
 
+  var MASTER_KEY = 'dumpAndDoneMasterChecked';
+  function loadMasterChecked(){
+    try{
+      var raw = localStorage.getItem(MASTER_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveMasterChecked(state){
+    try{ localStorage.setItem(MASTER_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  // Merges visible grocery items (filtered by selected recipes, same as the
+  // Grocery List tab) with all pantry items, grouped by store section.
+  function buildMasterSections(){
+    var sel = loadSelected();
+    var bySection = {};
+    function bucket(title){
+      if(!bySection[title]) bySection[title] = [];
+      return bySection[title];
+    }
+
+    groceryGroups.forEach(function(group, gi){
+      group.items.forEach(function(item, ii){
+        var visible = item.r.some(function(k){ return isSelected(sel, k); });
+        if(!visible) return;
+        var caption = recipeNamesFor(item.r);
+        if(item.note) caption += ' — ' + item.note;
+        bucket(group.title).push({id:'g' + gi + '-' + ii, n:item.n, q:item.q, p:item.p, caption:caption});
+      });
+    });
+
+    pantryItems.forEach(function(item, ii){
+      bucket(item.sec || PANTRY_DEFAULT_SECTION).push({id:'p' + ii, n:item.n, q:item.q, p:item.p, caption:'Pantry staple'});
+    });
+
+    return MASTER_SECTION_ORDER
+      .filter(function(title){ return bySection[title] && bySection[title].length; })
+      .map(function(title){ return {title:title, items:bySection[title]}; });
+  }
+
+  function renderMasterList(){
+    var checked = loadMasterChecked();
+    var container = document.getElementById('master-groups');
+    container.innerHTML = '';
+
+    var sections = buildMasterSections();
+    var grandTotal = 0, totalCount = 0, totalChecked = 0;
+
+    sections.forEach(function(section){
+      var groupEl = el('div', 'group');
+      var titleEl = el('div', 'group-title');
+      titleEl.innerHTML = '<span class="group-title-label">' + section.title + ' <span class="group-count"></span></span><span class="group-subtotal"></span>';
+      groupEl.appendChild(titleEl);
+
+      var groupSubtotal = 0;
+      section.items.forEach(function(item){
+        totalCount++;
+        var row = el('div', 'item');
+        if(checked[item.id]) row.classList.add('checked');
+        var priceHtml = item.p > 0 ? '<span class="item-price">' + fmt(item.p) + '</span>' : '<span class="item-price">on hand?</span>';
+        row.innerHTML =
+          '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div><div class="item-tags">' + item.caption + '</div></span>';
+        if(checked[item.id]){
+          totalChecked++;
+        } else {
+          groupSubtotal += item.p;
+          grandTotal += item.p;
+        }
+        row.addEventListener('click', function(){
+          var isChecked = row.classList.toggle('checked');
+          checked[item.id] = isChecked;
+          saveMasterChecked(checked);
+          renderMasterList();
+        });
+        groupEl.appendChild(row);
+      });
+
+      groupEl.querySelector('.group-count').textContent = section.items.length + ' item' + (section.items.length === 1 ? '' : 's');
+      groupEl.querySelector('.group-subtotal').textContent = fmt(groupSubtotal);
+      container.appendChild(groupEl);
+    });
+
+    document.getElementById('master-total').textContent = fmt(grandTotal);
+    document.getElementById('master-progress-label').textContent = totalChecked + ' / ' + totalCount + ' checked';
+    document.getElementById('master-progress-fill').style.width = (totalCount ? (totalChecked / totalCount * 100) : 0) + '%';
+    document.getElementById('master-empty-state').style.display = totalCount === 0 ? 'block' : 'none';
+    document.querySelectorAll('#panel-master .price-banner, #panel-master .progress-bar').forEach(function(elx){
+      elx.style.display = totalCount === 0 ? 'none' : '';
+    });
+  }
+
   var builderShowCount = 6;
 
   function renderBuilderInventory(){
@@ -2694,6 +2809,7 @@
     saveSelected(sel);
     updateRecipeCheckboxes();
     applyFilter();
+    renderMasterList();
   }
 
   function setAllRecipes(value){
@@ -2702,6 +2818,7 @@
     saveSelected(sel);
     updateRecipeCheckboxes();
     applyFilter();
+    renderMasterList();
   }
 
   function renderTechniques(){
@@ -2744,10 +2861,12 @@
     document.getElementById('tab-recipes').setAttribute('aria-selected', tab === 'recipes' ? 'true' : 'false');
     document.getElementById('tab-list').setAttribute('aria-selected', tab === 'list' ? 'true' : 'false');
     document.getElementById('tab-pantry').setAttribute('aria-selected', tab === 'pantry' ? 'true' : 'false');
+    document.getElementById('tab-master').setAttribute('aria-selected', tab === 'master' ? 'true' : 'false');
     document.getElementById('tab-builder').setAttribute('aria-selected', tab === 'builder' ? 'true' : 'false');
     document.getElementById('panel-recipes').classList.toggle('active', tab === 'recipes');
     document.getElementById('panel-list').classList.toggle('active', tab === 'list');
     document.getElementById('panel-pantry').classList.toggle('active', tab === 'pantry');
+    document.getElementById('panel-master').classList.toggle('active', tab === 'master');
     document.getElementById('panel-builder').classList.toggle('active', tab === 'builder');
     document.getElementById('tab-techniques').setAttribute('aria-selected', tab === 'techniques' ? 'true' : 'false');
     document.getElementById('panel-techniques').classList.toggle('active', tab === 'techniques');
@@ -2757,6 +2876,7 @@
     document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
     document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
+    document.getElementById('tab-master').addEventListener('click', function(){ activateTab('master'); });
     document.getElementById('tab-builder').addEventListener('click', function(){ activateTab('builder'); });
     document.getElementById('tab-techniques').addEventListener('click', function(){ activateTab('techniques'); });
     document.getElementById('select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
@@ -2772,6 +2892,10 @@
       savePantryChecked({});
       document.querySelectorAll('#pantry-groups .item.checked').forEach(function(r){ r.classList.remove('checked'); });
       updatePantryTotals();
+    });
+    document.getElementById('master-reset-btn').addEventListener('click', function(){
+      saveMasterChecked({});
+      renderMasterList();
     });
     document.getElementById('builder-reset-btn').addEventListener('click', function(){
       saveBuilderChecked({});
@@ -2797,5 +2921,6 @@
   updateRecipeCheckboxes();
   applyFilter();
   updatePantryTotals();
+  renderMasterList();
   renderBuilderResults();
 </script>
