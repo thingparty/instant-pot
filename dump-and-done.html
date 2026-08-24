@@ -533,10 +533,10 @@
   <section class="panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list">
     <div class="price-banner">
       <div class="price-banner-top">
-        <span class="price-banner-label">Estimated total</span>
+        <span class="price-banner-label">Estimated total to buy</span>
         <span class="price-banner-total" id="grand-total">$0.00</span>
       </div>
-      <p class="price-banner-note">Reflects only the recipes selected on the Recipes tab. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; not a live scrape of today's shelf prices, since the store site blocks most automated lookups. Treat as a ballpark, not a receipt.</p>
+      <p class="price-banner-note">Reflects the recipes selected on the Recipes tab, minus anything checked off below &mdash; check off an item you already have on hand and its price drops out of the total. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; not a live scrape of today's shelf prices, since the store site blocks most automated lookups. Treat as a ballpark, not a receipt.</p>
     </div>
     <div class="list-context">
       <span id="list-context-count">Built from 20 of 20 recipes</span>
@@ -1660,10 +1660,13 @@
         tagsEl.textContent = caption;
         if(visible){
           visibleCount++;
-          groupSubtotal += item.p;
-          grandTotal += item.p;
           totalVisible++;
-          if(checked[id]) totalCheckedVisible++;
+          if(checked[id]){
+            totalCheckedVisible++;
+          } else {
+            groupSubtotal += item.p;
+            grandTotal += item.p;
+          }
         }
       });
 
