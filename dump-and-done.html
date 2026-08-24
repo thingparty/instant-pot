@@ -689,13 +689,55 @@
     cursor: pointer;
   }
   .builder-show-more:hover{ border-color: var(--line-strong); }
+  /* techniques */
+  .technique{
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .technique-head{
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    padding: 16px 18px;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    display: block;
+  }
+  .technique-head:focus-visible{ outline: 2px solid var(--accent); outline-offset: -2px; }
+  .technique-name{ font-weight: 600; font-size: 1.02rem; }
+  .technique-time{
+    display: block;
+    margin-top: 3px;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .technique-desc{ margin-top: 6px; font-size: 0.9rem; color: var(--ink-soft); }
+  .technique-body{ padding: 0 18px 18px; display: none; }
+  .technique.open .technique-body{ display: block; }
+  .technique-body h4{
+    margin: 14px 0 6px;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .technique-body ul{ margin: 0; padding-left: 18px; }
+  .technique-body li{ margin-bottom: 4px; font-size: 0.92rem; }
+  .technique-body p{ margin: 0; font-size: 0.92rem; line-height: 1.55; }
+  .technique-source{ margin-top: 12px; font-size: 0.82rem; }
 </style>
 
 <div class="wrap">
   <header class="masthead">
     <div class="eyebrow">Instant Pot &middot; No-Chop Rotation</div>
     <h1>Dump &amp; Done</h1>
-    <p class="sub">Twenty-nine Instant Pot dinners (mostly dump-and-go, a few more hands-on), pulled from well-reviewed recipe sources plus your own collection, and six quick references. Check off what you're making this week &mdash; the grocery list and price total narrow to match.</p>
+    <p class="sub">Twenty-nine Instant Pot dinners, mostly dump-and-go, pulled from well-reviewed recipe sources plus your own collection. Check off what you're making this week &mdash; the grocery list and price total narrow to match. Method and cook-time references live on the Techniques tab; what's already in the house lives on Pantry Builder.</p>
     <div class="price-banner">
       <div class="price-banner-top">
         <span class="price-banner-label">Grocery list + pantry, combined</span>
@@ -710,6 +752,7 @@
     <button class="tab-btn" id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">Grocery List</button>
     <button class="tab-btn" id="tab-pantry" role="tab" aria-selected="false" aria-controls="panel-pantry">Pantry Items</button>
     <button class="tab-btn" id="tab-builder" role="tab" aria-selected="false" aria-controls="panel-builder">Pantry Builder</button>
+    <button class="tab-btn" id="tab-techniques" role="tab" aria-selected="false" aria-controls="panel-techniques">Techniques</button>
   </div>
 
   <section class="panel active" id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes">
@@ -799,6 +842,11 @@
         <div id="builder-results"></div>
       </div>
     </div>
+  </section>
+
+  <section class="panel" id="panel-techniques" role="tabpanel" aria-labelledby="tab-techniques">
+    <p class="builder-intro">How the pot works, separate from what goes in it. The method references that used to sit among the dinners, plus the rules the Pantry Builder applies on your behalf.</p>
+    <div id="technique-list"></div>
   </section>
 
   <footer>Checked items and recipe selections are remembered on this device only. &middot; Recipe sources linked above.</footer>
@@ -1123,20 +1171,6 @@
       sourceLabel: "Rose Bakes"
     },
     {
-      key: "plain-rice-reference",
-      name: "Plain Rice (Quick Reference)",
-      desc: "Not a dinner on its own &mdash; the ratio and times for cooking rice to serve under Butter Chicken and Teriyaki Chicken.",
-      time: "3&ndash;32 min, by type",
-      ingredients: [
-        "1 cup rice, any variety",
-        "1 cup water",
-        "1/2 tsp sea salt"
-      ],
-      method: "Ratio is always 1:1, rice to water &mdash; no water evaporates in a sealed pot, so it's simpler than stovetop. Add rice, water, and salt, seal, and cook on high pressure for the time below, then let pressure release naturally until the pin drops:<br><br>White rice (basmati/jasmine): 3 min<br>White sushi rice: 5 min<br>Brown rice (basmati): 22 min<br>Brown rice (short-grain): 24 min<br>Red or black rice: 30 min<br>Wild rice blend: 28 min<br>Wild rice: 28&ndash;32 min, depending on texture<br><br>Remove the rice right away once it's done to keep it from sticking.",
-      source: "https://greenhealthycooking.com/instant-pot-rice/",
-      sourceLabel: "Green Healthy Cooking"
-    },
-    {
       key: "level-1-spaghetti",
       name: "Level 1 Spaghetti (No-Stir)",
       desc: "Broken spaghetti and jarred sauce layered on a trivet and left completely unstirred until the pot's done, with notes for meatballs or browned ground meat.",
@@ -1154,116 +1188,6 @@
       method: "No-meat version: set a trivet in the pot and add 4 cups of the broth or water. Layer the broken noodles in a criss-cross pattern with spoonfuls of sauce, repeating until both are gone. Swirl the last 1/2 cup of broth in the empty sauce jar to rinse it out and pour that in, then add the can of tomatoes, olive oil, and garlic. Do not stir. Pressure cook on high for 4 minutes (drop to 3 if noodles come out mushy), quick release, remove the trivet, and stir for 2&ndash;3 minutes before serving.<br><br>Frozen meatballs: skip the trivet (the meatballs keep things off the bottom), don't stack them more than one layer deep, use 5 minutes instead of 4, and add an extra 1/2 cup of broth. A few more meatballs can go on top after layering the noodles and sauce.<br><br>Ground meat or sausage: brown and season it on saut&eacute; first, then remove, drain, and deglaze the pot before returning the meat. Skip the trivet, use the same 4-minute time, and add the extra 1/2 cup of broth.<br><br>It looks watery right when it's done &mdash; that mostly absorbs during the post-cook stir.",
       source: "https://www.copymethat.com/r/PIdXxUu2L/level-1-spaghetti-without-all-the-back-s/",
       sourceLabel: "CopyMeThat"
-    },
-    {
-      key: "hard-boiled-eggs-reference",
-      name: "5-5-5 Hard-Boiled Eggs (Quick Reference)",
-      desc: "Not a dinner either &mdash; the reliable ratio for perfect hard-boiled eggs in the Instant Pot.",
-      time: "~20 min total",
-      ingredients: [
-        "1 cup water (1.5 cups for an 8-quart pot)",
-        "Eggs, any amount that fits in a single layer",
-        "Trivet or steamer basket",
-        "Bowl of ice water"
-      ],
-      method: "Add the water to the inner pot, set the trivet or basket in, and arrange the eggs on top in a single layer. Seal and pressure cook on high for 5 minutes. Let it sit for a 5-minute natural release, then quick release the rest. Transfer the eggs straight to an ice bath for 5 minutes, then tap and peel under cool water.",
-      source: "https://www.theloveofspice.com/instant-pot-hard-boiled-eggs/",
-      sourceLabel: "The Love of Spice"
-    },
-    {
-      key: "baked-potatoes-reference",
-      name: "Baked Potatoes (Quick Reference)",
-      desc: "Not a dinner on its own &mdash; the trivet method and times for perfect baked potatoes in the Instant Pot.",
-      time: "12&ndash;20 min, by size",
-      ingredients: [
-        "Potatoes, any amount that fits on the trivet",
-        "1 cup water"
-      ],
-      method: "Scrub the potatoes and poke each one 4 to 6 times with a fork. Pour 1 cup of cold water into the pot and set the trivet in, then arrange the potatoes on top &mdash; stacking is fine if they fit. Seal and cook on high pressure: 12 minutes for small potatoes (under 2 inches), 14&ndash;15 minutes for medium (2&ndash;3 inches), 16&ndash;20 minutes for large (over 3 inches). Let the pressure release naturally for 10 minutes, then quick release the rest.",
-      source: "https://rosebakes.com/instant-pot-baked-potatoes/",
-      sourceLabel: "Rose Bakes"
-    },
-    {
-      key: "mashed-potatoes-reference",
-      name: "Mashed Potatoes (Quick Reference)",
-      desc: "Not a dinner on its own &mdash; potatoes steamed whole on a trivet, then mashed with warm dairy and butter.",
-      time: "~30 min (20 min high pressure)",
-      ingredients: [
-        "1 1/2 cups water",
-        "4 lb medium russet potatoes, peeled",
-        "2 cups half-and-half or whole milk",
-        "8 tbsp (1 stick) unsalted butter, room temperature",
-        "2 tsp kosher salt",
-        "Black pepper, optional"
-      ],
-      method: "Set a wire rack or trivet in the pot and pour in the water. Arrange the potatoes on the rack in an even layer. Seal and cook on high pressure for 20 minutes, then let the pressure release naturally. Meanwhile, warm the half-and-half or milk. Transfer the potatoes to a bowl and mash to the consistency you like, then fold in the warm dairy and the butter. Season with salt and pepper to taste.",
-      source: "https://www.thekitchn.com/recipe-instant-pot-mashed-potatoes-250982",
-      sourceLabel: "The Kitchn"
-    },
-    {
-      key: "tips-and-times-reference",
-      name: "Instant Pot Tips &amp; Cook Times (Quick Reference)",
-      desc: "Not a recipe &mdash; general operating tips plus a cheat sheet of common pressure-cook times, for whenever you're improvising off-list.",
-      time: "reference only",
-      ingredients: [
-        "Chicken breast, boneless (fresh): 6&ndash;8 min high pressure, 10-min natural release",
-        "Chicken thighs, bone-in: 9&ndash;10 min high pressure",
-        "Whole chicken (~3 lb): 20&ndash;25 min high pressure, full natural release",
-        "Ground beef or turkey: 4&ndash;5 min high pressure",
-        "Beef stew meat or cubes: 15&ndash;20 min high pressure, natural release",
-        "Chuck roast (3 lb): 45&ndash;60 min high pressure, natural release",
-        "Pork chops, bone-in: 2&ndash;5 min high pressure, quick release",
-        "Pork shoulder (3 lb): 55&ndash;60 min high pressure, natural release",
-        "Fish fillets, fresh: 2&ndash;3 min high pressure, quick release",
-        "White rice: 3&ndash;6 min high pressure, 1:1 ratio",
-        "Brown rice: 22&ndash;25 min high pressure, ~1:1.25 ratio",
-        "Dry black beans (no soak): 25&ndash;30 min high pressure, full natural release",
-        "Dry chickpeas (no soak): 40&ndash;50 min high pressure, full natural release",
-        "Lentils, brown or green: 10 min high pressure, no soak needed",
-        "Potatoes, cubed: 4 min high pressure",
-        "Potatoes, small and whole: 12 min high pressure",
-        "Carrots, sliced: 2&ndash;6 min high pressure depending on thickness",
-        "Broccoli florets: 0&ndash;1 min high pressure &mdash; barely needs any time",
-        "Corn on the cob: 3&ndash;4 min high pressure",
-        "Frozen chicken breast, boneless: 12&ndash;14 min high pressure, 10-min natural release",
-        "Frozen chicken thighs, bone-in: 12&ndash;15 min high pressure",
-        "Frozen whole chicken (~3 lb): 35&ndash;40 min high pressure, full natural release",
-        "Frozen ground meat or meatballs: add 3&ndash;5 min over the fresh time, breaking it apart once it's thawed enough to separate",
-        "Frozen beef stew meat or cubes: 20&ndash;25 min high pressure, natural release",
-        "Frozen chuck roast (3 lb): 60&ndash;75 min high pressure, full natural release",
-        "Frozen pork chops, bone-in: 8&ndash;10 min high pressure, quick release",
-        "Frozen pork shoulder (3 lb): 90 min high pressure, full natural release",
-        "Frozen fish fillets: 4&ndash;6 min high pressure, quick release",
-        "Frozen sausage links or brats: 8&ndash;10 min high pressure, quick release"
-      ],
-      method: "Use at least 1 cup of liquid &mdash; most pots need that minimum to build steam, and skimping is a common cause of the burn warning. Don't fill past two-thirds full for regular cooking, or past halfway for rice, beans, or anything that expands and foams as it cooks. Quick release (turn the valve to venting, hands and face clear) suits vegetables and delicate items you don't want to keep cooking during release; natural release &mdash; just letting it sit &mdash; suits meat, beans, and soups, where a slower pressure drop keeps things tender and avoids spatter. A 10-minute natural release followed by a quick release splits the difference and shows up in most dump recipes. Sauté with the lid off to brown meat or soften aromatics before sealing. Budget 5&ndash;15 minutes for the pot to come up to pressure and another 10&ndash;20 for release on top of the listed cook time &mdash; that gap is why a '15-minute' recipe can still take 45 minutes start to finish. The sealing ring holds onto odors, so it's worth keeping a second one just for sweet dishes if you cook a lot of both. Room-temperature ingredients bring the pot to pressure faster than cold-from-the-fridge ones.<br><br><strong>Cooking from frozen:</strong> the Instant Pot's own guidance and USDA food-safety rules both say it's fine to pressure cook meat straight from frozen &mdash; no thaw required, since the sealed pot moves it through the danger zone fast. A few things change, though. Skip the sauté-first sear; you can't brown a frozen block, so build flavor with seasoning, broth, and aromatics instead, or sear after cooking if you want color. Add roughly 50% more time than the fresh-meat number for whole pieces (chops, breasts, roasts) &mdash; frozen ground meat and meatballs need less of a bump since they separate as they thaw. Don't stack pieces that are frozen together in a solid block; separate them first or the inside will lag well behind the outside. Larger cuts (roasts, whole chicken, pork shoulder) want a full natural release so the center finishes evenly, while smaller cuts (chops, fillets, sausages) do fine with a quick release. However good the estimate, a frozen roast or thick cut is worth checking with a meat thermometer before serving &mdash; internal temp is what actually confirms it's done, not the clock.<br><br>A recipe that calls for sautéing meat first doesn't strictly need it &mdash; skipping that step is fine for a dump-and-go version. It just means the meat is going in more raw than it would otherwise be, so give it a couple of extra minutes at pressure to make sure it's fully cooked through.",
-      source: "https://www.paintthekitchenred.com/instant-pot-cooking-times-a-complete-guide/",
-      sourceLabel: "Paint the Kitchen Red"
-    },
-    {
-      key: "pantry-staples-reference",
-      name: "Pantry Staples for Instant Pot Cooking (Quick Reference)",
-      desc: "Not a recipe &mdash; the ingredients worth keeping stocked so a dump dinner is genuinely a five-minute decision, not a grocery run.",
-      time: "reference only",
-      ingredients: [
-        "Jarred minced garlic &mdash; skips the peeling and mincing entirely",
-        "Jarred minced or grated ginger",
-        "Onion powder and garlic powder, for when even jarred feels like too much",
-        "Low-sodium chicken and beef broth or bouillon (cubes or paste keep longer than cartons)",
-        "Canned diced tomatoes, tomato sauce, and tomato paste",
-        "Canned beans (black, pinto, kidney, cannellini) alongside a bag or two of dry beans",
-        "A neutral oil (vegetable or avocado) and a bottle of olive oil",
-        "Soy sauce, Worcestershire sauce, and a vinegar or two (apple cider, rice)",
-        "Cornstarch or flour, for last-minute thickening",
-        "A few seasoning packets on hand (taco, ranch, Italian) for instant flavor",
-        "Rice and a short pasta shape",
-        "Frozen chicken breasts or thighs, plus a bag of mixed frozen vegetables",
-        "Frozen mirepoix (diced onion, celery, and carrot) &mdash; skips the chopping for soups and stews entirely",
-        "Dehydrated (dried) minced garlic &mdash; a shelf-stable backup to jarred, no fridge space needed"
-      ],
-      method: "These are the ingredients that make dump cooking actually fast &mdash; the difference between a recipe that's '20 minutes of prep' and one that's 'open a few things and walk away.' Jarred garlic and ginger save the most time of anything on this list and keep for weeks in the fridge once opened. Broth and canned tomatoes are worth stocking a few of at a time since they turn up in nearly everything here, and a rotating stash of frozen chicken means there's always a protein ready to go without a store trip. Frozen mirepoix does for soups and stews what jarred garlic does for everything else &mdash; it goes straight from freezer to pot, no cutting board involved. Dehydrated garlic keeps indefinitely in the pantry, so it's worth having on hand for whenever the jarred or fresh runs out.",
-      source: "https://myhouseofzing.ca/2019/06/26/ingredients-for-instant-pot-success/",
-      sourceLabel: "My House of Zing"
     },
     {
       key: "french-lentils-bacon-chicken",
@@ -1588,8 +1512,6 @@
         {n:"Celery", q:"4 small ribs", p:2.49, r:["pressure-cooker-beef-stew","split-pea-soup"]},
         {n:"White button mushrooms", q:"10 oz", p:2.99, r:["pressure-cooker-beef-stew"]},
         {n:"Yukon Gold potatoes", q:"1 lb", p:1.99, r:["pressure-cooker-beef-stew"]},
-        {n:"Potatoes for baking (russet or your choice)", q:"as many as you want", p:1.99, r:["baked-potatoes-reference"]},
-        {n:"Russet potatoes, for mashing", q:"4 lb", p:4.99, r:["mashed-potatoes-reference"]},
         {n:"Yellow, red, or russet potatoes", q:"1 1/2 lb", p:2.29, r:["smoked-sausage-green-beans-potatoes"]},
         {n:"Fresh green beans", q:"1 lb", p:2.49, r:["smoked-sausage-green-beans-potatoes"]},
         {n:"Fresh thyme", q:"4 sprigs", p:2.49, r:["pressure-cooker-beef-stew"]},
@@ -1616,8 +1538,8 @@
     {
       title: "Dairy & Refrigerated",
       items: [
-        {n:"Unsalted butter", q:"2 sticks + 6 tbsp", p:4.99, r:["mississippi-pot-roast","butter-chicken","smoked-sausage-green-beans-potatoes","mashed-potatoes-reference"]},
-        {n:"Half-and-half", q:"3 1/2 cups", p:2.79, r:["butter-chicken","creamy-tuscan-chicken","mashed-potatoes-reference"]},
+        {n:"Unsalted butter", q:"2 sticks + 6 tbsp", p:4.99, r:["mississippi-pot-roast","butter-chicken","smoked-sausage-green-beans-potatoes"]},
+        {n:"Half-and-half", q:"3 1/2 cups", p:2.79, r:["butter-chicken","creamy-tuscan-chicken"]},
         {n:"Plain nonfat Greek yogurt", q:"1/2 cup", p:1.29, r:["butter-chicken"]},
         {n:"Cream cheese", q:"28 oz total (8+4+8+8 oz)", p:9.16, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","ranch-white-chicken-chili","crack-chicken"]},
         {n:"Parmesan cheese, grated", q:"1 cup + a little extra for topping", p:4.49, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
@@ -1625,7 +1547,6 @@
         {n:"Heavy cream", q:"2/3 cup + 1 1/4 cups + 1/2 cup (buy 1 pint)", p:3.99, r:["cheesy-taco-pasta","creamy-tomato-pasta","butternut-squash-soup"]},
         {n:"Shredded cheese", q:"small bag", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional"},
         {n:"Sour cream", q:"small tub", p:2.29, r:["chicken-taco-soup","taco-blop"], note:"optional"},
-        {n:"Eggs", q:"1 dozen", p:3.99, r:["hard-boiled-eggs-reference"], note:"optional"},
         {n:"Paneer", q:"10 oz", p:5.99, r:["saag-paneer"]},
         {n:"Ghee", q:"3 tbsp total", p:6.99, r:["chana-masala","saag-paneer"]}
       ]
@@ -1726,10 +1647,10 @@
         {n:"Dried thyme", q:"1/2 tsp", p:2.99, r:["split-pea-soup"]},
         {n:"Dried green split peas", q:"1 lb (about 2 1/4 cups)", p:2.49, r:["split-pea-soup"]},
         {n:"All-purpose flour", q:"2 tbsp", p:2.99, r:["pressure-cooker-beef-stew"], note:"likely already on hand"},
-        {n:"Rice, for serving", q:"your choice", p:3.49, r:["butter-chicken","teriyaki-chicken","plain-rice-reference","cuban-black-beans-plantains","chana-masala","saag-paneer"]},
+        {n:"Rice, for serving", q:"your choice", p:3.49, r:["butter-chicken","teriyaki-chicken","cuban-black-beans-plantains","chana-masala","saag-paneer"]},
         {n:"Tortilla chips", q:"optional", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional topping"},
         {n:"Coconut oil", q:"1 tbsp", p:6.99, r:["butter-chicken"], note:"or sub olive oil"},
-        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","crack-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","plain-rice-reference","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","mashed-potatoes-reference","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer"], note:"likely already on hand"},
+        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","crack-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer"], note:"likely already on hand"},
         {n:"Cumin seeds", q:"1 tsp + 1/4 tsp", p:3.49, r:["chana-masala","saag-paneer"]},
         {n:"Ground coriander", q:"1 tbsp + 2 tsp", p:3.49, r:["chana-masala","saag-paneer"]},
         {n:"Ground turmeric", q:"1/4 tsp + 1/2 tsp", p:3.49, r:["chana-masala","saag-paneer"]},
@@ -1742,10 +1663,179 @@
 
   var pantryItems = [
     {n:"Eggs", q:"1 dozen", p:3.99},
+    {n:"Potatoes for baking (russet or your choice)", q:"as many as you want", p:1.99},
+    {n:"Russet potatoes, for mashing", q:"4 lb", p:4.99},
     {n:"La Croix Sparkling Water", q:"8-pack cans", p:4.99},
     {n:"Peet's Coffee", q:"12 oz bag", p:9.99},
     {n:"Bacon", q:"1 lb", p:6.99},
     {n:"Frozen pizza", q:"each", p:6.49}
+  ];
+
+
+  var techniques = [
+    {
+      key: "five-slot-method",
+      name: "The Five-Slot Method",
+      desc: "The rule the Pantry Builder runs on &mdash; every dump-and-go dinner is the same five slots, so you pick from columns instead of hunting a recipe.",
+      time: "the whole system",
+      listLabel: "The slots",
+      ingredients: [
+        "<strong>Liquid</strong> &mdash; thin and water-based. This is what builds steam. Exactly one, always required.",
+        "<strong>Protein</strong> &mdash; meat, beans, lentils, eggs. Exactly one.",
+        "<strong>Flavor</strong> &mdash; jarred sauce, paste, seasoning packet, aromatics. Exactly one. This is the slot that does the most work for the least effort.",
+        "<strong>Bulk</strong> &mdash; grain, pasta, potato, frozen vegetable. Optional, up to two.",
+        "<strong>Fat and acid</strong> &mdash; dairy, oil, coconut milk, citrus, vinegar. Optional, up to two, almost always stirred in after cooking."
+      ],
+      method: "Pick one from each required column, dump, seal, walk away. That is the entire decision. The point of the system is that it removes the choosing: you are not deciding what to make, you are checking what is in the house and reading off what is already possible.<br><br>Jarred pastes and sauces are the single biggest lever in the whole method &mdash; one spoonful replaces six chopping steps. Frozen diced onion, frozen mirepoix, and jarred garlic do the same thing for aromatics. Buying the same handful of flavor bases over and over is not a failure of imagination, it is what makes the texture and taste predictable week to week.<br><br>The Pantry Builder tab enumerates these combinations for you from whatever you have checked off. Nothing there is authored as a recipe. It is all computed from the slots."
+    },
+    {
+      key: "pressure-rules",
+      name: "The Rules That Keep It From Failing",
+      desc: "Minimum liquid, thin versus thick, layer order, fill limits, and the Albuquerque altitude correction &mdash; the things that cause a burn warning or a wet brick when ignored.",
+      time: "read once, applies always",
+      listLabel: "The rules",
+      ingredients: [
+        "<strong>Minimum liquid.</strong> 1 cup of thin liquid for a 6-quart pot, 1.5 cups for an 8-quart. Without it the pot never builds pressure and throws the burn warning.",
+        "<strong>Thin versus thick.</strong> If it pours like water it builds pressure. If it sits like a paste it is a burn risk. Tomato paste, thick sauces, dairy, and nut butters never count toward the minimum.",
+        "<strong>Layer order.</strong> Thin liquid at the bottom, protein next, bulk on top of that, thick sauce poured over the top and <em>not</em> stirred in. Dairy and acid go in after cooking, never before.",
+        "<strong>Cook time is the maximum, not the sum.</strong> Take the longest single item and use that. Add 5 to 10 minutes if anything goes in frozen solid.",
+        "<strong>Pasta.</strong> Box time divided by two, plus one, rounded down. Goes in last, barely covered, unstirred.",
+        "<strong>Fill limits.</strong> Two-thirds full at most. Half for rice, dried beans, pasta, split peas, or anything that foams and expands.",
+        "<strong>Release.</strong> Natural for meat and beans. Quick for vegetables and anything delicate. If a combination contains both, natural wins.",
+        "<strong>Altitude.</strong> Albuquerque sits near 5,300 feet, so the pot runs cooler than a sea-level recipe assumes. Add roughly 15 to 20 percent to every published time. A 10-minute recipe becomes 12."
+      ],
+      method: "The two failures that account for almost everything going wrong are not enough thin liquid at the bottom, and thick sauce stirred through instead of floated on top. Both produce the same burn warning, and both are fixable before you seal the lid rather than after.<br><br>Budget 5 to 15 minutes for the pot to come up to pressure and another 10 to 20 for release, on top of whatever cook time is listed. That gap is why a fifteen-minute recipe still takes forty-five minutes start to finish. It is unattended time, which is the whole point, but it is worth knowing before you are hungry."
+    },
+    {
+      key: "pantry-staples",
+      name: "Stocking the Pantry",
+      desc: "What to keep on hand so a dump dinner is a five-minute decision and not a grocery run. These items now live as checkboxes in the Pantry Builder.",
+      time: "shopping strategy",
+      listLabel: "Worth keeping stocked",
+      ingredients: [
+        "Jarred minced garlic &mdash; skips the peeling and mincing entirely",
+        "Jarred minced or grated ginger",
+        "Onion powder and garlic powder, for when even jarred feels like too much",
+        "Dried minced garlic &mdash; a shelf-stable backup, no fridge space needed",
+        "Low-sodium chicken and beef broth or bouillon (cubes and paste keep longer than cartons)",
+        "Canned diced tomatoes, tomato sauce, and tomato paste",
+        "Canned beans (black, pinto, kidney, cannellini) alongside a bag or two of dry beans",
+        "A neutral oil and a bottle of olive oil",
+        "Soy sauce, Worcestershire, and a vinegar or two (apple cider, rice)",
+        "Cornstarch or flour, for last-minute thickening",
+        "Seasoning packets (taco, ranch, Italian) for instant flavor",
+        "Rice and a short pasta shape",
+        "Frozen chicken breasts or thighs, plus a bag of mixed frozen vegetables",
+        "Frozen mirepoix &mdash; skips the chopping for soups and stews entirely",
+        "Hatch green chile in the freezer, since you are where it comes from"
+      ],
+      method: "These are the ingredients that make dump cooking actually fast &mdash; the difference between a recipe that is twenty minutes of prep and one that is open a few things and walk away. Jarred garlic and ginger save the most time of anything here and keep for weeks in the fridge once opened. Broth and canned tomatoes are worth stocking several at a time since they turn up in nearly everything, and a rotating stash of frozen chicken means there is always a protein ready without a store trip.<br><br>Every item on this list is checkable on the Pantry Builder tab. Checking one there does not add it to a shopping list &mdash; it tells the generator you have it, and the possible dinners recompute immediately.",
+      source: "https://myhouseofzing.ca/2019/06/26/ingredients-for-instant-pot-success/",
+      sourceLabel: "My House of Zing"
+    },
+    {
+      key: "tips-and-times",
+      name: "Instant Pot Tips &amp; Cook Times",
+      desc: "Not a recipe &mdash; general operating tips plus a cheat sheet of common pressure-cook times, for whenever you're improvising off-list.",
+      time: "reference only",
+      ingredients: [
+        "Chicken breast, boneless (fresh): 6&ndash;8 min high pressure, 10-min natural release",
+        "Chicken thighs, bone-in: 9&ndash;10 min high pressure",
+        "Whole chicken (~3 lb): 20&ndash;25 min high pressure, full natural release",
+        "Ground beef or turkey: 4&ndash;5 min high pressure",
+        "Beef stew meat or cubes: 15&ndash;20 min high pressure, natural release",
+        "Chuck roast (3 lb): 45&ndash;60 min high pressure, natural release",
+        "Pork chops, bone-in: 2&ndash;5 min high pressure, quick release",
+        "Pork shoulder (3 lb): 55&ndash;60 min high pressure, natural release",
+        "Fish fillets, fresh: 2&ndash;3 min high pressure, quick release",
+        "White rice: 3&ndash;6 min high pressure, 1:1 ratio",
+        "Brown rice: 22&ndash;25 min high pressure, ~1:1.25 ratio",
+        "Dry black beans (no soak): 25&ndash;30 min high pressure, full natural release",
+        "Dry chickpeas (no soak): 40&ndash;50 min high pressure, full natural release",
+        "Lentils, brown or green: 10 min high pressure, no soak needed",
+        "Potatoes, cubed: 4 min high pressure",
+        "Potatoes, small and whole: 12 min high pressure",
+        "Carrots, sliced: 2&ndash;6 min high pressure depending on thickness",
+        "Broccoli florets: 0&ndash;1 min high pressure &mdash; barely needs any time",
+        "Corn on the cob: 3&ndash;4 min high pressure",
+        "Frozen chicken breast, boneless: 12&ndash;14 min high pressure, 10-min natural release",
+        "Frozen chicken thighs, bone-in: 12&ndash;15 min high pressure",
+        "Frozen whole chicken (~3 lb): 35&ndash;40 min high pressure, full natural release",
+        "Frozen ground meat or meatballs: add 3&ndash;5 min over the fresh time, breaking it apart once it's thawed enough to separate",
+        "Frozen beef stew meat or cubes: 20&ndash;25 min high pressure, natural release",
+        "Frozen chuck roast (3 lb): 60&ndash;75 min high pressure, full natural release",
+        "Frozen pork chops, bone-in: 8&ndash;10 min high pressure, quick release",
+        "Frozen pork shoulder (3 lb): 90 min high pressure, full natural release",
+        "Frozen fish fillets: 4&ndash;6 min high pressure, quick release",
+        "Frozen sausage links or brats: 8&ndash;10 min high pressure, quick release"
+      ],
+      method: "Use at least 1 cup of liquid &mdash; most pots need that minimum to build steam, and skimping is a common cause of the burn warning. Don't fill past two-thirds full for regular cooking, or past halfway for rice, beans, or anything that expands and foams as it cooks. Quick release (turn the valve to venting, hands and face clear) suits vegetables and delicate items you don't want to keep cooking during release; natural release &mdash; just letting it sit &mdash; suits meat, beans, and soups, where a slower pressure drop keeps things tender and avoids spatter. A 10-minute natural release followed by a quick release splits the difference and shows up in most dump recipes. Sauté with the lid off to brown meat or soften aromatics before sealing. Budget 5&ndash;15 minutes for the pot to come up to pressure and another 10&ndash;20 for release on top of the listed cook time &mdash; that gap is why a '15-minute' recipe can still take 45 minutes start to finish. The sealing ring holds onto odors, so it's worth keeping a second one just for sweet dishes if you cook a lot of both. Room-temperature ingredients bring the pot to pressure faster than cold-from-the-fridge ones.<br><br><strong>Cooking from frozen:</strong> the Instant Pot's own guidance and USDA food-safety rules both say it's fine to pressure cook meat straight from frozen &mdash; no thaw required, since the sealed pot moves it through the danger zone fast. A few things change, though. Skip the sauté-first sear; you can't brown a frozen block, so build flavor with seasoning, broth, and aromatics instead, or sear after cooking if you want color. Add roughly 50% more time than the fresh-meat number for whole pieces (chops, breasts, roasts) &mdash; frozen ground meat and meatballs need less of a bump since they separate as they thaw. Don't stack pieces that are frozen together in a solid block; separate them first or the inside will lag well behind the outside. Larger cuts (roasts, whole chicken, pork shoulder) want a full natural release so the center finishes evenly, while smaller cuts (chops, fillets, sausages) do fine with a quick release. However good the estimate, a frozen roast or thick cut is worth checking with a meat thermometer before serving &mdash; internal temp is what actually confirms it's done, not the clock.<br><br>A recipe that calls for sautéing meat first doesn't strictly need it &mdash; skipping that step is fine for a dump-and-go version. It just means the meat is going in more raw than it would otherwise be, so give it a couple of extra minutes at pressure to make sure it's fully cooked through.",
+      source: "https://www.paintthekitchenred.com/instant-pot-cooking-times-a-complete-guide/",
+      sourceLabel: "Paint the Kitchen Red"
+    },
+
+    {
+      key: "plain-rice",
+      name: "Plain Rice",
+      desc: "Not a dinner on its own &mdash; the ratio and times for cooking rice to serve under Butter Chicken and Teriyaki Chicken.",
+      time: "3&ndash;32 min, by type",
+      ingredients: [
+        "1 cup rice, any variety",
+        "1 cup water",
+        "1/2 tsp sea salt"
+      ],
+      method: "Ratio is always 1:1, rice to water &mdash; no water evaporates in a sealed pot, so it's simpler than stovetop. Add rice, water, and salt, seal, and cook on high pressure for the time below, then let pressure release naturally until the pin drops:<br><br>White rice (basmati/jasmine): 3 min<br>White sushi rice: 5 min<br>Brown rice (basmati): 22 min<br>Brown rice (short-grain): 24 min<br>Red or black rice: 30 min<br>Wild rice blend: 28 min<br>Wild rice: 28&ndash;32 min, depending on texture<br><br>Remove the rice right away once it's done to keep it from sticking.",
+      source: "https://greenhealthycooking.com/instant-pot-rice/",
+      sourceLabel: "Green Healthy Cooking"
+    },
+
+    {
+      key: "hard-boiled-eggs",
+      name: "5-5-5 Hard-Boiled Eggs",
+      desc: "Not a dinner either &mdash; the reliable ratio for perfect hard-boiled eggs in the Instant Pot.",
+      time: "~20 min total",
+      ingredients: [
+        "1 cup water (1.5 cups for an 8-quart pot)",
+        "Eggs, any amount that fits in a single layer",
+        "Trivet or steamer basket",
+        "Bowl of ice water"
+      ],
+      method: "Add the water to the inner pot, set the trivet or basket in, and arrange the eggs on top in a single layer. Seal and pressure cook on high for 5 minutes. Let it sit for a 5-minute natural release, then quick release the rest. Transfer the eggs straight to an ice bath for 5 minutes, then tap and peel under cool water.",
+      source: "https://www.theloveofspice.com/instant-pot-hard-boiled-eggs/",
+      sourceLabel: "The Love of Spice"
+    },
+
+    {
+      key: "baked-potatoes",
+      name: "Baked Potatoes",
+      desc: "Not a dinner on its own &mdash; the trivet method and times for perfect baked potatoes in the Instant Pot.",
+      time: "12&ndash;20 min, by size",
+      ingredients: [
+        "Potatoes, any amount that fits on the trivet",
+        "1 cup water"
+      ],
+      method: "Scrub the potatoes and poke each one 4 to 6 times with a fork. Pour 1 cup of cold water into the pot and set the trivet in, then arrange the potatoes on top &mdash; stacking is fine if they fit. Seal and cook on high pressure: 12 minutes for small potatoes (under 2 inches), 14&ndash;15 minutes for medium (2&ndash;3 inches), 16&ndash;20 minutes for large (over 3 inches). Let the pressure release naturally for 10 minutes, then quick release the rest.",
+      source: "https://rosebakes.com/instant-pot-baked-potatoes/",
+      sourceLabel: "Rose Bakes"
+    },
+
+    {
+      key: "mashed-potatoes",
+      name: "Mashed Potatoes",
+      desc: "Not a dinner on its own &mdash; potatoes steamed whole on a trivet, then mashed with warm dairy and butter.",
+      time: "~30 min (20 min high pressure)",
+      ingredients: [
+        "1 1/2 cups water",
+        "4 lb medium russet potatoes, peeled",
+        "2 cups half-and-half or whole milk",
+        "8 tbsp (1 stick) unsalted butter, room temperature",
+        "2 tsp kosher salt",
+        "Black pepper, optional"
+      ],
+      method: "Set a wire rack or trivet in the pot and pour in the water. Arrange the potatoes on the rack in an even layer. Seal and cook on high pressure for 20 minutes, then let the pressure release naturally. Meanwhile, warm the half-and-half or milk. Transfer the potatoes to a bowl and mash to the consistency you like, then fold in the warm dairy and the butter. Season with salt and pepper to taste.",
+      source: "https://www.thekitchn.com/recipe-instant-pot-mashed-potatoes-250982",
+      sourceLabel: "The Kitchn"
+    },
   ];
 
   var recipeByKey = {};
@@ -1774,7 +1864,7 @@
     {id:"black-beans-canned", name:"Black beans, canned", slot:"protein", aisle:"pantry", price:1.19, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:["salsa-jarred","enchilada-sauce-canned","curry-paste-red"], avoid:[], mealsPerPackage:1},
     {id:"chickpeas-canned", name:"Chickpeas, canned", slot:"protein", aisle:"pantry", price:1.09, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:["curry-paste-red","curry-paste-green","salsa-jarred"], avoid:[], mealsPerPackage:1},
     {id:"red-lentils-dry", name:"Red lentils, dry", slot:"protein", aisle:"pantry", price:2.49, unit:"1 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["shelf-stable","no-chop"], pairsWith:["curry-paste-red","curry-paste-green"], avoid:[], mealsPerPackage:3},
-    {id:"eggs", name:"Eggs", slot:"protein", aisle:"fridge", price:3.99, unit:"1 dozen", cookMinutes:6, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["fridge-staple"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"eggs", name:"Eggs", slot:"protein", aisle:"fridge", price:3.99, unit:"1 dozen", cookMinutes:6, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["not-bag-safe","fridge-staple"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"white-beans-canned", name:"White (cannellini) beans, canned", slot:"protein", aisle:"pantry", price:1.29, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:["marinara-jarred","salsa-jarred"], avoid:[], mealsPerPackage:1},
     {id:"shrimp-frozen", name:"Shrimp, frozen (peeled, tail-off)", slot:"protein", aisle:"freezer", price:10.99, unit:"1 lb bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["freezer-bag-safe"], pairsWith:["curry-paste-red","curry-paste-green","marinara-jarred"], avoid:[], mealsPerPackage:2},
     {id:"black-beans-dry", name:"Black beans, dry", slot:"protein", aisle:"pantry", price:1.99, unit:"1 lb bag", cookMinutes:25, release:"natural", liquidCups:0, liquidNeededPerCup:3, thick:false, tags:["shelf-stable","dried-beans","fill-limit-half"], pairsWith:["salsa-jarred","enchilada-sauce-canned"], avoid:[], mealsPerPackage:3},
@@ -1794,7 +1884,7 @@
     // bulk — grain, pasta, potato, frozen vegetable. optional, 0-2 per meal.
     {id:"white-rice", name:"White rice", slot:"bulk", aisle:"pantry", price:2.99, unit:"2 lb bag", cookMinutes:4, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
     {id:"brown-rice", name:"Brown rice", slot:"bulk", aisle:"pantry", price:3.49, unit:"2 lb bag", cookMinutes:22, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
-    {id:"baby-potatoes", name:"Baby potatoes, whole", slot:"bulk", aisle:"produce", price:3.99, unit:"1.5 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"baby-potatoes", name:"Baby potatoes, whole", slot:"bulk", aisle:"produce", price:3.99, unit:"1.5 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["not-bag-safe","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"frozen-mixed-vegetables", name:"Frozen mixed vegetables", slot:"bulk", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"frozen-diced-onion", name:"Frozen diced onion", slot:"bulk", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","aromatic","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:6},
     {id:"short-pasta-dry", name:"Short pasta (penne/rotini), dry", slot:"bulk", aisle:"pantry", price:1.79, unit:"16 oz box", cookMinutes:0, boxMinutes:12, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["pasta","fill-limit-half","family-size"], pairsWith:[], avoid:["curry-paste-red","curry-paste-green"], mealsPerPackage:4},
@@ -1803,13 +1893,53 @@
 
     // fat_acid — dairy, oil, coconut milk, citrus, vinegar. optional, 0-2 per meal, stirred in after cooking.
     {id:"coconut-milk-canned", name:"Coconut milk, canned (full-fat)", slot:"fat_acid", aisle:"pantry", price:2.49, unit:"13.5 oz can", cookMinutes:0, release:null, liquidCups:1.6, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:2},
-    {id:"sour-cream", name:"Sour cream", slot:"fat_acid", aisle:"fridge", price:2.29, unit:"16 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:5},
-    {id:"shredded-cheese", name:"Shredded cheese blend", slot:"fat_acid", aisle:"fridge", price:3.49, unit:"8 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
-    {id:"butter", name:"Butter", slot:"fat_acid", aisle:"fridge", price:4.49, unit:"1 lb (4 sticks)", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:8},
+    {id:"sour-cream", name:"Sour cream", slot:"fat_acid", aisle:"fridge", price:2.29, unit:"16 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe",], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"shredded-cheese", name:"Shredded cheese blend", slot:"fat_acid", aisle:"fridge", price:3.49, unit:"8 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe",], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"butter", name:"Butter", slot:"fat_acid", aisle:"fridge", price:4.49, unit:"1 lb (4 sticks)", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe",], pairsWith:[], avoid:[], mealsPerPackage:8},
     {id:"olive-oil", name:"Olive oil", slot:"fat_acid", aisle:"pantry", price:5.99, unit:"16.9 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:12},
     {id:"lime-juice-bottled", name:"Lime juice, bottled", slot:"fat_acid", aisle:"pantry", price:2.49, unit:"8 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:6},
-    {id:"plain-yogurt", name:"Plain yogurt", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"32 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:5},
-    {id:"heavy-cream", name:"Heavy cream", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"1 pint", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4}
+    {id:"plain-yogurt", name:"Plain yogurt", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"32 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe",], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"heavy-cream", name:"Heavy cream", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"1 pint", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe",], pairsWith:[], avoid:[], mealsPerPackage:4},
+    // --- added from the Pantry Staples reference, folded in here so the
+    // --- stocking list and the generator are the same list ---
+    {id:"tomato-sauce-canned", name:"Tomato sauce, canned", slot:"liquid", aisle:"pantry", price:1.09, unit:"15 oz can", cookMinutes:0, release:null, liquidCups:1.75, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"coconut-water-broth-thin", name:"Bouillon cubes", slot:"liquid", aisle:"pantry", price:2.99, unit:"box of 12, mixed with water", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:6},
+
+    {id:"pinto-beans-canned", name:"Pinto beans, canned", slot:"protein", aisle:"pantry", price:1.19, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"kidney-beans-canned", name:"Kidney beans, canned", slot:"protein", aisle:"pantry", price:1.19, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"tuna-canned", name:"Tuna, canned", slot:"protein", aisle:"pantry", price:1.49, unit:"5 oz can", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"ground-turkey-frozen", name:"Ground turkey, frozen", slot:"protein", aisle:"freezer", price:6.49, unit:"1 lb", cookMinutes:8, release:"natural", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"meatballs-frozen", name:"Meatballs, frozen", slot:"protein", aisle:"freezer", price:7.99, unit:"24 oz bag", cookMinutes:9, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"pork-shoulder", name:"Pork shoulder, boneless", slot:"protein", aisle:"freezer", price:11.99, unit:"3 lb", cookMinutes:55, release:"natural", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe","batch"], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"brown-lentils-dry", name:"Brown or green lentils, dry", slot:"protein", aisle:"pantry", price:2.29, unit:"1 lb bag", cookMinutes:10, release:"natural", liquidCups:0, liquidNeededPerCup:2, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"split-peas-dry", name:"Split peas, dry", slot:"protein", aisle:"pantry", price:1.99, unit:"1 lb bag", cookMinutes:15, release:"natural", liquidCups:0, liquidNeededPerCup:3, thick:false, tags:["shelf-stable","no-chop","fill-limit-half"], pairsWith:[], avoid:[], mealsPerPackage:3},
+
+    {id:"green-chile-frozen", name:"Hatch green chile, chopped (frozen)", slot:"flavor", aisle:"freezer", price:4.49, unit:"1 lb tub", cookMinutes:0, release:null, liquidCups:0.5, liquidNeededPerCup:0, thick:false, tags:["no-chop","local"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"salsa-verde-jarred", name:"Salsa verde, jarred", slot:"flavor", aisle:"pantry", price:3.29, unit:"16 oz jar", cookMinutes:0, release:null, liquidCups:1, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"tikka-masala-sauce", name:"Tikka masala simmer sauce", slot:"flavor", aisle:"pantry", price:4.29, unit:"15 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"tomato-paste", name:"Tomato paste", slot:"flavor", aisle:"pantry", price:0.89, unit:"6 oz can", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["burn-risk"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"soy-sauce", name:"Soy sauce", slot:"flavor", aisle:"pantry", price:3.29, unit:"15 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:12},
+    {id:"ranch-packet", name:"Ranch seasoning packet", slot:"flavor", aisle:"pantry", price:1.29, unit:"1 oz packet", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"italian-seasoning-packet", name:"Italian seasoning packet", slot:"flavor", aisle:"pantry", price:1.19, unit:"1 oz packet", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"curry-powder", name:"Curry powder", slot:"flavor", aisle:"pantry", price:3.49, unit:"2 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:10},
+    {id:"chili-powder-cumin", name:"Chili powder and cumin", slot:"flavor", aisle:"pantry", price:4.49, unit:"two jars", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:12},
+    {id:"jarred-garlic", name:"Jarred minced garlic", slot:"flavor", aisle:"fridge", price:3.49, unit:"8 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:12},
+    {id:"jarred-ginger", name:"Jarred minced ginger", slot:"flavor", aisle:"fridge", price:3.99, unit:"6 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:10},
+    {id:"garlic-onion-powder", name:"Garlic powder and onion powder", slot:"flavor", aisle:"pantry", price:4.49, unit:"two jars", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:14},
+    {id:"dried-minced-garlic", name:"Dried minced garlic", slot:"flavor", aisle:"pantry", price:3.29, unit:"2.5 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:12},
+
+    {id:"frozen-mirepoix", name:"Frozen mirepoix (onion, celery, carrot)", slot:"bulk", aisle:"freezer", price:2.99, unit:"12 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","aromatic","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"frozen-green-beans", name:"Frozen green beans", slot:"bulk", aisle:"freezer", price:2.29, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-corn", name:"Frozen corn", slot:"bulk", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"sweet-potatoes", name:"Sweet potatoes", slot:"bulk", aisle:"produce", price:2.49, unit:"2 lb", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["not-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"egg-noodles-dry", name:"Egg noodles, dry", slot:"bulk", aisle:"pantry", price:2.29, unit:"12 oz bag", cookMinutes:0, boxMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["pasta","fill-limit-half"], pairsWith:[], avoid:[], mealsPerPackage:3},
+
+    {id:"cornstarch", name:"Cornstarch (for thickening after)", slot:"fat_acid", aisle:"pantry", price:2.29, unit:"16 oz box", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable","post-cook"], pairsWith:[], avoid:[], mealsPerPackage:20},
+    {id:"apple-cider-vinegar", name:"Apple cider vinegar", slot:"fat_acid", aisle:"pantry", price:2.99, unit:"16 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:14},
+    {id:"rice-vinegar", name:"Rice vinegar", slot:"fat_acid", aisle:"pantry", price:3.29, unit:"12 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:12},
+    {id:"neutral-oil", name:"Neutral oil (vegetable or avocado)", slot:"fat_acid", aisle:"pantry", price:5.49, unit:"48 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:20},
+    {id:"cream-cheese", name:"Cream cheese", slot:"fat_acid", aisle:"fridge", price:2.79, unit:"8 oz block", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["not-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"lemon-juice-bottled", name:"Lemon juice, bottled", slot:"fat_acid", aisle:"pantry", price:2.49, unit:"8 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:6}
   ];
 
   var builderById = {};
@@ -1850,8 +1980,8 @@
     try{ localStorage.setItem(BUILDER_SETTINGS_KEY, JSON.stringify(s)); }catch(e){}
   }
 
-  function builderCheckedBySlot(){
-    var checked = loadBuilderChecked();
+  function builderCheckedBySlot(checkedMap){
+    var checked = checkedMap || loadBuilderChecked();
     var out = {liquid:[], protein:[], flavor:[], bulk:[], fat_acid:[]};
     builderItems.forEach(function(it){ if(checked[it.id]) out[it.slot].push(it); });
     return out;
@@ -1876,6 +2006,13 @@
       }
     }
     return false;
+  }
+
+  // An item is bag-safe unless it's fresh dairy, eggs, or raw potato — things
+  // that separate, weep, or go mealy after a freeze. Everything shelf-stable
+  // or already frozen goes in the bag raw without complaint.
+  function builderBagSafe(it){
+    return !(it.tags && it.tags.indexOf('not-bag-safe') !== -1);
   }
 
   function builderAltitudeFactor(elevationFeet){
@@ -1906,7 +2043,7 @@
     if(baseTime === 0) baseTime = 3;
     var anyFrozen = all.some(function(it){ return it.aisle === 'freezer'; });
     if(anyFrozen) baseTime += 7;
-    var freezerBagSafe = [protein].concat(bulkSet).every(function(it){ return it.tags && it.tags.indexOf('freezer-bag-safe') !== -1; }) && fatSet.length === 0;
+    var freezerBagSafe = [protein].concat(bulkSet, fatSet).every(builderBagSafe);
     var freezerBump = 0;
     if(settings.freezerMode) freezerBump = Math.round(baseTime * 0.5);
     var preCorrection = baseTime + freezerBump;
@@ -1937,12 +2074,14 @@
       if(fatSet.length) steps.push('After cooking: stir in ' + fatSet.map(function(f){ return f.name; }).join(' and ') + '.');
     }
 
+    var favored = !!(protein.pairsWith && protein.pairsWith.indexOf(flavor.id) !== -1);
     var parts = [protein.name].concat(bulkSet.map(function(b){ return b.name; })).concat([flavor.name]);
 
     return {
       name: parts.join(', '),
       liquid: liquid, protein: protein, flavor: flavor, bulkSet: bulkSet, fatSet: fatSet,
       handsOnSteps: handsOnSteps,
+      favored: favored,
       steps: steps,
       baseTime: baseTime + freezerBump,
       correctedTime: correctedTime,
@@ -1973,14 +2112,14 @@
         if(hasConflict([liquid, protein])) continue;
         for(var fi=0; fi<bySlot.flavor.length; fi++){
           var flavor = bySlot.flavor[fi];
-          if(protein.pairsWith && protein.pairsWith.length && protein.pairsWith.indexOf(flavor.id) === -1) continue;
+          // pairsWith is a preference hint, not a gate — see rankBuilderCombos.
           if(hasConflict([liquid, protein, flavor])) continue;
           for(var bi=0; bi<bulkSubsets.length; bi++){
             var bulkSet = bulkSubsets[bi];
             if(hasConflict([liquid, protein, flavor].concat(bulkSet))) continue;
             for(var fai=0; fai<fatSubsets.length; fai++){
               var fatSet = fatSubsets[fai];
-              if(settings.freezerMode && fatSet.length) continue; // fat/acid is a fresh, at-serving addition
+              if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
               if(hasConflict([liquid, protein, flavor].concat(bulkSet, fatSet))) continue;
               var combo = builderCombo(liquid, protein, flavor, bulkSet, fatSet, settings);
               if(settings.freezerMode && !combo.freezerBagSafe) continue;
@@ -1997,28 +2136,63 @@
   function rankBuilderCombos(combos){
     return combos.slice().sort(function(a, b){
       if(a.handsOnSteps !== b.handsOnSteps) return a.handsOnSteps - b.handsOnSteps;
+      if(a.favored !== b.favored) return a.favored ? -1 : 1;
       return a.correctedTime - b.correctedTime;
     });
   }
 
   // empty-state helper: which single unchecked item would unlock the most
   // combinations, computed by actually testing each one.
-  function builderNextUnlock(settings, currentCount){
+  // Pure: takes an explicit checked-map, never touches localStorage.
+  function countCombos(settings, checked, cap){
+    var bySlot = builderCheckedBySlot(checked);
+    if(!bySlot.liquid.length || !bySlot.protein.length || !bySlot.flavor.length) return 0;
+    var bulkSubsets = subsetsUpTo2(bySlot.bulk);
+    var fatSubsets = subsetsUpTo2(bySlot.fat_acid);
+    var n = 0;
+    for(var li=0; li<bySlot.liquid.length; li++){
+      for(var pi=0; pi<bySlot.protein.length; pi++){
+        var protein = bySlot.protein[pi], liquid = bySlot.liquid[li];
+        if(hasConflict([liquid, protein])) continue;
+        for(var fi=0; fi<bySlot.flavor.length; fi++){
+          var flavor = bySlot.flavor[fi];
+          if(hasConflict([liquid, protein, flavor])) continue;
+          for(var bi=0; bi<bulkSubsets.length; bi++){
+            var bulkSet = bulkSubsets[bi];
+            if(hasConflict([liquid, protein, flavor].concat(bulkSet))) continue;
+            for(var fai=0; fai<fatSubsets.length; fai++){
+              var fatSet = fatSubsets[fai];
+              if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
+              if(hasConflict([liquid, protein, flavor].concat(bulkSet, fatSet))) continue;
+              if(settings.freezerMode && ![protein].concat(bulkSet, fatSet).every(builderBagSafe)) continue;
+              n++;
+              if(n >= cap) return n;
+            }
+          }
+        }
+      }
+    }
+    return n;
+  }
+
+  // Which unchecked items would unlock the most dinners. Returns up to three,
+  // cheapest-first among equal unlocks.
+  function builderNextUnlocks(settings, limit){
     var checked = loadBuilderChecked();
-    var best = null;
+    var base = countCombos(settings, checked, 400);
+    var results = [];
     builderItems.forEach(function(it){
       if(checked[it.id]) return;
-      checked[it.id] = true;
-      saveBuilderChecked(checked);
-      var count = generateBuilderCombos(settings).length;
-      checked[it.id] = false;
-      saveBuilderChecked(checked);
-      var delta = count - currentCount;
-      if(delta > 0 && (!best || delta > best.delta || (delta === best.delta && it.price < best.item.price))){
-        best = {item: it, delta: delta};
-      }
+      var trial = Object.assign({}, checked);
+      trial[it.id] = true;
+      var delta = countCombos(settings, trial, 400) - base;
+      if(delta > 0) results.push({item: it, delta: delta});
     });
-    return best;
+    results.sort(function(a, b){
+      if(a.delta !== b.delta) return b.delta - a.delta;
+      return a.item.price - b.item.price;
+    });
+    return results.slice(0, limit || 3);
   }
 
   function el(tag, cls, html){
@@ -2353,9 +2527,11 @@
       if(missing.length){
         unlockEl.innerHTML = 'Check off at least one item from <strong>' + missing.join(', ') + '</strong> &mdash; liquid, protein, and flavor are required for every meal.';
       } else {
-        var unlock = builderNextUnlock(settings, 0);
-        if(unlock){
-          unlockEl.innerHTML = 'Check off <strong>' + unlock.item.name + '</strong> (' + (unlock.item.price > 0 ? fmt(unlock.item.price) : 'free') + ') and you unlock <strong>' + unlock.delta + '</strong> more dinner' + (unlock.delta === 1 ? '' : 's') + '.';
+        var unlocks = builderNextUnlocks(settings, 3);
+        if(unlocks.length){
+          unlockEl.innerHTML = 'Closest to a dinner: ' + unlocks.map(function(u){
+            return '<strong>' + u.item.name + '</strong> (' + (u.item.price > 0 ? fmt(u.item.price) : 'free') + ') unlocks ' + u.delta;
+          }).join(' &middot; ') + '.';
         } else {
           unlockEl.textContent = "What's checked doesn't pair up yet — try a different protein or flavor.";
         }
@@ -2476,6 +2652,42 @@
     applyFilter();
   }
 
+  function renderTechniques(){
+    var wrap = document.getElementById('technique-list');
+    techniques.forEach(function(t, i){
+      var box = el('div', 'technique');
+
+      var head = el('button', 'technique-head');
+      head.type = 'button';
+      head.setAttribute('aria-expanded', 'false');
+      head.innerHTML = '<span class="technique-name">' + t.name + '</span>' +
+        (t.time ? '<span class="technique-time">' + t.time + '</span>' : '') +
+        '<span class="technique-desc">' + t.desc + '</span>';
+      head.addEventListener('click', function(){
+        var open = box.classList.toggle('open');
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      box.appendChild(head);
+
+      var body = el('div', 'technique-body');
+      if(t.ingredients && t.ingredients.length){
+        body.appendChild(el('h4', null, t.listLabel || 'What you need'));
+        var ul = el('ul');
+        t.ingredients.forEach(function(x){ ul.appendChild(el('li', null, x)); });
+        body.appendChild(ul);
+      }
+      if(t.method){
+        body.appendChild(el('h4', null, t.methodLabel || 'Method'));
+        body.appendChild(el('p', null, t.method));
+      }
+      if(t.source){
+        body.appendChild(el('p', 'technique-source', 'Source: <a href="' + t.source + '" target="_blank" rel="noopener">' + (t.sourceLabel || t.source) + '</a>'));
+      }
+      box.appendChild(body);
+      wrap.appendChild(box);
+    });
+  }
+
   function activateTab(tab){
     document.getElementById('tab-recipes').setAttribute('aria-selected', tab === 'recipes' ? 'true' : 'false');
     document.getElementById('tab-list').setAttribute('aria-selected', tab === 'list' ? 'true' : 'false');
@@ -2485,6 +2697,8 @@
     document.getElementById('panel-list').classList.toggle('active', tab === 'list');
     document.getElementById('panel-pantry').classList.toggle('active', tab === 'pantry');
     document.getElementById('panel-builder').classList.toggle('active', tab === 'builder');
+    document.getElementById('tab-techniques').setAttribute('aria-selected', tab === 'techniques' ? 'true' : 'false');
+    document.getElementById('panel-techniques').classList.toggle('active', tab === 'techniques');
   }
 
   function setupControls(){
@@ -2492,6 +2706,7 @@
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
     document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
     document.getElementById('tab-builder').addEventListener('click', function(){ activateTab('builder'); });
+    document.getElementById('tab-techniques').addEventListener('click', function(){ activateTab('techniques'); });
     document.getElementById('select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
     document.getElementById('select-none-btn').addEventListener('click', function(){ setAllRecipes(false); });
     document.getElementById('empty-select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
@@ -2523,6 +2738,7 @@
   renderRecipes();
   renderGrocery();
   renderPantry();
+  renderTechniques();
   applyBuilderSettingsToForm(loadBuilderSettings());
   renderBuilderInventory();
   setupControls();
