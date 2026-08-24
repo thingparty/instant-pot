@@ -250,7 +250,7 @@
     gap: 4px;
   }
   @media (max-width: 480px){
-    .recipe-meta{ flex-direction: row; align-items: center; }
+    .recipe-meta{ flex-direction: row; align-items: center; width: 100%; }
   }
   .time-pill{
     font-family: 'IBM Plex Mono', monospace;
@@ -261,6 +261,10 @@
     border-radius: 999px;
     padding: 3px 9px;
     white-space: nowrap;
+    max-width: 100%;
+  }
+  @media (max-width: 480px){
+    .time-pill{ white-space: normal; text-align: center; }
   }
   .chevron{
     color: var(--ink-faint);
@@ -741,7 +745,7 @@
   <header class="masthead">
     <div class="eyebrow">Instant Pot &middot; No-Chop Rotation</div>
     <h1>Dump &amp; Done</h1>
-    <p class="sub">Thirty-two Instant Pot dinners, mostly dump-and-go, pulled from well-reviewed recipe sources plus your own collection. Check off what you're making this week &mdash; the grocery list and price total narrow to match. Method and cook-time references live on the Techniques tab; what's already in the house lives on Pantry Builder.</p>
+    <p class="sub">Thirty-two Instant Pot dinners, plus one dessert, mostly dump-and-go, pulled from well-reviewed recipe sources plus your own collection. Check off what you're making this week &mdash; the grocery list and price total narrow to match. Method and cook-time references live on the Techniques tab; what's already in the house lives on Pantry Builder.</p>
     <div class="price-banner">
       <div class="price-banner-top">
         <span class="price-banner-label">Grocery list + pantry, combined</span>
@@ -1564,6 +1568,29 @@
       method: "Combine the dal and rice in a bowl and cover with water to soak while you start the base. Set the pot to sauté and melt the 2 tablespoons ghee, then add the onion, ginger, cumin, coriander, and turmeric and cook, stirring often, until the onion is translucent, about 5 minutes. Add the tomatoes and cook, stirring occasionally, until softened, about 4 minutes, then season with 2 teaspoons salt. Drain the dal and rice, add it to the pot along with 4 cups water, seal, and cook on low pressure for 15 minutes &mdash; it takes a couple of minutes to come up to pressure. Release the pressure immediately once it's done, then season to taste with more salt. Divide among bowls, drizzle with ghee, and top with yogurt and cilantro to serve.",
       personal: true,
       attribution: "Adapted from NYT Cooking &mdash; no link included, so send it over if you'd like it added here."
+    },
+    {
+      key: "rice-pudding",
+      name: "Instant Pot Rice Pudding",
+      desc: "Arborio rice pressure cooked in milk and sugar, then finished off the heat with an egg-yolk-and-cream slurry for a rich, custardy pudding, chilled before serving.",
+      time: "~30 min (10 min high pressure) + chill",
+      ingredients: [
+        "3/4 cup arborio or other short-grain rice",
+        "2 1/2 cups whole milk",
+        "1/3 cup granulated sugar",
+        "1 (2-inch) cinnamon stick",
+        "1 (4-inch) strip orange or lemon zest, peeled with a vegetable peeler, optional",
+        "1/2 vanilla bean, halved lengthwise and seeds scraped, or 1 tbsp vanilla extract",
+        "Large pinch of fine sea salt",
+        "1/2 cup heavy cream",
+        "2 egg yolks",
+        "1/2 cup raisins, optional",
+        "Ground cinnamon or cardamom, for serving, optional",
+        "Whipped cream, for serving, optional"
+      ],
+      method: "Stir the rice, milk, sugar, cinnamon stick, orange or lemon zest if using, vanilla bean and seeds, and salt together right in the pot. Seal and cook on high pressure for 10 minutes, then let the pressure release naturally for 10 minutes before manually releasing the rest. Discard the cinnamon stick, zest, and vanilla bean. Whisk the cream and egg yolks together in a small bowl, then whisk into the rice and stir until slightly thickened, about 2 minutes &mdash; it will still look soupy at this point, since the residual heat of the rice cooks the yolks and chilling is what actually thickens the pudding. Stir in the raisins if using. Spoon into serving bowls, cover, and chill at least 2 hours. Serve with a sprinkle of cinnamon or cardamom and whipped cream, if you'd like.",
+      personal: true,
+      attribution: "Adapted from NYT Cooking &mdash; no link included, so send it over if you'd like it added here."
     }
   ];
 
@@ -1632,7 +1659,7 @@
         {n:"Green chile peppers", q:"2, optional", p:0.99, r:["saag-paneer"], note:"optional"},
         {n:"Scallions", q:"2 tbsp sliced (about 2 stalks)", p:1.29, r:["mapo-tofu"]},
         {n:"Shallot", q:"1", p:0.79, r:["prosciutto-tortellini-peas"]},
-        {n:"Lemon", q:"1/2", p:0.69, r:["prosciutto-tortellini-peas"]}
+        {n:"Lemon", q:"1/2", p:0.69, r:["prosciutto-tortellini-peas","rice-pudding"]}
       ]
     },
     {
@@ -1644,13 +1671,16 @@
         {n:"Cream cheese", q:"28 oz total (8+4+8+8 oz)", p:9.16, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","ranch-white-chicken-chili","crack-chicken"]},
         {n:"Parmesan cheese, grated", q:"1 cup + a little extra for topping", p:4.49, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
         {n:"Shredded Mexican cheese blend", q:"1 1/2 cups", p:3.49, r:["cheesy-taco-pasta"]},
-        {n:"Heavy cream", q:"2/3 cup + 1 1/4 cups + 1/2 cup + 1 cup (buy 1 quart)", p:3.99, r:["cheesy-taco-pasta","creamy-tomato-pasta","butternut-squash-soup","prosciutto-tortellini-peas"]},
+        {n:"Heavy cream", q:"2/3 cup + 1 1/4 cups + 1/2 cup + 1 cup + 1/2 cup (buy 1 quart)", p:3.99, r:["cheesy-taco-pasta","creamy-tomato-pasta","butternut-squash-soup","prosciutto-tortellini-peas","rice-pudding"]},
         {n:"Shredded cheese", q:"small bag", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional"},
         {n:"Sour cream", q:"small tub", p:2.29, r:["chicken-taco-soup","taco-blop"], note:"optional"},
         {n:"Paneer", q:"10 oz", p:5.99, r:["saag-paneer"]},
         {n:"Ghee", q:"5 tbsp total, plus more for drizzling", p:6.99, r:["chana-masala","saag-paneer","khichdi"]},
         {n:"Firm tofu", q:"1 (14–16 oz) package", p:2.49, r:["mapo-tofu"]},
-        {n:"Refrigerated cheese tortellini", q:"16–20 oz", p:5.99, r:["prosciutto-tortellini-peas"]}
+        {n:"Refrigerated cheese tortellini", q:"16–20 oz", p:5.99, r:["prosciutto-tortellini-peas"]},
+        {n:"Eggs (for yolks)", q:"2", p:3.99, r:["rice-pudding"]},
+        {n:"Whole milk", q:"2 1/2 cups", p:2.49, r:["rice-pudding"]},
+        {n:"Whipped cream", q:"for serving, optional", p:3.99, r:["rice-pudding"], note:"optional"}
       ]
     },
     {
@@ -1755,7 +1785,7 @@
         {n:"Rice, for serving", q:"your choice", p:3.49, r:["butter-chicken","teriyaki-chicken","cuban-black-beans-plantains","chana-masala","saag-paneer","mapo-tofu"]},
         {n:"Tortilla chips", q:"optional", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional topping"},
         {n:"Coconut oil", q:"1 tbsp", p:6.99, r:["butter-chicken"], note:"or sub olive oil"},
-        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","crack-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","prosciutto-tortellini-peas","khichdi"], note:"likely already on hand"},
+        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","crack-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","prosciutto-tortellini-peas","khichdi","rice-pudding"], note:"likely already on hand"},
         {n:"Cumin seeds", q:"1 tsp + 1/4 tsp + 1 1/2 tsp", p:3.49, r:["chana-masala","saag-paneer","khichdi"]},
         {n:"Ground coriander", q:"1 tbsp + 2 tsp", p:3.49, r:["chana-masala","saag-paneer"]},
         {n:"Ground turmeric", q:"1/4 tsp + 1/2 tsp + 1/2 tsp", p:3.49, r:["chana-masala","saag-paneer","khichdi"]},
@@ -1764,11 +1794,16 @@
         {n:"Dried chickpeas", q:"1 cup", p:2.49, r:["chana-masala"]},
         {n:"Sichuan peppercorns", q:"1 tbsp", p:5.99, r:["mapo-tofu"]},
         {n:"Sichuan coarse chile powder", q:"1 tsp", p:4.99, r:["mapo-tofu"]},
-        {n:"Sugar", q:"1 tsp", p:2.49, r:["mapo-tofu"]},
+        {n:"Sugar", q:"1 tsp + 1/3 cup", p:2.49, r:["mapo-tofu","rice-pudding"]},
         {n:"Ground nutmeg", q:"1/4 tsp, optional", p:3.49, r:["prosciutto-tortellini-peas"], note:"optional"},
         {n:"Petite yellow moong dal", q:"1/2 cup", p:3.99, r:["khichdi"]},
         {n:"Long-grain white rice", q:"1/2 cup", p:2.99, r:["khichdi"]},
-        {n:"Coriander seeds", q:"1 1/2 tsp", p:3.49, r:["khichdi"]}
+        {n:"Coriander seeds", q:"1 1/2 tsp", p:3.49, r:["khichdi"]},
+        {n:"Arborio rice", q:"3/4 cup", p:3.99, r:["rice-pudding"]},
+        {n:"Cinnamon stick", q:"1 (2-inch)", p:2.99, r:["rice-pudding"]},
+        {n:"Vanilla extract", q:"1 tbsp (or 1/2 vanilla bean)", p:5.99, r:["rice-pudding"]},
+        {n:"Raisins", q:"1/2 cup, optional", p:2.99, r:["rice-pudding"], note:"optional"},
+        {n:"Ground cinnamon or cardamom", q:"for serving, optional", p:3.49, r:["rice-pudding"], note:"optional"}
       ]
     }
   ];
