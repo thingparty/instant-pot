@@ -517,6 +517,7 @@
   <div class="tabs" role="tablist">
     <button class="tab-btn" id="tab-recipes" role="tab" aria-selected="true" aria-controls="panel-recipes">Recipes</button>
     <button class="tab-btn" id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">Grocery List</button>
+    <button class="tab-btn" id="tab-pantry" role="tab" aria-selected="false" aria-controls="panel-pantry">Pantry Items</button>
   </div>
 
   <section class="panel active" id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes">
@@ -553,6 +554,22 @@
       <br>
       <button type="button" id="empty-select-all-btn">Select all recipes</button>
     </div>
+  </section>
+
+  <section class="panel" id="panel-pantry" role="tabpanel" aria-labelledby="tab-pantry">
+    <div class="price-banner">
+      <div class="price-banner-top">
+        <span class="price-banner-label">Estimated total to buy</span>
+        <span class="price-banner-total" id="pantry-total">$0.00</span>
+      </div>
+      <p class="price-banner-note">Household items that aren't tied to a specific recipe. Check off anything already stocked and its price drops out of the total, same as the grocery list. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
+    </div>
+    <div class="progress-bar">
+      <span id="pantry-progress-label">0 / 0 checked</span>
+      <div class="progress-track"><div class="progress-fill" id="pantry-progress-fill"></div></div>
+      <button class="reset-btn" id="pantry-reset-btn" type="button">Reset</button>
+    </div>
+    <div id="pantry-groups"></div>
   </section>
 
   <footer>Checked items and recipe selections are remembered on this device only. &middot; Recipe sources linked above.</footer>
@@ -1494,6 +1511,14 @@
     }
   ];
 
+  var pantryItems = [
+    {n:"Eggs", q:"1 dozen", p:3.99},
+    {n:"La Croix Sparkling Water", q:"8-pack cans", p:4.99},
+    {n:"Peet's Coffee", q:"12 oz bag", p:9.99},
+    {n:"Bacon", q:"1 lb", p:6.99},
+    {n:"Frozen pizza", q:"each", p:6.49}
+  ];
+
   var recipeByKey = {};
   recipes.forEach(function(r){ recipeByKey[r.key] = r; });
 
@@ -1593,6 +1618,17 @@
     try{ localStorage.setItem(CHECK_KEY, JSON.stringify(state)); }catch(e){}
   }
 
+  var PANTRY_CHECK_KEY = 'dumpAndDoneCheckedPantry';
+  function loadPantryChecked(){
+    try{
+      var raw = localStorage.getItem(PANTRY_CHECK_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function savePantryChecked(state){
+    try{ localStorage.setItem(PANTRY_CHECK_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
   function fmt(n){ return '$' + n.toFixed(2); }
 
   function renderGrocery(){
@@ -1627,6 +1663,59 @@
       });
       container.appendChild(groupEl);
     });
+  }
+
+  function renderPantry(){
+    var container = document.getElementById('pantry-groups');
+    var checked = loadPantryChecked();
+    var groupEl = el('div', 'group');
+    var titleEl = el('div', 'group-title');
+    titleEl.innerHTML = '<span class="group-title-label">Pantry &amp; Household <span class="group-count"></span></span><span class="group-subtotal"></span>';
+    groupEl.appendChild(titleEl);
+
+    pantryItems.forEach(function(item, ii){
+      var id = 'p' + ii;
+      var row = el('div', 'item');
+      row.setAttribute('data-id', id);
+      row.setAttribute('data-price', item.p);
+      if(checked[id]) row.classList.add('checked');
+      var priceHtml = item.p > 0 ? '<span class="item-price">' + fmt(item.p) + '</span>' : '<span class="item-price">on hand?</span>';
+      row.innerHTML =
+        '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div></span>';
+      row.addEventListener('click', function(){
+        var isChecked = row.classList.toggle('checked');
+        checked[id] = isChecked;
+        savePantryChecked(checked);
+        updatePantryTotals();
+      });
+      groupEl.appendChild(row);
+    });
+    container.appendChild(groupEl);
+  }
+
+  function updatePantryTotals(){
+    var checked = loadPantryChecked();
+    var total = 0;
+    var checkedCount = 0;
+
+    pantryItems.forEach(function(item, ii){
+      var id = 'p' + ii;
+      if(checked[id]){
+        checkedCount++;
+      } else {
+        total += item.p;
+      }
+    });
+
+    document.getElementById('pantry-total').textContent = fmt(total);
+    document.getElementById('pantry-progress-label').textContent = checkedCount + ' / ' + pantryItems.length + ' checked';
+    document.getElementById('pantry-progress-fill').style.width = (pantryItems.length ? (checkedCount / pantryItems.length * 100) : 0) + '%';
+    var groupEl = document.querySelector('#pantry-groups .group');
+    if(groupEl){
+      groupEl.querySelector('.group-count').textContent = pantryItems.length + ' item' + (pantryItems.length === 1 ? '' : 's');
+      groupEl.querySelector('.group-subtotal').textContent = fmt(total);
+    }
   }
 
   function recipeNamesFor(keys){
@@ -1719,29 +1808,39 @@
   }
 
   function activateTab(tab){
-    var isRecipes = tab === 'recipes';
-    document.getElementById('tab-recipes').setAttribute('aria-selected', isRecipes ? 'true' : 'false');
-    document.getElementById('tab-list').setAttribute('aria-selected', isRecipes ? 'false' : 'true');
-    document.getElementById('panel-recipes').classList.toggle('active', isRecipes);
-    document.getElementById('panel-list').classList.toggle('active', !isRecipes);
+    document.getElementById('tab-recipes').setAttribute('aria-selected', tab === 'recipes' ? 'true' : 'false');
+    document.getElementById('tab-list').setAttribute('aria-selected', tab === 'list' ? 'true' : 'false');
+    document.getElementById('tab-pantry').setAttribute('aria-selected', tab === 'pantry' ? 'true' : 'false');
+    document.getElementById('panel-recipes').classList.toggle('active', tab === 'recipes');
+    document.getElementById('panel-list').classList.toggle('active', tab === 'list');
+    document.getElementById('panel-pantry').classList.toggle('active', tab === 'pantry');
   }
 
   function setupControls(){
     document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
+    document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
     document.getElementById('select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
     document.getElementById('select-none-btn').addEventListener('click', function(){ setAllRecipes(false); });
     document.getElementById('empty-select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
     document.getElementById('edit-selection-btn').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('reset-btn').addEventListener('click', function(){
       saveChecked({});
+      document.querySelectorAll('#grocery-groups .item.checked').forEach(function(r){ r.classList.remove('checked'); });
       applyFilter();
+    });
+    document.getElementById('pantry-reset-btn').addEventListener('click', function(){
+      savePantryChecked({});
+      document.querySelectorAll('#pantry-groups .item.checked').forEach(function(r){ r.classList.remove('checked'); });
+      updatePantryTotals();
     });
   }
 
   renderRecipes();
   renderGrocery();
+  renderPantry();
   setupControls();
   updateRecipeCheckboxes();
   applyFilter();
+  updatePantryTotals();
 </script>
