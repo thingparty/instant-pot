@@ -1,0 +1,1681 @@
+<title>Dump & Done</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #F2EEE4;
+    --bg-alt: #E9E2D1;
+    --card: #FBF9F3;
+    --ink: #2B2620;
+    --ink-soft: #6B6153;
+    --ink-faint: #94897A;
+    --accent: #A8412C;
+    --accent-ink: #FBF9F3;
+    --good: #4B6B4A;
+    --good-bg: #E3EBDF;
+    --line: #DAD0BB;
+    --line-strong: #C7BA9E;
+    --shadow: 0 1px 2px rgba(43,38,32,0.06), 0 6px 16px -8px rgba(43,38,32,0.18);
+    --radius-s: 6px;
+    --radius-m: 12px;
+    --radius-l: 18px;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #1B1915;
+      --bg-alt: #221F19;
+      --card: #262319;
+      --ink: #EDE6D6;
+      --ink-soft: #B7AC96;
+      --ink-faint: #837A68;
+      --accent: #E08A63;
+      --accent-ink: #1B1915;
+      --good: #8FB088;
+      --good-bg: #2C3529;
+      --line: #3A362C;
+      --line-strong: #4A4536;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 20px -10px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #1B1915;
+    --bg-alt: #221F19;
+    --card: #262319;
+    --ink: #EDE6D6;
+    --ink-soft: #B7AC96;
+    --ink-faint: #837A68;
+    --accent: #E08A63;
+    --accent-ink: #1B1915;
+    --good: #8FB088;
+    --good-bg: #2C3529;
+    --line: #3A362C;
+    --line-strong: #4A4536;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 20px -10px rgba(0,0,0,0.5);
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 18px 80px;
+  }
+
+  header.masthead{
+    padding: 6px 2px 22px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .eyebrow{
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h1{
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: clamp(32px, 8vw, 44px);
+    margin: 6px 0 8px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .sub{
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* segmented control */
+  .tabs{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    padding: 14px 2px 12px;
+    margin-bottom: 6px;
+  }
+  .tabs::after{
+    content: "";
+    position: absolute;
+    left: 2px; right: 2px; bottom: 0;
+    height: 1px;
+    background: var(--line);
+  }
+  .tab-btn{
+    flex: 1;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-alt);
+    color: var(--ink-soft);
+    border-radius: var(--radius-m);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .tab-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tab-btn[aria-selected="true"]{
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+
+  section.panel{ display: none; }
+  section.panel.active{ display: block; }
+
+  /* select bar */
+  .select-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 4px 2px 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .select-bar-actions{ display: flex; gap: 12px; flex-shrink: 0; }
+  .select-link{
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+  .select-link:hover{ text-decoration: underline; }
+  .select-link:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* recipe cards */
+  .recipe-grid{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .recipe{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: opacity 0.15s ease;
+  }
+  .recipe.excluded{ opacity: 0.5; }
+  .recipe-toprow{
+    display: flex;
+    align-items: center;
+  }
+  .recipe-check{
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    margin-left: 16px;
+    border-radius: 6px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .recipe-check.on{ background: var(--good); border-color: var(--good); }
+  .recipe-check svg{ width: 13px; height: 13px; opacity: 0; transition: opacity 0.1s ease; }
+  .recipe-check.on svg{ opacity: 1; }
+  .recipe-head{
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px 16px 10px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  .recipe-head:focus-visible{ outline: 2px solid var(--accent); outline-offset: -2px; }
+  .recipe-num{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .recipe-titles{ flex: 1; min-width: 0; }
+  .recipe-name{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 18.5px;
+    margin: 0 0 3px;
+    text-wrap: balance;
+  }
+  .recipe-desc{
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin: 0;
+  }
+  .recipe-meta{
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .time-pill{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 999px;
+    padding: 3px 9px;
+    white-space: nowrap;
+  }
+  .chevron{
+    color: var(--ink-faint);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .recipe.open .chevron{ transform: rotate(180deg); }
+
+  .recipe-body{
+    display: none;
+    padding: 0 18px 18px;
+    border-top: 1px solid var(--line);
+  }
+  .recipe.open .recipe-body{ display: block; }
+
+  .recipe-body h4{
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin: 16px 0 8px;
+    font-weight: 600;
+  }
+  .ing-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ing-list li{
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .ing-list li::before{
+    content: "";
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    flex-shrink: 0;
+    transform: translateY(-3px);
+  }
+  .method{
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .source-link{
+    display: inline-block;
+    margin-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .source-link:hover{ border-color: var(--accent); }
+
+  /* grocery list */
+  .price-banner{
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 14px 16px;
+    margin-top: 14px;
+  }
+  .price-banner-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .price-banner-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .price-banner-total{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .price-banner-note{
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .list-context{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+  }
+  .group-subtotal{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .item-price{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    padding-left: 8px;
+  }
+  .item.checked .item-price{ color: var(--ink-faint); }
+  .item-row-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .progress-bar{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .progress-track{
+    flex: 1;
+    height: 6px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill{
+    height: 100%;
+    background: var(--good);
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+  .reset-btn{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .reset-btn:hover{ color: var(--ink); border-color: var(--line-strong); }
+
+  .group{ margin-bottom: 22px; }
+  .group-title{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .group-count{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+  .item{
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 9px 4px;
+    border-radius: var(--radius-s);
+    cursor: pointer;
+  }
+  .item:hover{ background: var(--bg-alt); }
+  .checkbox{
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    border-radius: 6px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .item.checked .checkbox{
+    background: var(--good);
+    border-color: var(--good);
+  }
+  .checkbox svg{ width: 13px; height: 13px; opacity: 0; transition: opacity 0.1s ease; }
+  .item.checked .checkbox svg{ opacity: 1; }
+  .item-text{ flex: 1; }
+  .item-name{ font-size: 14.5px; }
+  .item.checked .item-name{ color: var(--ink-faint); text-decoration: line-through; }
+  .item-qty{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .item.checked .item-qty{ color: var(--ink-faint); }
+  .item-tags{
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-top: 2px;
+  }
+
+  .empty-state{
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .empty-state button{
+    margin-top: 14px;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+  }
+
+  footer{
+    margin-top: 30px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Instant Pot &middot; No-Chop Rotation</div>
+    <h1>Dump &amp; Done</h1>
+    <p class="sub">Twenty-seven Instant Pot dinners (mostly dump-and-go, a few more hands-on), pulled from well-reviewed recipe sources plus your own collection, and six quick references. Check off what you're making this week &mdash; the grocery list and price total narrow to match.</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" id="tab-recipes" role="tab" aria-selected="true" aria-controls="panel-recipes">Recipes</button>
+    <button class="tab-btn" id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">Grocery List</button>
+  </div>
+
+  <section class="panel active" id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes">
+    <div class="select-bar">
+      <span id="select-count">20 of 20 selected</span>
+      <span class="select-bar-actions">
+        <button class="select-link" id="select-all-btn" type="button">Select all</button>
+        <button class="select-link" id="select-none-btn" type="button">Clear all</button>
+      </span>
+    </div>
+    <div class="recipe-grid" id="recipe-grid"></div>
+  </section>
+
+  <section class="panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list">
+    <div class="price-banner">
+      <div class="price-banner-top">
+        <span class="price-banner-label">Estimated total</span>
+        <span class="price-banner-total" id="grand-total">$0.00</span>
+      </div>
+      <p class="price-banner-note">Reflects only the recipes selected on the Recipes tab. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; not a live scrape of today's shelf prices, since the store site blocks most automated lookups. Treat as a ballpark, not a receipt.</p>
+    </div>
+    <div class="list-context">
+      <span id="list-context-count">Built from 20 of 20 recipes</span>
+      <button class="select-link" id="edit-selection-btn" type="button">Edit selection</button>
+    </div>
+    <div class="progress-bar">
+      <span id="progress-label">0 / 0 checked</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <button class="reset-btn" id="reset-btn" type="button">Reset</button>
+    </div>
+    <div id="grocery-groups"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      No recipes selected &mdash; there's nothing to shop for yet.
+      <br>
+      <button type="button" id="empty-select-all-btn">Select all recipes</button>
+    </div>
+  </section>
+
+  <footer>Checked items and recipe selections are remembered on this device only. &middot; Recipe sources linked above.</footer>
+</div>
+
+<script>
+  var recipes = [
+    {
+      key: "mississippi-pot-roast",
+      name: "Mississippi Pot Roast",
+      desc: "Chuck roast braised in butter, pepperoncini, and gravy mix until it falls apart.",
+      time: "1 hr 35 min",
+      ingredients: [
+        "8 tbsp (1 stick) unsalted butter",
+        "3 lb boneless beef chuck roast",
+        "1 tbsp vegetable or canola oil",
+        "1/4 cup water",
+        "1 (12 oz) jar pepperoncini peppers, divided",
+        "1 (1 oz) packet ranch seasoning mix",
+        "1&ndash;2 (1 oz) packets au jus gravy mix"
+      ],
+      method: "Sear the roast, then dump everything else in and pressure cook on high for 55 minutes. Natural release 15 minutes, then quick release.",
+      source: "https://www.thekitchn.com/instant-pot-mississippi-pot-roast-recipe-23136229",
+      sourceLabel: "The Kitchn"
+    },
+    {
+      key: "korean-beef",
+      name: "Instant Pot Korean Beef",
+      desc: "Cubed chuck roast in a sweet, garlicky, gochujang-spiked sauce.",
+      time: "1 hr 20 min",
+      ingredients: [
+        "3&ndash;4 lb boneless beef chuck roast, cut into 1-inch cubes",
+        "1/2 cup reduced-sodium soy sauce",
+        "1/3 cup packed brown sugar",
+        "1/4 cup reduced-sodium beef broth",
+        "5 cloves garlic, minced",
+        "2 tbsp sesame oil",
+        "2 tbsp rice vinegar",
+        "2 tbsp fresh ginger, grated",
+        "2&ndash;4 tbsp gochujang sauce",
+        "1/2 tsp onion powder",
+        "1/2 tsp black pepper"
+      ],
+      method: "Whisk the sauce, pour over the cubed beef, and pressure cook 40 minutes. Natural release 25 minutes.",
+      source: "https://www.ihearteating.com/instant-pot-korean-beef/",
+      sourceLabel: "I Heart Eating"
+    },
+    {
+      key: "butter-chicken",
+      name: "Instant Pot Butter Chicken",
+      desc: "Chicken breasts and cauliflower simmered in a spiced tomato-cream sauce.",
+      time: "1 hr",
+      ingredients: [
+        "2 lb boneless, skinless chicken breasts",
+        "1 tbsp coconut oil",
+        "1 small yellow onion, diced",
+        "4 cloves garlic, minced",
+        "1 tbsp fresh ginger, minced",
+        "1 1/2 tbsp curry powder",
+        "2 tsp garam masala",
+        "1 tsp chili powder",
+        "3/4 tsp kosher salt",
+        "1 (28 oz) can tomato sauce",
+        "1 small cauliflower, cut into florets (~4 1/2 cups)",
+        "2 tbsp unsalted butter",
+        "1/2 cup half-and-half (or full-fat coconut milk)",
+        "1/2 cup plain nonfat Greek yogurt",
+        "Rice and cilantro, for serving"
+      ],
+      method: "Sauté aromatics and spices, add tomato sauce, cauliflower, and whole chicken breasts, then pressure cook 12 minutes. Natural release 10 minutes, shred chicken, stir in butter and dairy.",
+      source: "https://www.wellplated.com/instant-pot-butter-chicken/",
+      sourceLabel: "Well Plated"
+    },
+    {
+      key: "white-bean-green-chile-chili",
+      name: "White Bean & Green Chile Chicken Chili",
+      desc: "Whole chicken breasts, white kidney beans, and green chiles, shredded and finished with cream cheese.",
+      time: "15&ndash;20 min",
+      ingredients: [
+        "4 boneless, skinless chicken breasts",
+        "2 cups low-sodium chicken broth",
+        "1 (19 oz) can white kidney (cannellini) beans, drained and rinsed",
+        "1 (12 oz) can corn, drained",
+        "1 medium onion, finely chopped",
+        "1 (4.3 oz) can green chiles",
+        "2&ndash;3 tsp chili powder",
+        "3/4 tsp salt",
+        "4 oz cream cheese, room temperature",
+        "Cornstarch + water, optional, to thicken"
+      ],
+      method: "Layer everything except the cream cheese and pressure cook 10 minutes. Natural release 10 minutes, shred the chicken in the pot, then stir in the cream cheese.",
+      source: "https://www.thereciperebel.com/instant-pot-white-chicken-chili/",
+      sourceLabel: "The Recipe Rebel"
+    },
+    {
+      key: "ranch-white-chicken-chili",
+      name: "Ranch White Chicken Chili",
+      desc: "Shredded chicken with black and white beans and Rotel in a ranch-and-cream-cheese broth.",
+      time: "~50 min",
+      ingredients: [
+        "2 large chicken breasts",
+        "1 (15 oz) can black beans, drained and rinsed",
+        "1 (15 oz) can white beans, drained",
+        "1 medium onion, chopped",
+        "1 (15 oz) can corn, with juice",
+        "1 (10 oz) can Rotel diced tomatoes with green chiles",
+        "1/2 cup chicken broth",
+        "1 tsp chili powder",
+        "1 tsp ground cumin",
+        "1 (0.4 oz) packet ranch dip/dressing mix",
+        "8 oz cream cheese, cut into pieces",
+        "Optional: cilantro, avocado, tortilla chips, shredded cheese, sour cream, jalape&ntilde;os"
+      ],
+      method: "Layer chicken, beans, onion, corn, and tomatoes, add broth, spices, and ranch mix, then top with cream cheese pieces. Pressure cook on high 20 minutes. Natural release 10 minutes, shred the chicken back into the pot, and stir until the cream cheese melts in.",
+      source: "https://natashaskitchen.com/instant-pot-white-chicken-chili/",
+      sourceLabel: "Natasha's Kitchen"
+    },
+    {
+      key: "black-bean-sweet-potato-chili",
+      name: "Black Bean &amp; Sweet Potato Chili",
+      desc: "Vegetarian chili built from sweet potato, black beans, and jarred salsa &mdash; five ingredients, no browning.",
+      time: "~25 min",
+      ingredients: [
+        "4 cups chopped sweet potato (about 3 medium, peeled, 1-inch pieces)",
+        "2 (15 oz) cans black beans, drained and rinsed",
+        "1 (15 oz) jar chunky salsa",
+        "1 tsp cumin",
+        "1 cup vegetable stock",
+        "1/2 tsp kosher salt",
+        "1 tsp smoked paprika, optional",
+        "Optional: guacamole, lime juice, avocado, sour cream, green onion, cilantro, jalape&ntilde;o"
+      ],
+      method: "Dump everything into the Instant Pot and pressure cook on high for 10 minutes, then quick release. Serves 6.",
+      source: "https://realfoodwholelife.com/recipes/5-ingredient-black-bean-and-sweet-potato-chili/",
+      sourceLabel: "Real Food Whole Life"
+    },
+    {
+      key: "creamy-tuscan-chicken",
+      name: "Creamy Tuscan Chicken",
+      desc: "Chicken in a parmesan and sun-dried tomato cream sauce with wilted spinach.",
+      time: "45 min",
+      ingredients: [
+        "2 lb boneless, skinless chicken thighs or breasts",
+        "1 tbsp olive oil",
+        "1 cup diced onion",
+        "1 tbsp minced garlic",
+        "2 cups chicken broth",
+        "1 tsp Italian seasoning",
+        "1 (8 oz) package cream cheese, softened",
+        "1 cup half-and-half, warmed",
+        "3 tbsp cornstarch",
+        "1 cup grated parmesan cheese",
+        "1 (8 oz) jar sun-dried tomatoes, rinsed and chopped",
+        "3 oz spinach, coarsely chopped",
+        "Salt and pepper, to taste"
+      ],
+      method: "Sauté onion and garlic, pressure cook chicken in broth 12&ndash;15 minutes, natural release 5 minutes, then stir in cream cheese, cornstarch slurry, parmesan, tomatoes, and spinach.",
+      source: "https://www.365daysofcrockpot.com/instant-pot-creamy-tuscan-chicken/",
+      sourceLabel: "365 Days of Crock Pot"
+    },
+    {
+      key: "chicken-taco-soup",
+      name: "Chicken Taco Soup",
+      desc: "Rotisserie chicken, beans, corn, and two kinds of chiles in a taco-seasoned broth.",
+      time: "45 min",
+      ingredients: [
+        "1 rotisserie chicken, shredded (~3 cups)",
+        "1/2 white onion, diced",
+        "1 tsp minced garlic",
+        "1 tbsp olive oil",
+        "1 (15 oz) can kidney beans, drained and rinsed",
+        "1 (15 oz) can pinto beans, drained and rinsed",
+        "1 (15.25 oz) can yellow corn, drained",
+        "1 (14.5 oz) can diced tomatoes",
+        "1 (10 oz) can diced tomatoes with jalapeños or Hatch chiles",
+        "1 (4 oz) can diced green chiles",
+        "1 (1 oz) packet ranch seasoning",
+        "1 (1 oz) packet taco seasoning",
+        "4 cups chicken broth",
+        "Optional: shredded cheese, avocado, cilantro, lime, tortilla chips, sour cream"
+      ],
+      method: "Sauté onion and garlic, dump in everything else, and pressure cook on the soup setting for 15 minutes. Natural release 10 minutes.",
+      source: "https://krollskorner.com/recipes/soups-stews/instant-pot-chicken-taco-soup/",
+      sourceLabel: "Kroll's Korner"
+    },
+    {
+      key: "cheesy-taco-pasta",
+      name: "Cheesy Taco Pasta",
+      desc: "Ground beef and shell pasta pressure-cooked together in taco-spiced broth, finished creamy.",
+      time: "~27 min",
+      ingredients: [
+        "1 lb ground beef (85/90%)",
+        "1 tbsp vegetable or avocado oil",
+        "1 medium yellow onion, diced",
+        "1 small poblano pepper or jalapeño, minced",
+        "3 cloves garlic, minced",
+        "2&ndash;3 tbsp taco seasoning",
+        "1/2 tsp kosher salt",
+        "1/2 tsp Mexican oregano, optional",
+        "16 oz box medium shell pasta",
+        "8 oz tomato sauce",
+        "8 oz picante sauce or salsa",
+        "4 cups reduced-sodium beef broth",
+        "2/3 cup heavy whipping cream",
+        "1 1/2 cups shredded Mexican cheese blend"
+      ],
+      method: "Brown the beef with onion, pepper, and garlic, add pasta and liquids, and pressure cook 4 minutes at high pressure. Quick release, then stir in cream and cheese.",
+      source: "https://www.thechunkychef.com/instant-pot-cheesy-taco-pasta/",
+      sourceLabel: "The Chunky Chef"
+    },
+    {
+      key: "teriyaki-chicken",
+      name: "Teriyaki Chicken",
+      desc: "Diced chicken breast in a sweet soy-garlic sauce, thickened at the end.",
+      time: "15 min",
+      ingredients: [
+        "2 lb boneless, skinless chicken breasts, diced",
+        "1/4 tsp salt",
+        "1/4 tsp black pepper",
+        "1/2 cup water",
+        "1/4 cup packed brown sugar",
+        "1/2 cup low-sodium soy sauce",
+        "2 tbsp apple cider vinegar",
+        "2 tsp minced garlic",
+        "1 tsp sesame oil",
+        "3 tbsp cornstarch + 3 tbsp water, for slurry",
+        "Rice, for serving"
+      ],
+      method: "Season chicken, dump in with the sauce ingredients, and pressure cook 5 minutes. Natural release 10 minutes, then thicken with the cornstarch slurry.",
+      source: "https://www.crunchycreamysweet.com/instant-pot-teriyaki-chicken/",
+      sourceLabel: "Crunchy Creamy Sweet"
+    },
+    {
+      key: "chicken-pot-pie-casserole",
+      name: "Chicken Pot Pie Casserole",
+      desc: "Layered chicken, green beans, mushrooms, corn, and stuffing under cream of chicken soup &mdash; a family favorite, no browning at all.",
+      time: "~35 min",
+      ingredients: [
+        "2 chicken breasts",
+        "1 can green beans, drained",
+        "1 can mushrooms, drained (or fresh)",
+        "1/4 cup frozen corn, or so, to taste",
+        "1 box stuffing mix",
+        "1 can cream of chicken soup",
+        "Water or chicken broth, to fill the empty soup can 2/3 to 3/4 full"
+      ],
+      method: "Layer in the Instant Pot in this order: chicken, green beans, mushrooms, corn, stuffing mix, then cream of chicken soup. Fill the empty soup can 2/3 to 3/4 with water or chicken broth and pour it in along the edges. Pressure cook on high for 15 minutes, then let it release naturally for 10 minutes. Shred the chicken with two forks and serve.",
+      personal: true,
+      attribution: "Your recipe &mdash; picked up from a Reddit thread years ago, original poster lost to time"
+    },
+    {
+      key: "cool-ranch-chicken-tacos",
+      name: "Cool Ranch Shredded Chicken Tacos",
+      desc: "Freezer-bag chicken in taco and ranch seasoning &mdash; a Family Freezer staple, adapted here for the Instant Pot.",
+      time: "~30 min thawed / ~40 min frozen",
+      ingredients: [
+        "2 lb boneless, skinless chicken breasts",
+        "3 tbsp olive oil",
+        "2 tbsp red wine vinegar",
+        "1 packet taco seasoning (or homemade blend)",
+        "1 packet dry ranch seasoning (or homemade blend)"
+      ],
+      method: "Combine everything in a gallon freezer bag and freeze up to 3 months, or use fresh. Dump into the Instant Pot and pressure cook on high about 12 minutes if thawed (18&ndash;20 minutes from frozen), then natural release 10 minutes. Shred the chicken and toss with the seasoned liquid left in the pot. (Instant Pot timing is an estimated conversion &mdash; the original recipe is written for the slow cooker.)",
+      source: "https://thefamilyfreezer.com/2016/03/30/cool-ranch-shredded-chicken-tacos-crockpot-recipe/",
+      sourceLabel: "The Family Freezer"
+    },
+    {
+      key: "crack-chicken",
+      name: "Crack Chicken",
+      desc: "Bacon, ranch-style herbs, and cream cheese turn freezer-bag chicken into a rich shredded filling &mdash; another Family Freezer staple, adapted for the Instant Pot.",
+      time: "~30 min thawed / ~40 min frozen",
+      ingredients: [
+        "2 lb boneless chicken breasts",
+        "1/2 cup real bacon bits",
+        "3 tbsp olive oil",
+        "2 tbsp red wine vinegar",
+        "1 tbsp dried parsley",
+        "1 tbsp onion powder",
+        "1 tsp garlic powder",
+        "1/2 tsp dried dill",
+        "1/2 tsp black pepper",
+        "1/2 tsp salt",
+        "8 oz cream cheese, added at cooking time only (not frozen with the rest)"
+      ],
+      method: "Freeze everything except the cream cheese in a gallon freezer bag up to 3 months, or use fresh. Dump the chicken and seasoning into the Instant Pot and pressure cook on high about 12 minutes if thawed (18&ndash;20 minutes from frozen), then natural release 10 minutes. Shred the chicken, stir in the cream cheese, and let it melt through. (Instant Pot timing is an estimated conversion &mdash; the original recipe is written for the slow cooker.)",
+      source: "https://thefamilyfreezer.com/2017/09/14/slow-cooker-crack-chicken-recipe/",
+      sourceLabel: "The Family Freezer"
+    },
+    {
+      key: "creamy-tomato-pasta",
+      name: "Creamy Tomato Pasta",
+      desc: "Dry pasta, broth, cream, and jarred sauce layered without stirring &mdash; a genuinely no-prep dump pasta.",
+      time: "~20 min",
+      ingredients: [
+        "8 oz short pasta (penne, rotini, ziti, etc.)",
+        "1 1/4 cups chicken broth",
+        "1 1/4 cups heavy cream",
+        "1 cup pasta sauce (red, your favorite brand)",
+        "1/2 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "1/2 tsp Italian seasoning",
+        "1/4 tsp red pepper flakes",
+        "Shredded parmesan, for serving"
+      ],
+      method: "Add the dry pasta, then pour in the broth and cream, making sure most of the pasta is submerged. Spoon the pasta sauce on top in the center, then add the spices &mdash; do not stir before cooking. Pressure cook on high for 6 minutes, then quick release. Stir together and serve, topped with shredded parmesan.",
+      personal: true,
+      attribution: "Found online &mdash; the link didn't come through in your message, so send it over if you want it added here"
+    },
+    {
+      key: "zatarains-dirty-rice",
+      name: "Zatarain's Dirty Rice",
+      desc: "Ground meat and a boxed Cajun rice mix &mdash; the simplest path to real dirty rice, though it needs a quick browning step first to avoid a rice burn warning.",
+      time: "~30 min",
+      ingredients: [
+        "1 tbsp olive oil",
+        "1 lb ground beef, turkey, pork, or venison",
+        "1 (8 oz) box Zatarain's Dirty Rice Mix",
+        "1 1/2 cups water"
+      ],
+      method: "Brown the ground meat in the Instant Pot on saut&eacute;, scraping up any browned bits. Stir in the water and rice mix. Pressure cook on high for 4 minutes, then natural release 5 minutes before releasing the rest. Fluff and serve. (This is one of two recipes here that needs a genuine browning step first &mdash; rice and ground meat together risk a burn warning in the Instant Pot without it.)",
+      source: "https://rosebakes.com/instant-pot-zatarains-dirty-rice/",
+      sourceLabel: "Rose Bakes"
+    },
+    {
+      key: "plain-rice-reference",
+      name: "Plain Rice (Quick Reference)",
+      desc: "Not a dinner on its own &mdash; the ratio and times for cooking rice to serve under Butter Chicken and Teriyaki Chicken.",
+      time: "3&ndash;32 min, by type",
+      ingredients: [
+        "1 cup rice, any variety",
+        "1 cup water",
+        "1/2 tsp sea salt"
+      ],
+      method: "Ratio is always 1:1, rice to water &mdash; no water evaporates in a sealed pot, so it's simpler than stovetop. Add rice, water, and salt, seal, and cook on high pressure for the time below, then let pressure release naturally until the pin drops:<br><br>White rice (basmati/jasmine): 3 min<br>White sushi rice: 5 min<br>Brown rice (basmati): 22 min<br>Brown rice (short-grain): 24 min<br>Red or black rice: 30 min<br>Wild rice blend: 28 min<br>Wild rice: 28&ndash;32 min, depending on texture<br><br>Remove the rice right away once it's done to keep it from sticking.",
+      source: "https://greenhealthycooking.com/instant-pot-rice/",
+      sourceLabel: "Green Healthy Cooking"
+    },
+    {
+      key: "level-1-spaghetti",
+      name: "Level 1 Spaghetti (No-Stir)",
+      desc: "Broken spaghetti and jarred sauce layered on a trivet and left completely unstirred until the pot's done, with notes for meatballs or browned ground meat.",
+      time: "~15 min (4 min high pressure)",
+      ingredients: [
+        "1 lb dried spaghetti, broken in half",
+        "1 (24 oz) jar spaghetti sauce",
+        "4 1/2 cups broth or water, divided",
+        "2 tbsp extra virgin olive oil",
+        "1 (14.5 oz) can crushed or diced seasoned tomatoes",
+        "2 bay leaves",
+        "Optional: pepper, garlic, basil (add after cooking), a shot glass of red wine, a dash of Worcestershire sauce",
+        "Optional meat: 1 lb 90/10 ground beef or Italian sausage, or frozen meatballs"
+      ],
+      method: "No-meat version: set a trivet in the pot and add 4 cups of the broth or water. Layer the broken noodles in a criss-cross pattern with spoonfuls of sauce, repeating until both are gone. Swirl the last 1/2 cup of broth in the empty sauce jar to rinse it out and pour that in, then add the can of tomatoes, olive oil, and garlic. Do not stir. Pressure cook on high for 4 minutes (drop to 3 if noodles come out mushy), quick release, remove the trivet, and stir for 2&ndash;3 minutes before serving.<br><br>Frozen meatballs: skip the trivet (the meatballs keep things off the bottom), don't stack them more than one layer deep, use 5 minutes instead of 4, and add an extra 1/2 cup of broth. A few more meatballs can go on top after layering the noodles and sauce.<br><br>Ground meat or sausage: brown and season it on saut&eacute; first, then remove, drain, and deglaze the pot before returning the meat. Skip the trivet, use the same 4-minute time, and add the extra 1/2 cup of broth.<br><br>It looks watery right when it's done &mdash; that mostly absorbs during the post-cook stir.",
+      source: "https://www.copymethat.com/r/PIdXxUu2L/level-1-spaghetti-without-all-the-back-s/",
+      sourceLabel: "CopyMeThat"
+    },
+    {
+      key: "hard-boiled-eggs-reference",
+      name: "5-5-5 Hard-Boiled Eggs (Quick Reference)",
+      desc: "Not a dinner either &mdash; the reliable ratio for perfect hard-boiled eggs in the Instant Pot.",
+      time: "~20 min total",
+      ingredients: [
+        "1 cup water (1.5 cups for an 8-quart pot)",
+        "Eggs, any amount that fits in a single layer",
+        "Trivet or steamer basket",
+        "Bowl of ice water"
+      ],
+      method: "Add the water to the inner pot, set the trivet or basket in, and arrange the eggs on top in a single layer. Seal and pressure cook on high for 5 minutes. Let it sit for a 5-minute natural release, then quick release the rest. Transfer the eggs straight to an ice bath for 5 minutes, then tap and peel under cool water.",
+      source: "https://www.theloveofspice.com/instant-pot-hard-boiled-eggs/",
+      sourceLabel: "The Love of Spice"
+    },
+    {
+      key: "baked-potatoes-reference",
+      name: "Baked Potatoes (Quick Reference)",
+      desc: "Not a dinner on its own &mdash; the trivet method and times for perfect baked potatoes in the Instant Pot.",
+      time: "12&ndash;20 min, by size",
+      ingredients: [
+        "Potatoes, any amount that fits on the trivet",
+        "1 cup water"
+      ],
+      method: "Scrub the potatoes and poke each one 4 to 6 times with a fork. Pour 1 cup of cold water into the pot and set the trivet in, then arrange the potatoes on top &mdash; stacking is fine if they fit. Seal and cook on high pressure: 12 minutes for small potatoes (under 2 inches), 14&ndash;15 minutes for medium (2&ndash;3 inches), 16&ndash;20 minutes for large (over 3 inches). Let the pressure release naturally for 10 minutes, then quick release the rest.",
+      source: "https://rosebakes.com/instant-pot-baked-potatoes/",
+      sourceLabel: "Rose Bakes"
+    },
+    {
+      key: "mashed-potatoes-reference",
+      name: "Mashed Potatoes (Quick Reference)",
+      desc: "Not a dinner on its own &mdash; potatoes steamed whole on a trivet, then mashed with warm dairy and butter.",
+      time: "~30 min (20 min high pressure)",
+      ingredients: [
+        "1 1/2 cups water",
+        "4 lb medium russet potatoes, peeled",
+        "2 cups half-and-half or whole milk",
+        "8 tbsp (1 stick) unsalted butter, room temperature",
+        "2 tsp kosher salt",
+        "Black pepper, optional"
+      ],
+      method: "Set a wire rack or trivet in the pot and pour in the water. Arrange the potatoes on the rack in an even layer. Seal and cook on high pressure for 20 minutes, then let the pressure release naturally. Meanwhile, warm the half-and-half or milk. Transfer the potatoes to a bowl and mash to the consistency you like, then fold in the warm dairy and the butter. Season with salt and pepper to taste.",
+      source: "https://www.thekitchn.com/recipe-instant-pot-mashed-potatoes-250982",
+      sourceLabel: "The Kitchn"
+    },
+    {
+      key: "tips-and-times-reference",
+      name: "Instant Pot Tips &amp; Cook Times (Quick Reference)",
+      desc: "Not a recipe &mdash; general operating tips plus a cheat sheet of common pressure-cook times, for whenever you're improvising off-list.",
+      time: "reference only",
+      ingredients: [
+        "Chicken breast, boneless (fresh): 6&ndash;8 min high pressure, 10-min natural release",
+        "Chicken thighs, bone-in: 9&ndash;10 min high pressure",
+        "Whole chicken (~3 lb): 20&ndash;25 min high pressure, full natural release",
+        "Ground beef or turkey: 4&ndash;5 min high pressure",
+        "Beef stew meat or cubes: 15&ndash;20 min high pressure, natural release",
+        "Chuck roast (3 lb): 45&ndash;60 min high pressure, natural release",
+        "Pork chops, bone-in: 2&ndash;5 min high pressure, quick release",
+        "Pork shoulder (3 lb): 55&ndash;60 min high pressure, natural release",
+        "Fish fillets, fresh: 2&ndash;3 min high pressure, quick release",
+        "White rice: 3&ndash;6 min high pressure, 1:1 ratio",
+        "Brown rice: 22&ndash;25 min high pressure, ~1:1.25 ratio",
+        "Dry black beans (no soak): 25&ndash;30 min high pressure, full natural release",
+        "Dry chickpeas (no soak): 40&ndash;50 min high pressure, full natural release",
+        "Lentils, brown or green: 10 min high pressure, no soak needed",
+        "Potatoes, cubed: 4 min high pressure",
+        "Potatoes, small and whole: 12 min high pressure",
+        "Carrots, sliced: 2&ndash;6 min high pressure depending on thickness",
+        "Broccoli florets: 0&ndash;1 min high pressure &mdash; barely needs any time",
+        "Corn on the cob: 3&ndash;4 min high pressure",
+        "Frozen chicken breast, boneless: 12&ndash;14 min high pressure, 10-min natural release",
+        "Frozen chicken thighs, bone-in: 12&ndash;15 min high pressure",
+        "Frozen whole chicken (~3 lb): 35&ndash;40 min high pressure, full natural release",
+        "Frozen ground meat or meatballs: add 3&ndash;5 min over the fresh time, breaking it apart once it's thawed enough to separate",
+        "Frozen beef stew meat or cubes: 20&ndash;25 min high pressure, natural release",
+        "Frozen chuck roast (3 lb): 60&ndash;75 min high pressure, full natural release",
+        "Frozen pork chops, bone-in: 8&ndash;10 min high pressure, quick release",
+        "Frozen pork shoulder (3 lb): 90 min high pressure, full natural release",
+        "Frozen fish fillets: 4&ndash;6 min high pressure, quick release",
+        "Frozen sausage links or brats: 8&ndash;10 min high pressure, quick release"
+      ],
+      method: "Use at least 1 cup of liquid &mdash; most pots need that minimum to build steam, and skimping is a common cause of the burn warning. Don't fill past two-thirds full for regular cooking, or past halfway for rice, beans, or anything that expands and foams as it cooks. Quick release (turn the valve to venting, hands and face clear) suits vegetables and delicate items you don't want to keep cooking during release; natural release &mdash; just letting it sit &mdash; suits meat, beans, and soups, where a slower pressure drop keeps things tender and avoids spatter. A 10-minute natural release followed by a quick release splits the difference and shows up in most dump recipes. Sauté with the lid off to brown meat or soften aromatics before sealing. Budget 5&ndash;15 minutes for the pot to come up to pressure and another 10&ndash;20 for release on top of the listed cook time &mdash; that gap is why a '15-minute' recipe can still take 45 minutes start to finish. The sealing ring holds onto odors, so it's worth keeping a second one just for sweet dishes if you cook a lot of both. Room-temperature ingredients bring the pot to pressure faster than cold-from-the-fridge ones.<br><br><strong>Cooking from frozen:</strong> the Instant Pot's own guidance and USDA food-safety rules both say it's fine to pressure cook meat straight from frozen &mdash; no thaw required, since the sealed pot moves it through the danger zone fast. A few things change, though. Skip the sauté-first sear; you can't brown a frozen block, so build flavor with seasoning, broth, and aromatics instead, or sear after cooking if you want color. Add roughly 50% more time than the fresh-meat number for whole pieces (chops, breasts, roasts) &mdash; frozen ground meat and meatballs need less of a bump since they separate as they thaw. Don't stack pieces that are frozen together in a solid block; separate them first or the inside will lag well behind the outside. Larger cuts (roasts, whole chicken, pork shoulder) want a full natural release so the center finishes evenly, while smaller cuts (chops, fillets, sausages) do fine with a quick release. However good the estimate, a frozen roast or thick cut is worth checking with a meat thermometer before serving &mdash; internal temp is what actually confirms it's done, not the clock.<br><br>A recipe that calls for sautéing meat first doesn't strictly need it &mdash; skipping that step is fine for a dump-and-go version. It just means the meat is going in more raw than it would otherwise be, so give it a couple of extra minutes at pressure to make sure it's fully cooked through.",
+      source: "https://www.paintthekitchenred.com/instant-pot-cooking-times-a-complete-guide/",
+      sourceLabel: "Paint the Kitchen Red"
+    },
+    {
+      key: "pantry-staples-reference",
+      name: "Pantry Staples for Instant Pot Cooking (Quick Reference)",
+      desc: "Not a recipe &mdash; the ingredients worth keeping stocked so a dump dinner is genuinely a five-minute decision, not a grocery run.",
+      time: "reference only",
+      ingredients: [
+        "Jarred minced garlic &mdash; skips the peeling and mincing entirely",
+        "Jarred minced or grated ginger",
+        "Onion powder and garlic powder, for when even jarred feels like too much",
+        "Low-sodium chicken and beef broth or bouillon (cubes or paste keep longer than cartons)",
+        "Canned diced tomatoes, tomato sauce, and tomato paste",
+        "Canned beans (black, pinto, kidney, cannellini) alongside a bag or two of dry beans",
+        "A neutral oil (vegetable or avocado) and a bottle of olive oil",
+        "Soy sauce, Worcestershire sauce, and a vinegar or two (apple cider, rice)",
+        "Cornstarch or flour, for last-minute thickening",
+        "A few seasoning packets on hand (taco, ranch, Italian) for instant flavor",
+        "Rice and a short pasta shape",
+        "Frozen chicken breasts or thighs, plus a bag of mixed frozen vegetables",
+        "Frozen mirepoix (diced onion, celery, and carrot) &mdash; skips the chopping for soups and stews entirely",
+        "Dehydrated (dried) minced garlic &mdash; a shelf-stable backup to jarred, no fridge space needed"
+      ],
+      method: "These are the ingredients that make dump cooking actually fast &mdash; the difference between a recipe that's '20 minutes of prep' and one that's 'open a few things and walk away.' Jarred garlic and ginger save the most time of anything on this list and keep for weeks in the fridge once opened. Broth and canned tomatoes are worth stocking a few of at a time since they turn up in nearly everything here, and a rotating stash of frozen chicken means there's always a protein ready to go without a store trip. Frozen mirepoix does for soups and stews what jarred garlic does for everything else &mdash; it goes straight from freezer to pot, no cutting board involved. Dehydrated garlic keeps indefinitely in the pantry, so it's worth having on hand for whenever the jarred or fresh runs out.",
+      source: "https://myhouseofzing.ca/2019/06/26/ingredients-for-instant-pot-success/",
+      sourceLabel: "My House of Zing"
+    },
+    {
+      key: "french-lentils-bacon-chicken",
+      name: "French Lentils with Bacon &amp; Chicken",
+      desc: "Bacon and aromatics browned first, then chicken and lentils pressure cooked together and reduced to a stew &mdash; more hands-on than the rest of this list, but worth it.",
+      time: "55 min total (20 min high pressure)",
+      ingredients: [
+        "2 tbsp extra-virgin olive oil, plus more for serving",
+        "1 (8 oz) slab bacon or pancetta, cut into 1/2-inch lardons",
+        "1 medium onion, diced (about 1 cup)",
+        "2 medium carrots, peeled and roughly chopped",
+        "8 oz dried French lentils, such as Le Puy",
+        "12 sprigs parsley, leaves chopped, stems tied together",
+        "2 bay leaves",
+        "2 1/2 lb bone-in, skin-on chicken pieces (thighs and drumsticks, or breasts)",
+        "1 quart low-sodium chicken stock",
+        "Kosher salt and freshly ground black pepper",
+        "2 tsp sherry vinegar, plus more to taste"
+      ],
+      method: "Heat the oil in the pressure cooker over medium-high and cook the bacon until it starts to crisp, about 1 minute. Add the onions and cook 2 minutes more, then add the carrots, lentils, parsley stems, bay leaves, chicken, and stock. Season lightly and stir. Seal and cook at high pressure for 20 minutes, then quick release. Pull the chicken out with tongs, discard the parsley stems, and simmer the lentils on high heat for about 5 minutes to thicken while you shred the chicken (discard bones and skin). Stir the chicken and vinegar back into the lentils, season to taste, and stir in half the chopped parsley. Serve with the remaining parsley, more vinegar, and a drizzle of olive oil at the table.",
+      personal: true,
+      attribution: "From Serious Eats &mdash; the exact recipe page wasn't included, just this text, so send the link if you'd like it added"
+    },
+    {
+      key: "black-beans-and-rice",
+      name: "Instant Pot Black Beans and Rice",
+      desc: "Dry beans and rice dumped in together with onion and garlic &mdash; mild enough for picky eaters, feeds a crowd.",
+      time: "1 hr (28 min high pressure)",
+      ingredients: [
+        "1 cup diced onion",
+        "4 cloves garlic, crushed and minced",
+        "2 cups brown rice",
+        "2 cups dry black beans",
+        "8 cups water",
+        "1 tsp salt",
+        "1&ndash;2 limes, optional",
+        "Avocado, optional",
+        "1 (4 oz) can diced green chiles, optional"
+      ],
+      method: "Dump the onion and garlic into the pot, then add the rice and beans. Pour in the water, add the salt, and stir in the green chiles if using. Seal and cook on manual/pressure cook for 28 minutes, then let the pressure release naturally (about 20&ndash;30 minutes). Scoop into bowls, squeeze lime over each, and garnish with avocado.",
+      personal: true,
+      attribution: "Found online &mdash; no link included, so send it over if you'd like it added here"
+    },
+    {
+      key: "split-pea-soup",
+      name: "Instant Pot Split Pea Soup",
+      desc: "Sautéed carrots, celery, and onion with ham and split peas, pressure cooked until creamy.",
+      time: "~1 hr (15 min high pressure)",
+      ingredients: [
+        "2 medium carrots, peeled and diced (about 1 cup)",
+        "2 medium celery stalks, diced (about 1 cup)",
+        "1/2 medium yellow onion, diced (about 1 cup)",
+        "2 cloves garlic, finely chopped",
+        "1 tbsp olive oil",
+        "1 bay leaf",
+        "1/2 tsp dried thyme",
+        "1/2 tsp kosher salt, plus more as needed",
+        "Freshly ground black pepper",
+        "1 lb dried green split peas (about 2 1/4 cups), picked over and rinsed",
+        "7&ndash;8 oz diced cooked ham (about 1 1/2 cups)",
+        "1 (32 oz) carton low-sodium chicken broth (4 cups)",
+        "2 cups water, plus more as needed"
+      ],
+      method: "Sauté the carrots, celery, onion, garlic, bay leaf, thyme, salt, and pepper in the olive oil until the onion softens, about 5 minutes. Add the split peas, ham, chicken broth, and water, and stir to combine. Seal and cook on high pressure for 15 minutes, then quick release. Discard the bay leaf and stir until creamy &mdash; thin with more water if it's too thick, and season to taste.",
+      source: "https://www.thekitchn.com/instant-pot-split-pea-soup-recipe-23281250",
+      sourceLabel: "The Kitchn"
+    },
+    {
+      key: "smoked-sausage-green-beans-potatoes",
+      name: "Smoked Sausage, Green Beans &amp; Potatoes",
+      desc: "Layered sausage, potatoes, and fresh green beans with butter on top &mdash; genuinely one minute at pressure.",
+      time: "~20 min (1 min high pressure)",
+      ingredients: [
+        "1 cup water",
+        "1 (12 oz) package pre-cooked smoked sausage, sliced into quarter-inch pieces",
+        "1 1/2 lb yellow, red, or russet potatoes, washed and cubed",
+        "1 lb fresh green beans, washed and trimmed",
+        "1 tsp black pepper",
+        "2 tsp seasoned salt",
+        "1 tsp garlic powder",
+        "4 tbsp butter, cut into 8 pieces"
+      ],
+      method: "Pour the water into the pot, then layer a third each of the sausage, potatoes, and green beans; repeat two more times. Sprinkle the pepper, seasoned salt, and garlic powder over the top, then scatter the butter pieces on top. Seal and pressure cook on high for just 1 minute, then let it sit 3&ndash;5 minutes before venting. Stir gently and serve.",
+      personal: true,
+      attribution: "Found online &mdash; no link included, so send it over if you'd like it added here"
+    },
+    {
+      key: "taco-blop",
+      name: "Taco Blop",
+      desc: "Ground meat, frozen peppers and onions, beans, and a small can of tomatoes, dumped in and broken up with a spatula. Liz's weekly regular.",
+      time: "~15 min (10 min high pressure)",
+      ingredients: [
+        "1 lb ground meat",
+        "1 frozen package sliced peppers &amp; onions",
+        "1&ndash;2 (15 oz) cans black beans, drained",
+        "1 (4 oz) can diced tomatoes, undrained",
+        "1 (4 oz) can diced jalapeños, optional, for spice",
+        "1/2 cup broth or water, optional",
+        "1 taco seasoning packet (or part of one), optional"
+      ],
+      method: "Put the ground meat in the pot raw and break it into rough chunks with a spatula. Add the frozen peppers and onions, the drained black beans, and the taco seasoning if using, along with the broth or water if using. Pour the diced tomatoes and jalapeños on top, undrained &mdash; skip the jalapeños for a milder batch. Seal and pressure cook on high for about 10 minutes. Serve in a bowl with chips, or in a tortilla with cheese and sour cream. A chicken breast or two works in place of the ground meat if you'd rather skip the breaking-up step.",
+      personal: true,
+      attribution: "Liz's own recipe &mdash; in weekly rotation for over a year"
+    },
+    {
+      key: "chicken-tikka-dump",
+      name: "Chicken Tikka",
+      desc: "Chicken breasts or thighs under a jar of tikka masala sauce &mdash; about as low-effort as this collection gets.",
+      time: "~15 min (10 min high pressure)",
+      ingredients: [
+        "2 chicken breasts or thighs",
+        "Frozen sliced peppers &amp; onions, optional",
+        "1 jar tikka masala sauce",
+        "1/2 cup water or broth",
+        "Samosas, for serving, optional"
+      ],
+      method: "Put the chicken in the pot, top with the frozen peppers and onions if using, then pour the sauce over everything. Add the water or broth. Seal and pressure cook on high for 10 minutes. Good with microwaved samosas on the side.",
+      personal: true,
+      attribution: "Liz's own recipe"
+    },
+    {
+      key: "pulled-pork-bbq",
+      name: "Pulled Pork",
+      desc: "Pork and a bottle of barbecue sauce, left alone for an hour, then shredded right in the pot.",
+      time: "~70 min (60 min high pressure)",
+      ingredients: [
+        "3&ndash;4 lb pork shoulder or butt, boneless",
+        "1 (18 oz) bottle barbecue sauce",
+        "Buns, for serving, optional"
+      ],
+      method: "Put the pork in the pot and pour the barbecue sauce over it. Seal and pressure cook on high for 60 minutes, then let it release naturally. Shred the pork right in the pot with two forks, stirring it through the sauce, and pile it onto buns. If the pot throws a burn warning before it comes up to pressure, a splash of water or broth poured in first fixes it without changing much else.",
+      personal: true,
+      attribution: "Liz's own recipe"
+    },
+    {
+      key: "cuban-black-beans-plantains",
+      name: "Cuban Black Beans with Fried Plantains",
+      desc: "Dried beans built up from sautéed aromatics, served over rice with pan-fried sweet plantains &mdash; more hands-on than the dump recipes, but still mostly a matter of waiting.",
+      time: "~50 min (25&ndash;30 min high pressure)",
+      ingredients: [
+        "1 lb dried black beans, rinsed and sorted",
+        "1 medium onion, diced",
+        "1 green or red bell pepper, diced",
+        "1 tbsp minced garlic",
+        "4 cups vegetable or chicken broth",
+        "2 tsp ground cumin",
+        "2 tsp dried oregano",
+        "2 bay leaves",
+        "1 tbsp tomato paste",
+        "2 tbsp vinegar (apple cider or sherry)",
+        "Salt and black pepper, to taste",
+        "2 ripe plantains, peeled and sliced diagonally",
+        "2&ndash;3 tbsp neutral or coconut oil, for frying",
+        "Pinch of sea salt, for the plantains",
+        "Rice, for serving",
+        "Optional: cilantro, diced avocado, lime, for garnish"
+      ],
+      method: "Turn the Instant Pot to sauté, add a little oil, and cook the onion and bell pepper 3&ndash;4 minutes until soft. Stir in the garlic, cumin, oregano, and tomato paste for 1 minute. Pour in the broth, then add the dried black beans and bay leaves. Seal and cook on high pressure for 25&ndash;30 minutes (15&ndash;20 if the beans were soaked overnight), then let the pressure release naturally for 15 minutes before releasing the rest. Stir in the vinegar, mash a few beans against the side of the pot to thicken the liquid, and season with salt. While the beans cook, heat the oil in a skillet over medium heat and fry the plantain slices 2&ndash;3 minutes per side until golden, then drain on a paper towel and sprinkle with sea salt. Serve the beans over rice, topped with the plantains and, if you like, cilantro, avocado, and a squeeze of lime.",
+      personal: true,
+      attribution: "Pasted recipe &mdash; no source link included, so send it over if you'd like it added here"
+    },
+    {
+      key: "curry-rice",
+      name: "Curry Rice",
+      desc: "Basmati rice and broth seasoned with curry powder, chicken layered on top &mdash; six minutes at pressure, then a warm hold to finish.",
+      time: "~30 min (6 min high pressure + 20 min warm)",
+      ingredients: [
+        "1 diced onion, or 1 cup frozen diced onion",
+        "2 cups basmati rice, well rinsed",
+        "2 cups chicken broth",
+        "1 tbsp chicken bouillon",
+        "2 tbsp curry powder",
+        "Black pepper, to taste",
+        "Boneless, skinless chicken thighs or breasts",
+        "1 diced red bell pepper, optional"
+      ],
+      method: "Add the onion, rice, broth, bouillon, curry powder, and pepper to the pot and stir well. Lay the chicken on top. Seal and pressure cook on high for 6 minutes, then let it switch to the warm setting for 20 minutes. Remove the chicken, fluff the rice, and stir in the diced red pepper if using. Serve the chicken whole or diced and mixed into the rice.",
+      personal: true,
+      attribution: "Liz's own recipe"
+    },
+    {
+      key: "butternut-squash-soup",
+      name: "Butternut Squash Soup",
+      desc: "Squash and aromatics pressure cooked in stock, blended smooth, and finished with cream &mdash; garam masala or a green chile pepper turns it Indian-spiced.",
+      time: "~20 min (8 min high pressure)",
+      ingredients: [
+        "1 butternut squash, peeled and chopped",
+        "1 onion, chopped",
+        "1 sweet pepper, chopped",
+        "1 clove garlic, chopped",
+        "1 liter (about 4 1/4 cups) vegetable stock",
+        "1/2 cup cream",
+        "1 tsp garam masala, optional",
+        "1 green chile pepper, chopped, optional"
+      ],
+      method: "Add the squash, onion, sweet pepper, garlic, and vegetable stock to the pot &mdash; stir in the garam masala or chile now if you're using either. Seal and pressure cook on high for 8 minutes, then quick release. Blend with an immersion blender, or in batches in a regular blender, if you want a smooth soup. Stir in the cream and serve.",
+      personal: true,
+      attribution: "Liz's own recipe &mdash; the original method boils this on the stovetop for 30 minutes; converted here to pressure cook instead"
+    },
+    {
+      key: "pressure-cooker-beef-stew",
+      name: "Pressure Cooker Beef Stew",
+      desc: "Seared beef, browned vegetables, and a gelatin-boosted stock reduced to a rich stew &mdash; the most involved recipe here, but a classic for a reason.",
+      time: "1 hr 20 min (two pressure-cook stages)",
+      ingredients: [
+        "3 cups low-sodium chicken stock",
+        "4 packets powdered unflavored gelatin (1 oz)",
+        "3 tbsp tomato paste",
+        "1 tbsp soy sauce",
+        "3 oil- or salt-packed anchovy fillets, rinsed (or 1 tbsp Asian fish sauce)",
+        "1 tbsp Worcestershire sauce",
+        "2 tbsp vegetable oil",
+        "3 lb whole boneless beef chuck roast, cut into 3 steaks",
+        "Kosher salt and freshly ground black pepper",
+        "10 oz white button mushrooms, quartered",
+        "4 medium carrots (2 left whole, 2 cut into bite-size pieces)",
+        "8 oz frozen or fresh pearl onions, peeled",
+        "1 large yellow onion, unpeeled, split in half",
+        "2 small ribs celery",
+        "3 medium cloves garlic, unpeeled",
+        "1 cup sherry, dry vermouth, or red wine",
+        "2 tbsp flour",
+        "2 bay leaves",
+        "4 sprigs thyme",
+        "1 lb Yukon Gold potatoes, peeled and cubed",
+        "4 oz frozen peas"
+      ],
+      method: "Blend the stock, gelatin, tomato paste, soy sauce, anchovies (or fish sauce), and Worcestershire until smooth; set aside. Sear the beef in the oil in the pressure cooker until browned on two sides, about 10 minutes, then set aside. Brown the mushrooms (about 6 minutes), then the chopped carrots and pearl onions, and set that batch aside too. Brown the halved onion cut-side down along with the whole carrots, celery, and garlic, about 4 minutes. Deglaze with the wine or sherry, reduce by three-quarters, then stir in the stock mixture. Cut the seared beef into chunks, toss with the flour, and add it back in with the bay leaves and thyme. Seal and cook at high pressure for 30 minutes, then quick release. Discard the whole carrot, celery, thyme, bay leaves, onion, and garlic. Add the potatoes and the reserved mushrooms, pearl onions, and chopped carrots, reseal, and cook 15 minutes more at high pressure. Quick release, stir in the peas, and season to taste. Keeps well and reheats for up to 5 days.",
+      personal: true,
+      attribution: "From Serious Eats &mdash; the exact recipe page wasn't included, just this text (reads like Kenji's pressure cooker beef stew)"
+    }
+  ];
+
+  var groceryGroups = [
+    {
+      title: "Meat & Poultry",
+      items: [
+        {n:"Beef chuck roast, boneless", q:"3 lb", p:26.97, r:["mississippi-pot-roast"]},
+        {n:"Beef chuck roast, boneless (for cubing)", q:"3–4 lb", p:31.47, r:["korean-beef"]},
+        {n:"Whole boneless beef chuck roast (cut into 3 steaks)", q:"3 lb", p:26.97, r:["pressure-cooker-beef-stew"]},
+        {n:"Chicken breasts, boneless skinless", q:"2 lb", p:7.98, r:["butter-chicken"]},
+        {n:"Chicken breasts, boneless skinless", q:"4 breasts (~2 lb)", p:7.98, r:["white-bean-green-chile-chili"]},
+        {n:"Chicken thighs or breasts, boneless skinless", q:"2 lb", p:5.98, r:["creamy-tuscan-chicken"]},
+        {n:"Chicken breasts, boneless skinless", q:"2 lb", p:7.98, r:["teriyaki-chicken"]},
+        {n:"Rotisserie chicken", q:"1 whole", p:8.99, r:["chicken-taco-soup"]},
+        {n:"Ground beef, 85/90%", q:"1 lb", p:5.99, r:["cheesy-taco-pasta"]},
+        {n:"Chicken breasts, boneless skinless", q:"2 large (~1.25 lb)", p:4.99, r:["ranch-white-chicken-chili"]},
+        {n:"Chicken breasts, boneless skinless", q:"2", p:3.99, r:["chicken-pot-pie-casserole"]},
+        {n:"Chicken breasts, boneless skinless", q:"2 lb", p:7.98, r:["cool-ranch-chicken-tacos"]},
+        {n:"Chicken breasts, boneless", q:"2 lb", p:7.98, r:["crack-chicken"]},
+        {n:"Chicken thighs or breasts, boneless skinless", q:"2 lb", p:7.98, r:["curry-rice"]},
+        {n:"Real bacon bits", q:"1/2 cup (jar)", p:3.49, r:["crack-chicken"]},
+        {n:"Ground beef, turkey, pork, or venison", q:"1 lb", p:5.99, r:["zatarains-dirty-rice"]},
+        {n:"Slab bacon or pancetta", q:"8 oz", p:5.99, r:["french-lentils-bacon-chicken"]},
+        {n:"Bone-in, skin-on chicken thighs and drumsticks", q:"2 1/2 lb", p:7.48, r:["french-lentils-bacon-chicken"]},
+        {n:"Diced cooked ham", q:"7–8 oz (~1 1/2 cups)", p:4.99, r:["split-pea-soup"]},
+        {n:"Pre-cooked smoked sausage", q:"1 (12 oz) package", p:3.99, r:["smoked-sausage-green-beans-potatoes"]},
+        {n:"Ground meat (beef, turkey, or your choice)", q:"1 lb", p:5.99, r:["taco-blop"]},
+        {n:"Chicken breasts or thighs", q:"2", p:5.99, r:["chicken-tikka-dump"]},
+        {n:"Pork shoulder or butt, boneless", q:"3–4 lb", p:12.99, r:["pulled-pork-bbq"]}
+      ]
+    },
+    {
+      title: "Produce",
+      items: [
+        {n:"Yellow or white onions", q:"10–11 medium (or sub 1 cup frozen diced onion for curry rice)", p:5.99, r:["butter-chicken","white-bean-green-chile-chili","ranch-white-chicken-chili","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","curry-rice"]},
+        {n:"Red bell pepper", q:"1, optional", p:0.99, r:["curry-rice"], note:"optional"},
+        {n:"Green or red bell pepper", q:"1", p:0.99, r:["cuban-black-beans-plantains"]},
+        {n:"Ripe plantains", q:"2", p:1.49, r:["cuban-black-beans-plantains"]},
+        {n:"Carrots", q:"8 medium", p:2.99, r:["french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup"]},
+        {n:"Celery", q:"4 small ribs", p:2.49, r:["pressure-cooker-beef-stew","split-pea-soup"]},
+        {n:"White button mushrooms", q:"10 oz", p:2.99, r:["pressure-cooker-beef-stew"]},
+        {n:"Yukon Gold potatoes", q:"1 lb", p:1.99, r:["pressure-cooker-beef-stew"]},
+        {n:"Potatoes for baking (russet or your choice)", q:"as many as you want", p:1.99, r:["baked-potatoes-reference"]},
+        {n:"Russet potatoes, for mashing", q:"4 lb", p:4.99, r:["mashed-potatoes-reference"]},
+        {n:"Yellow, red, or russet potatoes", q:"1 1/2 lb", p:2.29, r:["smoked-sausage-green-beans-potatoes"]},
+        {n:"Fresh green beans", q:"1 lb", p:2.49, r:["smoked-sausage-green-beans-potatoes"]},
+        {n:"Fresh thyme", q:"4 sprigs", p:2.49, r:["pressure-cooker-beef-stew"]},
+        {n:"Fresh parsley", q:"1 bunch (12 sprigs)", p:1.49, r:["french-lentils-bacon-chicken"]},
+        {n:"Garlic", q:"2 heads", p:1.98, r:["korean-beef","butter-chicken","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","teriyaki-chicken","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","butternut-squash-soup"]},
+        {n:"Fresh ginger", q:"1 knob", p:0.79, r:["korean-beef","butter-chicken"]},
+        {n:"Cauliflower", q:"1 small head", p:3.49, r:["butter-chicken"]},
+        {n:"Baby spinach", q:"3 oz", p:2.99, r:["creamy-tuscan-chicken"]},
+        {n:"Poblano pepper or jalapeño", q:"1 small", p:0.69, r:["cheesy-taco-pasta"]},
+        {n:"Fresh cilantro", q:"1 bunch", p:0.99, r:["butter-chicken","chicken-taco-soup","ranch-white-chicken-chili","black-bean-sweet-potato-chili","cuban-black-beans-plantains"], note:"garnish"},
+        {n:"Fresh basil", q:"optional", p:2.49, r:["level-1-spaghetti"], note:"optional"},
+        {n:"Limes", q:"2–3", p:1.47, r:["chicken-taco-soup","black-bean-sweet-potato-chili","black-beans-and-rice","cuban-black-beans-plantains"], note:"optional"},
+        {n:"Avocado", q:"1–2", p:2.58, r:["chicken-taco-soup","black-bean-sweet-potato-chili","black-beans-and-rice","cuban-black-beans-plantains"], note:"optional"},
+        {n:"Sweet potatoes", q:"3 medium (4 cups chopped)", p:3.49, r:["black-bean-sweet-potato-chili"]},
+        {n:"Butternut squash", q:"1 medium", p:3.99, r:["butternut-squash-soup"]},
+        {n:"Sweet pepper (bell pepper)", q:"1", p:0.99, r:["butternut-squash-soup"]},
+        {n:"Green chile pepper", q:"1, optional", p:0.69, r:["butternut-squash-soup"], note:"optional"}
+      ]
+    },
+    {
+      title: "Dairy & Refrigerated",
+      items: [
+        {n:"Unsalted butter", q:"2 sticks + 6 tbsp", p:4.99, r:["mississippi-pot-roast","butter-chicken","smoked-sausage-green-beans-potatoes","mashed-potatoes-reference"]},
+        {n:"Half-and-half", q:"3 1/2 cups", p:2.79, r:["butter-chicken","creamy-tuscan-chicken","mashed-potatoes-reference"]},
+        {n:"Plain nonfat Greek yogurt", q:"1/2 cup", p:1.29, r:["butter-chicken"]},
+        {n:"Cream cheese", q:"28 oz total (8+4+8+8 oz)", p:9.16, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","ranch-white-chicken-chili","crack-chicken"]},
+        {n:"Parmesan cheese, grated", q:"1 cup + a little extra for topping", p:4.49, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
+        {n:"Shredded Mexican cheese blend", q:"1 1/2 cups", p:3.49, r:["cheesy-taco-pasta"]},
+        {n:"Heavy cream", q:"2/3 cup + 1 1/4 cups + 1/2 cup (buy 1 pint)", p:3.99, r:["cheesy-taco-pasta","creamy-tomato-pasta","butternut-squash-soup"]},
+        {n:"Shredded cheese", q:"small bag", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional"},
+        {n:"Sour cream", q:"small tub", p:2.29, r:["chicken-taco-soup","taco-blop"], note:"optional"},
+        {n:"Eggs", q:"1 dozen", p:3.99, r:["hard-boiled-eggs-reference"], note:"optional"}
+      ]
+    },
+    {
+      title: "Canned & Jarred",
+      items: [
+        {n:"Tomato sauce", q:"28 oz + 8 oz cans", p:3.18, r:["butter-chicken","cheesy-taco-pasta"]},
+        {n:"Tomato paste", q:"4 tbsp (small can or tube)", p:1.49, r:["pressure-cooker-beef-stew","cuban-black-beans-plantains"]},
+        {n:"Picante sauce or salsa", q:"8 oz", p:2.49, r:["cheesy-taco-pasta"]},
+        {n:"Diced or crushed tomatoes", q:"2 (14.5 oz) cans", p:2.58, r:["chicken-taco-soup","level-1-spaghetti"]},
+        {n:"Diced tomatoes with jalapeños, Hatch chiles, or Rotel", q:"2 (10 oz) cans", p:2.98, r:["chicken-taco-soup","ranch-white-chicken-chili"]},
+        {n:"Diced green chiles", q:"4 oz + 4.3 oz + 4 oz cans", p:3.87, r:["chicken-taco-soup","white-bean-green-chile-chili","black-beans-and-rice"], note:"the third can is optional, for black beans and rice"},
+        {n:"White kidney (cannellini) beans", q:"19 oz can", p:1.79, r:["white-bean-green-chile-chili"]},
+        {n:"White beans (great northern or cannellini)", q:"15 oz can", p:1.29, r:["ranch-white-chicken-chili"]},
+        {n:"Black beans", q:"4–5 (15 oz) cans", p:5.36, r:["ranch-white-chicken-chili","black-bean-sweet-potato-chili","taco-blop"]},
+        {n:"Diced tomatoes (small can)", q:"1 (4 oz) can, undrained", p:0.79, r:["taco-blop"]},
+        {n:"Diced jalapeños (small can)", q:"1 (4 oz) can, optional", p:0.79, r:["taco-blop"], note:"optional, for spice"},
+        {n:"Tikka masala sauce", q:"1 jar", p:4.49, r:["chicken-tikka-dump"]},
+        {n:"Kidney beans", q:"15 oz can", p:1.19, r:["chicken-taco-soup"]},
+        {n:"Pinto beans", q:"15 oz can", p:1.19, r:["chicken-taco-soup"]},
+        {n:"Corn", q:"12 oz + 15.25 oz + 15 oz cans", p:3.27, r:["white-bean-green-chile-chili","chicken-taco-soup","ranch-white-chicken-chili"]},
+        {n:"Pepperoncini peppers", q:"12 oz jar", p:3.29, r:["mississippi-pot-roast"]},
+        {n:"Sun-dried tomatoes", q:"8 oz jar", p:5.99, r:["creamy-tuscan-chicken"]},
+        {n:"Gochujang sauce", q:"1 small jar", p:5.99, r:["korean-beef"]},
+        {n:"Chunky salsa", q:"15 oz jar", p:3.49, r:["black-bean-sweet-potato-chili"]},
+        {n:"Pasta sauce (marinara)", q:"2 (24 oz) jars", p:6.98, r:["creamy-tomato-pasta","level-1-spaghetti"]},
+        {n:"Bay leaves", q:"1 small jar", p:2.99, r:["level-1-spaghetti","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","cuban-black-beans-plantains"]},
+        {n:"Green beans", q:"1 can, drained", p:1.09, r:["chicken-pot-pie-casserole"]},
+        {n:"Mushrooms", q:"1 can, drained (or fresh)", p:1.49, r:["chicken-pot-pie-casserole"]},
+        {n:"Cream of chicken soup", q:"1 can", p:1.79, r:["chicken-pot-pie-casserole"]},
+        {n:"Powdered unflavored gelatin", q:"4 packets (1 oz)", p:3.99, r:["pressure-cooker-beef-stew"]},
+        {n:"Anchovy fillets (oil- or salt-packed) or Asian fish sauce", q:"3 fillets or 1 tbsp fish sauce", p:3.99, r:["pressure-cooker-beef-stew"]}
+      ]
+    },
+    {
+      title: "Frozen",
+      items: [
+        {n:"Frozen corn", q:"1/4 cup or so", p:1.99, r:["chicken-pot-pie-casserole"]},
+        {n:"Frozen or fresh pearl onions", q:"8 oz", p:2.99, r:["pressure-cooker-beef-stew"]},
+        {n:"Frozen peas", q:"4 oz", p:1.99, r:["pressure-cooker-beef-stew"]},
+        {n:"Frozen sliced peppers &amp; onions", q:"1 package", p:2.99, r:["taco-blop"]},
+        {n:"Frozen sliced peppers &amp; onions", q:"1 package, optional", p:2.99, r:["chicken-tikka-dump"], note:"optional"},
+        {n:"Samosas", q:"1 box, optional", p:5.99, r:["chicken-tikka-dump"], note:"optional, for serving"}
+      ]
+    },
+    {
+      title: "Broth & Sauces",
+      items: [
+        {n:"Chicken broth or stock", q:"~27 3/4 cups (seven 32 oz cartons)", p:15.33, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","chicken-taco-soup","ranch-white-chicken-chili","creamy-tomato-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","taco-blop","chicken-tikka-dump","cuban-black-beans-plantains","curry-rice"], note:"the taco blop 1/2 cup is optional; swap in vegetable broth for cuban black beans if you'd rather"},
+        {n:"Chicken bouillon", q:"1 tbsp (paste, granules, or cube)", p:3.49, r:["curry-rice"]},
+        {n:"Beef broth", q:"~4 1/4 cups (one 32 oz carton)", p:2.49, r:["korean-beef","cheesy-taco-pasta"]},
+        {n:"Soy sauce, reduced sodium", q:"1 cup + 1 tbsp total", p:3.49, r:["korean-beef","teriyaki-chicken","pressure-cooker-beef-stew"]},
+        {n:"Rice vinegar", q:"2 tbsp", p:2.99, r:["korean-beef"]},
+        {n:"Apple cider vinegar", q:"4 tbsp total", p:3.49, r:["teriyaki-chicken","cuban-black-beans-plantains"]},
+        {n:"Sesame oil", q:"2 tbsp + 1 tsp", p:4.99, r:["korean-beef","teriyaki-chicken"]},
+        {n:"Vegetable stock", q:"~5 1/4 cups (buy two 32 oz cartons)", p:4.98, r:["black-bean-sweet-potato-chili","butternut-squash-soup"]},
+        {n:"Olive oil", q:"~14 tbsp total, plus more for serving", p:5.99, r:["creamy-tuscan-chicken","chicken-taco-soup","cool-ranch-chicken-tacos","crack-chicken","zatarains-dirty-rice","french-lentils-bacon-chicken","level-1-spaghetti","split-pea-soup"]},
+        {n:"Vegetable oil", q:"~7 tbsp total", p:4.99, r:["mississippi-pot-roast","cheesy-taco-pasta","pressure-cooker-beef-stew","cuban-black-beans-plantains"]},
+        {n:"Sherry vinegar", q:"2 tsp, plus more to taste", p:6.99, r:["french-lentils-bacon-chicken"]},
+        {n:"Red wine vinegar", q:"4 tbsp total", p:3.49, r:["cool-ranch-chicken-tacos","crack-chicken"]},
+        {n:"Worcestershire sauce", q:"~1 tbsp + a dash", p:3.49, r:["pressure-cooker-beef-stew","level-1-spaghetti"], note:"the dash for spaghetti is optional"},
+        {n:"Sherry, dry vermouth, or red wine", q:"1 cup, plus an optional splash for spaghetti", p:9.99, r:["pressure-cooker-beef-stew","level-1-spaghetti"]},
+        {n:"Barbecue sauce", q:"1 (18 oz) bottle", p:3.49, r:["pulled-pork-bbq"]}
+      ]
+    },
+    {
+      title: "Spices, Seasoning Packets & Dry Goods",
+      items: [
+        {n:"Ranch seasoning or dip packets", q:"4", p:5.16, r:["mississippi-pot-roast","chicken-taco-soup","ranch-white-chicken-chili","cool-ranch-chicken-tacos"]},
+        {n:"Au jus gravy mix packets", q:"1–2", p:2.38, r:["mississippi-pot-roast"]},
+        {n:"Taco seasoning", q:"3–4 packets or ~6–8 tbsp", p:4.76, r:["chicken-taco-soup","cheesy-taco-pasta","cool-ranch-chicken-tacos","taco-blop"], note:"the taco blop packet is optional"},
+        {n:"Curry powder", q:"3 1/2 tbsp", p:3.99, r:["butter-chicken","curry-rice"]},
+        {n:"Basmati rice", q:"2 cups", p:3.99, r:["curry-rice"]},
+        {n:"Garam masala", q:"2 tsp + 1 tsp", p:4.99, r:["butter-chicken","butternut-squash-soup"], note:"the second addition is optional, for the Indian-spiced version"},
+        {n:"Chili powder", q:"small jar", p:3.49, r:["butter-chicken","white-bean-green-chile-chili","ranch-white-chicken-chili"]},
+        {n:"Ground cumin", q:"1 tsp + 1 tsp + 2 tsp", p:3.49, r:["ranch-white-chicken-chili","black-bean-sweet-potato-chili","cuban-black-beans-plantains"]},
+        {n:"Dried oregano", q:"2 tsp", p:2.99, r:["cuban-black-beans-plantains"]},
+        {n:"Smoked paprika", q:"1 tsp, optional", p:3.49, r:["black-bean-sweet-potato-chili"], note:"optional"},
+        {n:"Dried parsley", q:"1 tbsp", p:2.99, r:["crack-chicken"]},
+        {n:"Garlic powder", q:"1 tsp + 1/2 tsp + 1 tsp", p:2.99, r:["crack-chicken","creamy-tomato-pasta","smoked-sausage-green-beans-potatoes"]},
+        {n:"Seasoned salt", q:"2 tsp", p:2.99, r:["smoked-sausage-green-beans-potatoes"]},
+        {n:"Dried dill", q:"1/2 tsp", p:3.49, r:["crack-chicken"]},
+        {n:"Red pepper flakes", q:"1/4 tsp", p:2.99, r:["creamy-tomato-pasta"]},
+        {n:"Short pasta (penne, rotini, or ziti)", q:"8 oz", p:1.79, r:["creamy-tomato-pasta"]},
+        {n:"Italian seasoning", q:"1 tsp + 1/2 tsp", p:2.99, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
+        {n:"Mexican oregano", q:"optional", p:2.99, r:["cheesy-taco-pasta"], note:"optional"},
+        {n:"Brown sugar", q:"~2/3 cup", p:2.99, r:["korean-beef","teriyaki-chicken"]},
+        {n:"Cornstarch", q:"1 small box", p:2.49, r:["creamy-tuscan-chicken","teriyaki-chicken","white-bean-green-chile-chili"], note:"optional for the chili"},
+        {n:"Medium shell pasta", q:"16 oz box", p:1.99, r:["cheesy-taco-pasta"]},
+        {n:"Stuffing mix", q:"1 box", p:2.99, r:["chicken-pot-pie-casserole"]},
+        {n:"Zatarain's Dirty Rice Mix", q:"1 (8 oz) box", p:2.49, r:["zatarains-dirty-rice"]},
+        {n:"Hamburger buns", q:"1 package, optional", p:3.49, r:["pulled-pork-bbq"], note:"optional, for serving"},
+        {n:"Dried spaghetti", q:"1 lb box", p:1.79, r:["level-1-spaghetti"]},
+        {n:"Dried French lentils (such as Le Puy)", q:"8 oz", p:4.99, r:["french-lentils-bacon-chicken"]},
+        {n:"Brown rice", q:"2 cups", p:2.99, r:["black-beans-and-rice"]},
+        {n:"Dry black beans", q:"2 cups + 1 lb (~4 1/4 cups total)", p:6.98, r:["black-beans-and-rice","cuban-black-beans-plantains"]},
+        {n:"Dried thyme", q:"1/2 tsp", p:2.99, r:["split-pea-soup"]},
+        {n:"Dried green split peas", q:"1 lb (about 2 1/4 cups)", p:2.49, r:["split-pea-soup"]},
+        {n:"All-purpose flour", q:"2 tbsp", p:2.99, r:["pressure-cooker-beef-stew"], note:"likely already on hand"},
+        {n:"Rice, for serving", q:"your choice", p:3.49, r:["butter-chicken","teriyaki-chicken","plain-rice-reference","cuban-black-beans-plantains"]},
+        {n:"Tortilla chips", q:"optional", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional topping"},
+        {n:"Coconut oil", q:"1 tbsp", p:6.99, r:["butter-chicken"], note:"or sub olive oil"},
+        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","crack-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","plain-rice-reference","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","mashed-potatoes-reference","cuban-black-beans-plantains","curry-rice","butternut-squash-soup"], note:"likely already on hand"}
+      ]
+    }
+  ];
+
+  var recipeByKey = {};
+  recipes.forEach(function(r){ recipeByKey[r.key] = r; });
+
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  var SELECT_KEY = 'dumpAndDoneSelectedRecipes';
+  function loadSelected(){
+    try{
+      var raw = localStorage.getItem(SELECT_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveSelected(sel){
+    try{ localStorage.setItem(SELECT_KEY, JSON.stringify(sel)); }catch(e){}
+  }
+  function isSelected(sel, key){ return sel[key] !== false; }
+
+  function renderRecipes(){
+    var grid = document.getElementById('recipe-grid');
+    recipes.forEach(function(r, i){
+      var card = el('div', 'recipe');
+      card.setAttribute('data-key', r.key);
+
+      var toprow = el('div', 'recipe-toprow');
+      var check = el('span', 'recipe-check');
+      check.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      check.setAttribute('role', 'checkbox');
+      check.setAttribute('tabindex', '0');
+      check.setAttribute('aria-label', 'Include ' + r.name.replace(/<[^>]+>/g,'') + ' in grocery list');
+      check.addEventListener('click', function(){ toggleRecipe(r.key); });
+      check.addEventListener('keydown', function(ev){
+        if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); toggleRecipe(r.key); }
+      });
+
+      var head = el('button', 'recipe-head');
+      head.setAttribute('type', 'button');
+      head.setAttribute('aria-expanded', 'false');
+      head.innerHTML =
+        '<span class="recipe-num">' + String(i+1).padStart(2,'0') + '</span>' +
+        '<span class="recipe-titles"><p class="recipe-name">' + r.name + '</p><p class="recipe-desc">' + r.desc + '</p></span>' +
+        '<span class="recipe-meta"><span class="time-pill">' + r.time + '</span></span>' +
+        '<svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      head.addEventListener('click', function(){
+        var open = card.classList.toggle('open');
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      toprow.appendChild(check);
+      toprow.appendChild(head);
+
+      var body = el('div', 'recipe-body');
+      var ingH = el('h4', null, 'Ingredients');
+      var ul = el('ul', 'ing-list');
+      r.ingredients.forEach(function(ing){
+        var li = el('li', null, ing);
+        ul.appendChild(li);
+      });
+      var methodH = el('h4', null, 'Method');
+      var methodP = el('p', 'method', r.method);
+
+      body.appendChild(ingH);
+      body.appendChild(ul);
+      body.appendChild(methodH);
+      body.appendChild(methodP);
+
+      if(r.personal){
+        var attr = el('p', 'source-link', r.attribution);
+        attr.style.cursor = 'default';
+        body.appendChild(attr);
+      } else {
+        var link = el('a', 'source-link', 'Full recipe → ' + r.sourceLabel);
+        link.href = r.source;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        body.appendChild(link);
+      }
+
+      card.appendChild(toprow);
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+  }
+
+  var CHECK_KEY = 'dumpAndDoneCheckedItems';
+  function loadChecked(){
+    try{
+      var raw = localStorage.getItem(CHECK_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveChecked(state){
+    try{ localStorage.setItem(CHECK_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function fmt(n){ return '$' + n.toFixed(2); }
+
+  function renderGrocery(){
+    var container = document.getElementById('grocery-groups');
+    var checked = loadChecked();
+
+    groceryGroups.forEach(function(group, gi){
+      var groupEl = el('div', 'group');
+      groupEl.setAttribute('data-group', gi);
+      var titleEl = el('div', 'group-title');
+      titleEl.innerHTML = '<span class="group-title-label">' + group.title + ' <span class="group-count"></span></span><span class="group-subtotal"></span>';
+      groupEl.appendChild(titleEl);
+
+      group.items.forEach(function(item, ii){
+        var id = 'g' + gi + '-' + ii;
+        var row = el('div', 'item');
+        row.setAttribute('data-id', id);
+        row.setAttribute('data-price', item.p);
+        row.setAttribute('data-recipes', item.r.join(','));
+        if(checked[id]) row.classList.add('checked');
+        var priceHtml = item.p > 0 ? '<span class="item-price">' + fmt(item.p) + '</span>' : '<span class="item-price">on hand?</span>';
+        row.innerHTML =
+          '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div><div class="item-tags"></div></span>';
+        row.addEventListener('click', function(){
+          var isChecked = row.classList.toggle('checked');
+          checked[id] = isChecked;
+          saveChecked(checked);
+          applyFilter();
+        });
+        groupEl.appendChild(row);
+      });
+      container.appendChild(groupEl);
+    });
+  }
+
+  function recipeNamesFor(keys){
+    return keys.map(function(k){
+      var r = recipeByKey[k];
+      return r ? r.name.replace(/<[^>]+>/g,'') : k;
+    }).join(', ');
+  }
+
+  function applyFilter(){
+    var sel = loadSelected();
+    var checked = loadChecked();
+    var container = document.getElementById('grocery-groups');
+    var grandTotal = 0;
+    var totalVisible = 0;
+    var totalCheckedVisible = 0;
+
+    groceryGroups.forEach(function(group, gi){
+      var groupEl = container.querySelector('[data-group="' + gi + '"]');
+      var groupSubtotal = 0;
+      var visibleCount = 0;
+
+      group.items.forEach(function(item, ii){
+        var id = 'g' + gi + '-' + ii;
+        var row = groupEl.querySelector('[data-id="' + id + '"]');
+        var visible = item.r.some(function(k){ return isSelected(sel, k); });
+        row.style.display = visible ? '' : 'none';
+        var tagsEl = row.querySelector('.item-tags');
+        var caption = recipeNamesFor(item.r);
+        if(item.note) caption += ' — ' + item.note;
+        tagsEl.textContent = caption;
+        if(visible){
+          visibleCount++;
+          groupSubtotal += item.p;
+          grandTotal += item.p;
+          totalVisible++;
+          if(checked[id]) totalCheckedVisible++;
+        }
+      });
+
+      groupEl.style.display = visibleCount ? '' : 'none';
+      groupEl.querySelector('.group-count').textContent = visibleCount + ' item' + (visibleCount === 1 ? '' : 's');
+      groupEl.querySelector('.group-subtotal').textContent = fmt(groupSubtotal);
+    });
+
+    document.getElementById('grand-total').textContent = fmt(grandTotal);
+    document.getElementById('progress-label').textContent = totalCheckedVisible + ' / ' + totalVisible + ' checked';
+    document.getElementById('progress-fill').style.width = (totalVisible ? (totalCheckedVisible/totalVisible*100) : 0) + '%';
+
+    var selectedCount = recipes.filter(function(r){ return isSelected(sel, r.key); }).length;
+    document.getElementById('list-context-count').textContent = 'Built from ' + selectedCount + ' of ' + recipes.length + ' recipes';
+
+    document.getElementById('empty-state').style.display = totalVisible === 0 ? 'block' : 'none';
+    document.querySelectorAll('#panel-list .price-banner, #panel-list .list-context, #panel-list .progress-bar').forEach(function(elx){
+      elx.style.display = totalVisible === 0 ? 'none' : '';
+    });
+  }
+
+  function updateRecipeCheckboxes(){
+    var sel = loadSelected();
+    document.querySelectorAll('.recipe').forEach(function(card){
+      var key = card.getAttribute('data-key');
+      var on = isSelected(sel, key);
+      card.classList.toggle('excluded', !on);
+      var check = card.querySelector('.recipe-check');
+      check.classList.toggle('on', on);
+      check.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    var selectedCount = recipes.filter(function(r){ return isSelected(sel, r.key); }).length;
+    document.getElementById('select-count').textContent = selectedCount + ' of ' + recipes.length + ' selected';
+  }
+
+  function toggleRecipe(key){
+    var sel = loadSelected();
+    sel[key] = !isSelected(sel, key);
+    saveSelected(sel);
+    updateRecipeCheckboxes();
+    applyFilter();
+  }
+
+  function setAllRecipes(value){
+    var sel = {};
+    recipes.forEach(function(r){ sel[r.key] = value; });
+    saveSelected(sel);
+    updateRecipeCheckboxes();
+    applyFilter();
+  }
+
+  function activateTab(tab){
+    var isRecipes = tab === 'recipes';
+    document.getElementById('tab-recipes').setAttribute('aria-selected', isRecipes ? 'true' : 'false');
+    document.getElementById('tab-list').setAttribute('aria-selected', isRecipes ? 'false' : 'true');
+    document.getElementById('panel-recipes').classList.toggle('active', isRecipes);
+    document.getElementById('panel-list').classList.toggle('active', !isRecipes);
+  }
+
+  function setupControls(){
+    document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
+    document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
+    document.getElementById('select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
+    document.getElementById('select-none-btn').addEventListener('click', function(){ setAllRecipes(false); });
+    document.getElementById('empty-select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
+    document.getElementById('edit-selection-btn').addEventListener('click', function(){ activateTab('recipes'); });
+    document.getElementById('reset-btn').addEventListener('click', function(){
+      saveChecked({});
+      applyFilter();
+    });
+  }
+
+  renderRecipes();
+  renderGrocery();
+  setupControls();
+  updateRecipeCheckboxes();
+  applyFilter();
+</script>
