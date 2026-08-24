@@ -507,6 +507,21 @@
     color: var(--accent);
     cursor: pointer;
   }
+  .email-btn{
+    display: block;
+    margin: 10px auto 0;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .email-btn:hover{ background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .email-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
 
   footer{
     margin-top: 30px;
@@ -745,7 +760,7 @@
   <header class="masthead">
     <div class="eyebrow">Instant Pot &middot; No-Chop Rotation</div>
     <h1>Dump &amp; Done</h1>
-    <p class="sub">Thirty Instant Pot dinners, plus one dessert, mostly dump-and-go, pulled from well-reviewed recipe sources plus your own collection. Check off what you're making this week &mdash; the grocery list and price total narrow to match. Method and cook-time references live on the Techniques tab; what's already in the house lives on Pantry Builder.</p>
+    <p class="sub">Thirty-one Instant Pot dinners, plus one dessert, mostly dump-and-go, pulled from well-reviewed recipe sources plus your own collection. Check off what you're making this week &mdash; the grocery list and price total narrow to match. Method and cook-time references live on the Techniques tab; what's already in the house lives on Pantry Builder.</p>
     <div class="price-banner">
       <div class="price-banner-top">
         <span class="price-banner-label">Grocery list + pantry, combined</span>
@@ -753,6 +768,7 @@
       </div>
       <p class="price-banner-note">Grocery List total (still needed for selected recipes, net of anything checked off as on hand) plus Pantry Items total (what you've checked off as picked up), added together.</p>
     </div>
+    <button class="email-btn" id="email-menu-btn" type="button">Email this week's menu &amp; list to myself</button>
   </header>
 
   <div class="tabs" role="tablist">
@@ -819,10 +835,10 @@
   <section class="panel" id="panel-master" role="tabpanel" aria-labelledby="tab-master">
     <div class="price-banner">
       <div class="price-banner-top">
-        <span class="price-banner-label">Estimated total to buy</span>
+        <span class="price-banner-label">Total checked off</span>
         <span class="price-banner-total" id="master-total">$0.00</span>
       </div>
-      <p class="price-banner-note">Grocery List (from selected recipes) and Pantry Items, merged into one list by store section. Checking something off here means you already have it &mdash; same convention as the Grocery List tab. This has its own check-off state, separate from the Grocery List and Pantry Items tabs, so checking something off in one place doesn't check it off in another. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
+      <p class="price-banner-note">Grocery List (from selected recipes) and Pantry Items, merged into one list by store section. Check an item off as you actually pick it up, and its price gets added to the total &mdash; so this tracks what you've got in the cart, not what's left. This has its own check-off state, separate from the Grocery List and Pantry Items tabs, so checking something off in one place doesn't check it off in another. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
     </div>
     <div class="progress-bar">
       <span id="master-progress-label">0 / 0 checked</span>
@@ -1555,6 +1571,36 @@
       method: "Heat the coconut oil in the pot on sauté. Add the onion, season with a generous pinch of salt, and cook, stirring occasionally, until softened and translucent, about 5 minutes. Add the garlic and cook until fragrant, 1 minute, then stir in the curry paste until combined, 1 minute more. Stir in the brown sugar and turmeric, then add the sweet potatoes, 2 1/2 cups water, and the 1/2 teaspoon salt. Seal and cook on high pressure for 25 minutes. Let the pressure release naturally for 10 minutes, then release the rest manually. Stir thoroughly, letting some of the sweet potatoes fall apart to thicken the soup, then stir in the coconut milk and peanut butter. Purée with an immersion blender, then stir in the kale or spinach and lime juice and cook until the greens are wilted and tender, 3 to 5 minutes. Taste and adjust with cayenne, more salt, brown sugar, lime juice, or curry paste as needed. Serve with peanuts on top.",
       personal: true,
       attribution: "Adapted from NYT Cooking &mdash; no link included, so send it over if you'd like it added here."
+    },
+    {
+      key: "lentil-soup-sausage",
+      name: "Lentil Soup with Sausage",
+      desc: "Italian sausage browned with aromatics, then lentils and tomatoes pressure cooked into a hearty soup, finished with wilted greens and a splash of vinegar.",
+      time: "~35 min (10 min high pressure)",
+      ingredients: [
+        "Olive oil",
+        "1 large red or yellow onion, chopped",
+        "Kosher salt and black pepper",
+        "1 lb hot or sweet Italian sausage (pork, chicken, or turkey), casing removed",
+        "6 garlic cloves, chopped",
+        "1 tsp onion powder",
+        "1 tsp garlic powder",
+        "3 fresh thyme sprigs or 1 tsp dried thyme",
+        "2 tbsp fresh oregano or 1 tsp dried oregano",
+        "Generous pinch of red pepper flakes",
+        "3/4 cup dry white wine",
+        "1 (14 oz) can whole or chopped tomatoes",
+        "8 cups chicken stock",
+        "2 cups dried lentils, preferably black beluga",
+        "1 bay leaf",
+        "5 oz delicate leafy greens (baby spinach or baby kale) or 8 oz hearty greens (chard or collards), stemmed and chopped, fresh or frozen",
+        "1 tbsp red wine vinegar",
+        "Chopped fresh basil, for serving",
+        "Grated Parmesan, for serving"
+      ],
+      method: "Cover the bottom of the pot with a thin layer of olive oil. Add the onion, season lightly with salt, and cook on sauté, stirring constantly, until softened and translucent, about 5 minutes. Add the sausage and cook, breaking it into small pieces, until it starts to brown, about 5 minutes. Add the garlic, onion powder, garlic powder, thyme, oregano, red pepper flakes, and several grinds of pepper, and cook until fragrant, about 1 minute. Add the wine, scraping up any browned bits, and simmer until reduced by half, about 5 minutes. Add the tomatoes and their juices, crushing whole tomatoes with your hands as you add them, then add the chicken stock, lentils, and bay leaf, and season generously with pepper. Seal and cook on high pressure for 10 minutes, then let the pressure release naturally for 5 minutes before releasing the rest manually. Discard the thyme sprigs and bay leaf. Switch back to sauté, stir in the greens, and cook until wilted and tender, 2 to 5 minutes depending on the type. Stir in the vinegar and season to taste with salt and pepper. Divide among bowls and top with basil and Parmesan.",
+      personal: true,
+      attribution: "Adapted from NYT Cooking &mdash; no link included, so send it over if you'd like it added here."
     }
   ];
 
@@ -1582,13 +1628,14 @@
         {n:"Chicken breasts or thighs", q:"2", p:5.99, r:["chicken-tikka-dump"]},
         {n:"Pork shoulder or butt, boneless", q:"3–4 lb", p:12.99, r:["pulled-pork-bbq"]},
         {n:"Ground pork (or beef)", q:"8 oz", p:3.99, r:["mapo-tofu"]},
-        {n:"Prosciutto", q:"4 slices (about 2 oz)", p:5.99, r:["prosciutto-tortellini-peas"]}
+        {n:"Prosciutto", q:"4 slices (about 2 oz)", p:5.99, r:["prosciutto-tortellini-peas"]},
+        {n:"Italian sausage (pork, chicken, or turkey)", q:"1 lb, casing removed", p:5.49, r:["lentil-soup-sausage"]}
       ]
     },
     {
       title: "Produce",
       items: [
-        {n:"Yellow or white onions", q:"14–15 medium (or sub 1 cup frozen diced onion for curry rice)", p:5.99, r:["butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","curry-rice","chana-masala","saag-paneer","khichdi","sweet-potato-coconut-curry-soup"]},
+        {n:"Yellow or white onions", q:"15–16 medium (or sub 1 cup frozen diced onion for curry rice)", p:5.99, r:["butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","curry-rice","chana-masala","saag-paneer","khichdi","sweet-potato-coconut-curry-soup","lentil-soup-sausage"]},
         {n:"Red bell pepper", q:"1, optional", p:0.99, r:["curry-rice"], note:"optional"},
         {n:"Green or red bell pepper", q:"1", p:0.99, r:["cuban-black-beans-plantains"]},
         {n:"Ripe plantains", q:"2", p:1.49, r:["cuban-black-beans-plantains"]},
@@ -1598,15 +1645,15 @@
         {n:"Yukon Gold potatoes", q:"1 lb", p:1.99, r:["pressure-cooker-beef-stew"]},
         {n:"Yellow, red, or russet potatoes", q:"1 1/2 lb", p:2.29, r:["smoked-sausage-green-beans-potatoes"]},
         {n:"Fresh green beans", q:"1 lb", p:2.49, r:["smoked-sausage-green-beans-potatoes"]},
-        {n:"Fresh thyme", q:"4 sprigs", p:2.49, r:["pressure-cooker-beef-stew"]},
+        {n:"Fresh thyme", q:"4 sprigs + 3 sprigs (or 1 tsp dried)", p:2.49, r:["pressure-cooker-beef-stew","lentil-soup-sausage"]},
         {n:"Fresh parsley", q:"1 bunch (12 sprigs)", p:1.49, r:["french-lentils-bacon-chicken"]},
-        {n:"Garlic", q:"3–4 heads", p:1.98, r:["korean-beef","butter-chicken","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","teriyaki-chicken","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","sweet-potato-coconut-curry-soup"]},
+        {n:"Garlic", q:"4–5 heads", p:1.98, r:["korean-beef","butter-chicken","creamy-tuscan-chicken","chicken-taco-soup","cheesy-taco-pasta","teriyaki-chicken","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","cuban-black-beans-plantains","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","sweet-potato-coconut-curry-soup","lentil-soup-sausage"]},
         {n:"Fresh ginger", q:"2–3 knobs", p:0.79, r:["korean-beef","butter-chicken","chana-masala","saag-paneer","mapo-tofu","khichdi"]},
         {n:"Cauliflower", q:"1 small head", p:3.49, r:["butter-chicken"]},
-        {n:"Baby kale or spinach", q:"9–11 oz total", p:3.99, r:["creamy-tuscan-chicken","sweet-potato-coconut-curry-soup"]},
+        {n:"Baby kale or spinach", q:"14–16 oz total (or sub 8 oz chard or collards for the lentil soup)", p:3.99, r:["creamy-tuscan-chicken","sweet-potato-coconut-curry-soup","lentil-soup-sausage"]},
         {n:"Poblano pepper or jalapeño", q:"1 small", p:0.69, r:["cheesy-taco-pasta"]},
         {n:"Fresh cilantro", q:"1 bunch", p:0.99, r:["butter-chicken","chicken-taco-soup","black-bean-sweet-potato-chili","cuban-black-beans-plantains","chana-masala","khichdi"], note:"garnish"},
-        {n:"Fresh basil", q:"optional", p:2.49, r:["level-1-spaghetti"], note:"optional"},
+        {n:"Fresh basil", q:"optional", p:2.49, r:["level-1-spaghetti","lentil-soup-sausage"], note:"optional"},
         {n:"Limes", q:"3–4", p:1.47, r:["chicken-taco-soup","black-bean-sweet-potato-chili","black-beans-and-rice","cuban-black-beans-plantains","sweet-potato-coconut-curry-soup"], note:"optional for the others; required for the curry soup"},
         {n:"Avocado", q:"1–2", p:2.58, r:["chicken-taco-soup","black-bean-sweet-potato-chili","black-beans-and-rice","cuban-black-beans-plantains"], note:"optional"},
         {n:"Sweet potatoes", q:"3 medium (4 cups chopped) + 2 1/2 lb", p:3.49, r:["black-bean-sweet-potato-chili","sweet-potato-coconut-curry-soup"]},
@@ -1618,6 +1665,7 @@
         {n:"Fresh spinach", q:"1 bunch (~8 oz)", p:2.49, r:["saag-paneer"]},
         {n:"Green chile peppers", q:"2, optional", p:0.99, r:["saag-paneer"], note:"optional"},
         {n:"Scallions", q:"2 tbsp sliced (about 2 stalks)", p:1.29, r:["mapo-tofu"]},
+        {n:"Fresh oregano", q:"2 tbsp (or 1 tsp dried)", p:2.49, r:["lentil-soup-sausage"]},
         {n:"Shallot", q:"1", p:0.79, r:["prosciutto-tortellini-peas"]},
         {n:"Lemon", q:"1/2", p:0.69, r:["prosciutto-tortellini-peas","rice-pudding"]}
       ]
@@ -1629,7 +1677,7 @@
         {n:"Half-and-half", q:"3 1/2 cups", p:2.79, r:["butter-chicken","creamy-tuscan-chicken"]},
         {n:"Plain nonfat Greek yogurt", q:"1/2 cup, plus more for serving", p:1.29, r:["butter-chicken","khichdi"]},
         {n:"Cream cheese", q:"12 oz total (8+4 oz)", p:3.44, r:["creamy-tuscan-chicken","white-bean-green-chile-chili"]},
-        {n:"Parmesan cheese, grated", q:"1 cup + a little extra for topping", p:4.49, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
+        {n:"Parmesan cheese, grated", q:"1 cup + a little extra for topping", p:4.49, r:["creamy-tuscan-chicken","creamy-tomato-pasta","lentil-soup-sausage"]},
         {n:"Shredded Mexican cheese blend", q:"1 1/2 cups", p:3.49, r:["cheesy-taco-pasta"]},
         {n:"Heavy cream", q:"2/3 cup + 1 1/4 cups + 1/2 cup + 1 cup + 1/2 cup (buy 1 quart)", p:3.99, r:["cheesy-taco-pasta","creamy-tomato-pasta","butternut-squash-soup","prosciutto-tortellini-peas","rice-pudding"]},
         {n:"Shredded cheese", q:"small bag", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional"},
@@ -1665,14 +1713,15 @@
         {n:"Gochujang sauce", q:"1 small jar", p:5.99, r:["korean-beef"]},
         {n:"Chunky salsa", q:"15 oz jar", p:3.49, r:["black-bean-sweet-potato-chili"]},
         {n:"Pasta sauce (marinara)", q:"2 (24 oz) jars", p:6.98, r:["creamy-tomato-pasta","level-1-spaghetti"]},
-        {n:"Bay leaves", q:"1 small jar", p:2.99, r:["level-1-spaghetti","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","cuban-black-beans-plantains"]},
+        {n:"Bay leaves", q:"1 small jar", p:2.99, r:["level-1-spaghetti","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","cuban-black-beans-plantains","lentil-soup-sausage"]},
         {n:"Green beans", q:"1 can, drained", p:1.09, r:["chicken-pot-pie-casserole"]},
         {n:"Mushrooms", q:"1 can, drained (or fresh)", p:1.49, r:["chicken-pot-pie-casserole"]},
         {n:"Cream of chicken soup", q:"1 can", p:1.79, r:["chicken-pot-pie-casserole"]},
         {n:"Powdered unflavored gelatin", q:"4 packets (1 oz)", p:3.99, r:["pressure-cooker-beef-stew"]},
         {n:"Anchovy fillets (oil- or salt-packed) or Asian fish sauce", q:"3 fillets or 1 tbsp fish sauce", p:3.99, r:["pressure-cooker-beef-stew"]},
         {n:"Red curry paste", q:"1 (4 oz) jar (1/2 cup), plus more to taste", p:3.99, r:["sweet-potato-coconut-curry-soup"]},
-        {n:"Coconut milk, canned (full-fat)", q:"1 (13 oz) can", p:2.49, r:["sweet-potato-coconut-curry-soup"]}
+        {n:"Coconut milk, canned (full-fat)", q:"1 (13 oz) can", p:2.49, r:["sweet-potato-coconut-curry-soup"]},
+        {n:"Canned whole or chopped tomatoes", q:"1 (14 oz) can", p:1.79, r:["lentil-soup-sausage"]}
       ]
     },
     {
@@ -1690,7 +1739,7 @@
     {
       title: "Broth & Sauces",
       items: [
-        {n:"Chicken broth or stock", q:"~29 1/4 cups (eight 32 oz cartons)", p:15.33, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","chicken-taco-soup","creamy-tomato-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","taco-blop","chicken-tikka-dump","cuban-black-beans-plantains","curry-rice","mapo-tofu","prosciutto-tortellini-peas"], note:"the taco blop 1/2 cup is optional; swap in vegetable broth for cuban black beans if you'd rather"},
+        {n:"Chicken broth or stock", q:"~37 1/4 cups (ten 32 oz cartons)", p:19.17, r:["creamy-tuscan-chicken","white-bean-green-chile-chili","chicken-taco-soup","creamy-tomato-pasta","french-lentils-bacon-chicken","pressure-cooker-beef-stew","split-pea-soup","taco-blop","chicken-tikka-dump","cuban-black-beans-plantains","curry-rice","mapo-tofu","prosciutto-tortellini-peas","lentil-soup-sausage"], note:"the taco blop 1/2 cup is optional; swap in vegetable broth for cuban black beans if you'd rather"},
         {n:"Chicken bouillon", q:"1 tbsp (paste, granules, or cube)", p:3.49, r:["curry-rice"]},
         {n:"Beef broth", q:"~4 1/4 cups (one 32 oz carton)", p:2.49, r:["korean-beef","cheesy-taco-pasta"]},
         {n:"Soy sauce, reduced sodium", q:"1 cup + 2 tbsp total", p:3.49, r:["korean-beef","teriyaki-chicken","pressure-cooker-beef-stew","mapo-tofu"]},
@@ -1698,12 +1747,14 @@
         {n:"Apple cider vinegar", q:"4 tbsp total", p:3.49, r:["teriyaki-chicken","cuban-black-beans-plantains"]},
         {n:"Sesame oil", q:"2 tbsp + 2 tsp", p:4.99, r:["korean-beef","teriyaki-chicken","mapo-tofu"]},
         {n:"Vegetable stock", q:"~5 1/4 cups (buy two 32 oz cartons)", p:4.98, r:["black-bean-sweet-potato-chili","butternut-squash-soup"]},
-        {n:"Olive oil", q:"~8 tbsp total, plus more for serving", p:5.99, r:["creamy-tuscan-chicken","chicken-taco-soup","zatarains-dirty-rice","french-lentils-bacon-chicken","level-1-spaghetti","split-pea-soup"]},
+        {n:"Olive oil", q:"~9 tbsp total, plus more for serving", p:5.99, r:["creamy-tuscan-chicken","chicken-taco-soup","zatarains-dirty-rice","french-lentils-bacon-chicken","level-1-spaghetti","split-pea-soup","lentil-soup-sausage"]},
         {n:"Vegetable oil", q:"~11 tbsp total", p:4.99, r:["mississippi-pot-roast","cheesy-taco-pasta","pressure-cooker-beef-stew","cuban-black-beans-plantains","mapo-tofu"]},
         {n:"Sherry vinegar", q:"2 tsp, plus more to taste", p:6.99, r:["french-lentils-bacon-chicken"]},
         {n:"Worcestershire sauce", q:"~1 tbsp + a dash", p:3.49, r:["pressure-cooker-beef-stew","level-1-spaghetti"], note:"the dash for spaghetti is optional"},
         {n:"Sherry, dry vermouth, or red wine", q:"1 cup, plus an optional splash for spaghetti", p:9.99, r:["pressure-cooker-beef-stew","level-1-spaghetti"]},
         {n:"Barbecue sauce", q:"1 (18 oz) bottle", p:3.49, r:["pulled-pork-bbq"]},
+        {n:"Dry white wine", q:"3/4 cup", p:8.99, r:["lentil-soup-sausage"]},
+        {n:"Red wine vinegar", q:"1 tbsp", p:3.49, r:["lentil-soup-sausage"]},
         {n:"Doubanjiang (fermented chile bean sauce)", q:"2 tbsp (buy a small jar)", p:5.99, r:["mapo-tofu"]},
         {n:"Chinkiang (black) vinegar", q:"1 tsp (buy a small bottle)", p:4.99, r:["mapo-tofu"]}
       ]
@@ -1721,9 +1772,9 @@
         {n:"Ground cumin", q:"1 tsp + 2 tsp", p:3.49, r:["black-bean-sweet-potato-chili","cuban-black-beans-plantains"]},
         {n:"Dried oregano", q:"2 tsp", p:2.99, r:["cuban-black-beans-plantains"]},
         {n:"Smoked paprika", q:"1 tsp, optional", p:3.49, r:["black-bean-sweet-potato-chili"], note:"optional"},
-        {n:"Garlic powder", q:"1/2 tsp + 1 tsp", p:2.99, r:["creamy-tomato-pasta","smoked-sausage-green-beans-potatoes"]},
+        {n:"Garlic powder", q:"1/2 tsp + 1 tsp + 1 tsp", p:2.99, r:["creamy-tomato-pasta","smoked-sausage-green-beans-potatoes","lentil-soup-sausage"]},
         {n:"Seasoned salt", q:"2 tsp", p:2.99, r:["smoked-sausage-green-beans-potatoes"]},
-        {n:"Red pepper flakes", q:"1/4 tsp", p:2.99, r:["creamy-tomato-pasta"]},
+        {n:"Red pepper flakes", q:"1/4 tsp + a pinch", p:2.99, r:["creamy-tomato-pasta","lentil-soup-sausage"]},
         {n:"Short pasta (penne, rotini, or ziti)", q:"8 oz", p:1.79, r:["creamy-tomato-pasta"]},
         {n:"Italian seasoning", q:"1 tsp + 1/2 tsp", p:2.99, r:["creamy-tuscan-chicken","creamy-tomato-pasta"]},
         {n:"Mexican oregano", q:"optional", p:2.99, r:["cheesy-taco-pasta"], note:"optional"},
@@ -1743,7 +1794,7 @@
         {n:"Rice, for serving", q:"your choice", p:3.49, r:["butter-chicken","teriyaki-chicken","cuban-black-beans-plantains","chana-masala","saag-paneer","mapo-tofu"]},
         {n:"Tortilla chips", q:"optional", p:3.49, r:["chicken-taco-soup","taco-blop"], note:"optional topping"},
         {n:"Coconut oil", q:"1 tbsp + 2 tbsp", p:6.99, r:["butter-chicken","sweet-potato-coconut-curry-soup"], note:"or sub olive oil for the butter chicken"},
-        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","prosciutto-tortellini-peas","khichdi","rice-pudding","sweet-potato-coconut-curry-soup"], note:"likely already on hand"},
+        {n:"Kosher salt, black pepper, onion powder", q:"pantry check", p:0, r:["korean-beef","butter-chicken","white-bean-green-chile-chili","creamy-tuscan-chicken","cheesy-taco-pasta","teriyaki-chicken","creamy-tomato-pasta","black-bean-sweet-potato-chili","french-lentils-bacon-chicken","pressure-cooker-beef-stew","black-beans-and-rice","split-pea-soup","smoked-sausage-green-beans-potatoes","cuban-black-beans-plantains","curry-rice","butternut-squash-soup","chana-masala","saag-paneer","mapo-tofu","prosciutto-tortellini-peas","khichdi","rice-pudding","sweet-potato-coconut-curry-soup","lentil-soup-sausage"], note:"likely already on hand"},
         {n:"Cumin seeds", q:"1 tsp + 1/4 tsp + 1 1/2 tsp", p:3.49, r:["chana-masala","saag-paneer","khichdi"]},
         {n:"Ground coriander", q:"1 tbsp + 2 tsp", p:3.49, r:["chana-masala","saag-paneer"]},
         {n:"Ground turmeric", q:"1/4 tsp + 1/2 tsp + 1/2 tsp + 1 tsp", p:3.49, r:["chana-masala","saag-paneer","khichdi","sweet-potato-coconut-curry-soup"]},
@@ -1764,7 +1815,8 @@
         {n:"Ground cinnamon or cardamom", q:"for serving, optional", p:3.49, r:["rice-pudding"], note:"optional"},
         {n:"Peanut butter, smooth natural", q:"3/4 cup", p:4.99, r:["sweet-potato-coconut-curry-soup"]},
         {n:"Ground cayenne", q:"pinch, optional", p:3.49, r:["sweet-potato-coconut-curry-soup"], note:"optional"},
-        {n:"Roasted, salted peanuts", q:"chopped, for serving", p:3.49, r:["sweet-potato-coconut-curry-soup"]}
+        {n:"Roasted, salted peanuts", q:"chopped, for serving", p:3.49, r:["sweet-potato-coconut-curry-soup"]},
+        {n:"Dried lentils, preferably black beluga (or brown/green)", q:"2 cups", p:4.49, r:["lentil-soup-sausage"]}
       ]
     }
   ];
@@ -2537,6 +2589,63 @@
     document.getElementById('combined-total').textContent = fmt(groceryGrandTotal + pantryGrandTotal);
   }
 
+  function decodeEntities(html){
+    var ta = document.createElement('textarea');
+    ta.innerHTML = html;
+    return ta.value;
+  }
+
+  // Plain-text menu + still-needed grocery list, for the "email to myself"
+  // button. Capped well under typical mailto: URL limits.
+  function buildMenuAndListText(){
+    var sel = loadSelected();
+    var checked = loadChecked();
+    var lines = [];
+
+    var menuNames = recipes.filter(function(r){ return isSelected(sel, r.key); }).map(function(r){ return decodeEntities(r.name); });
+    lines.push("THIS WEEK'S MENU (" + menuNames.length + ")");
+    if(menuNames.length){
+      menuNames.forEach(function(n){ lines.push('- ' + n); });
+    } else {
+      lines.push('(nothing selected)');
+    }
+
+    lines.push('');
+    lines.push('GROCERY LIST (still needed)');
+    var sawAny = false;
+    groceryGroups.forEach(function(group, gi){
+      var groupLines = [];
+      group.items.forEach(function(item, ii){
+        var visible = item.r.some(function(k){ return isSelected(sel, k); });
+        if(!visible) return;
+        var id = 'g' + gi + '-' + ii;
+        if(checked[id]) return;
+        groupLines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
+        sawAny = true;
+      });
+      if(groupLines.length){
+        lines.push('');
+        lines.push(decodeEntities(group.title).toUpperCase());
+        lines = lines.concat(groupLines);
+      }
+    });
+    if(!sawAny) lines.push('(nothing needed)');
+
+    var text = lines.join('\n');
+    var LIMIT = 1500;
+    if(text.length > LIMIT){
+      text = text.slice(0, LIMIT) + '\n...(list truncated -- open the app to see the rest)';
+    }
+    return text;
+  }
+
+  function emailMenuAndList(){
+    var today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    var subject = 'Dump & Done - Menu & Grocery List (' + today + ')';
+    var body = buildMenuAndListText();
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   function updatePantryTotals(){
     var checked = loadPantryChecked();
     var total = 0;
@@ -2628,7 +2737,6 @@
           '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div><div class="item-tags">' + item.caption + '</div></span>';
         if(checked[item.id]){
           totalChecked++;
-        } else {
           groupSubtotal += item.p;
           grandTotal += item.p;
         }
@@ -2961,6 +3069,7 @@
   }
 
   function setupControls(){
+    document.getElementById('email-menu-btn').addEventListener('click', emailMenuAndList);
     document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
     document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
