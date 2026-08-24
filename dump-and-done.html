@@ -1709,14 +1709,15 @@
     {
       key: "five-slot-method",
       name: "The Five-Slot Method",
-      desc: "The rule the Pantry Builder runs on &mdash; every dump-and-go dinner is the same five slots, so you pick from columns instead of hunting a recipe.",
+      desc: "The rule the Pantry Builder runs on &mdash; every dump-and-go dinner comes from the same set of columns, so you pick from them instead of hunting a recipe. (Vegetable split out from Bulk as its own column since; the name stuck.)",
       time: "the whole system",
       listLabel: "The slots",
       ingredients: [
         "<strong>Liquid</strong> &mdash; thin and water-based. This is what builds steam. Exactly one, always required.",
         "<strong>Protein</strong> &mdash; meat, beans, lentils, eggs. Exactly one.",
         "<strong>Flavor</strong> &mdash; jarred sauce, paste, seasoning packet, aromatics. Exactly one. This is the slot that does the most work for the least effort.",
-        "<strong>Bulk</strong> &mdash; grain, pasta, potato, frozen vegetable. Optional, up to two.",
+        "<strong>Bulk</strong> &mdash; grain, pasta, or potato. Optional, up to two.",
+        "<strong>Vegetable</strong> &mdash; frozen or canned, for volume and nutrition. Optional, up to two.",
         "<strong>Fat and acid</strong> &mdash; dairy, oil, coconut milk, citrus, vinegar. Optional, up to two, almost always stirred in after cooking."
       ],
       method: "Pick one from each required column, dump, seal, walk away. That is the entire decision. The point of the system is that it removes the choosing: you are not deciding what to make, you are checking what is in the house and reading off what is already possible.<br><br>Jarred pastes and sauces are the single biggest lever in the whole method &mdash; one spoonful replaces six chopping steps. Frozen diced onion, frozen mirepoix, and jarred garlic do the same thing for aromatics. Buying the same handful of flavor bases over and over is not a failure of imagination, it is what makes the texture and taste predictable week to week.<br><br>The Pantry Builder tab enumerates these combinations for you from whatever you have checked off. Nothing there is authored as a recipe. It is all computed from the slots."
@@ -1918,10 +1919,8 @@
     {id:"white-rice", name:"White rice", slot:"bulk", aisle:"pantry", price:2.99, unit:"2 lb bag", cookMinutes:4, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
     {id:"brown-rice", name:"Brown rice", slot:"bulk", aisle:"pantry", price:3.49, unit:"2 lb bag", cookMinutes:22, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
     {id:"baby-potatoes", name:"Baby potatoes, whole", slot:"bulk", aisle:"produce", price:3.99, unit:"1.5 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["not-bag-safe","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:3},
-    {id:"frozen-mixed-vegetables", name:"Frozen mixed vegetables", slot:"bulk", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"frozen-diced-onion", name:"Frozen diced onion", slot:"bulk", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","aromatic","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:6},
     {id:"short-pasta-dry", name:"Short pasta (penne/rotini), dry", slot:"bulk", aisle:"pantry", price:1.79, unit:"16 oz box", cookMinutes:0, boxMinutes:12, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["pasta","fill-limit-half","family-size"], pairsWith:[], avoid:["curry-paste-red","curry-paste-green"], mealsPerPackage:4},
-    {id:"frozen-spinach", name:"Frozen chopped spinach", slot:"bulk", aisle:"freezer", price:1.79, unit:"10 oz box", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"quinoa", name:"Quinoa, dry", slot:"bulk", aisle:"pantry", price:4.49, unit:"1 lb bag", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:4},
 
     // fat_acid — dairy, oil, coconut milk, citrus, vinegar. optional, 0-2 per meal, stirred in after cooking.
@@ -1962,10 +1961,19 @@
     {id:"dried-minced-garlic", name:"Dried minced garlic", slot:"flavor", aisle:"pantry", price:3.29, unit:"2.5 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:12},
 
     {id:"frozen-mirepoix", name:"Frozen mirepoix (onion, celery, carrot)", slot:"bulk", aisle:"freezer", price:2.99, unit:"12 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","aromatic","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:5},
-    {id:"frozen-green-beans", name:"Frozen green beans", slot:"bulk", aisle:"freezer", price:2.29, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
-    {id:"frozen-corn", name:"Frozen corn", slot:"bulk", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"sweet-potatoes", name:"Sweet potatoes", slot:"bulk", aisle:"produce", price:2.49, unit:"2 lb", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["not-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
     {id:"egg-noodles-dry", name:"Egg noodles, dry", slot:"bulk", aisle:"pantry", price:2.29, unit:"12 oz bag", cookMinutes:0, boxMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["pasta","fill-limit-half"], pairsWith:[], avoid:[], mealsPerPackage:3},
+
+    // vegetable — frozen or canned vegetables for volume and nutrition. optional, 0-2 per meal.
+    {id:"frozen-mixed-vegetables", name:"Frozen mixed vegetables", slot:"vegetable", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-spinach", name:"Frozen chopped spinach", slot:"vegetable", aisle:"freezer", price:1.79, unit:"10 oz box", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-green-beans", name:"Frozen green beans", slot:"vegetable", aisle:"freezer", price:2.29, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-corn", name:"Frozen corn", slot:"vegetable", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-broccoli", name:"Frozen broccoli florets", slot:"vegetable", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-peas", name:"Frozen peas", slot:"vegetable", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-cauliflower", name:"Frozen cauliflower florets", slot:"vegetable", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"canned-corn", name:"Canned corn", slot:"vegetable", aisle:"pantry", price:1.09, unit:"15 oz can", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"canned-green-beans", name:"Canned green beans", slot:"vegetable", aisle:"pantry", price:1.09, unit:"14.5 oz can", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
 
     {id:"cornstarch", name:"Cornstarch (for thickening after)", slot:"fat_acid", aisle:"pantry", price:2.29, unit:"16 oz box", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:["shelf-stable","post-cook"], pairsWith:[], avoid:[], mealsPerPackage:20},
     {id:"apple-cider-vinegar", name:"Apple cider vinegar", slot:"fat_acid", aisle:"pantry", price:2.99, unit:"16 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:14},
@@ -1977,16 +1985,17 @@
 
   var builderById = {};
   builderItems.forEach(function(it){ builderById[it.id] = it; });
-  var builderBySlot = {liquid:[], protein:[], flavor:[], bulk:[], fat_acid:[]};
+  var builderBySlot = {liquid:[], protein:[], flavor:[], bulk:[], vegetable:[], fat_acid:[]};
   builderItems.forEach(function(it){ builderBySlot[it.slot].push(it); });
 
-  var BUILDER_SLOT_ORDER = ["liquid","protein","flavor","bulk","fat_acid"];
-  var BUILDER_SLOT_LABEL = {liquid:"Liquid", protein:"Protein", flavor:"Flavor", bulk:"Bulk", fat_acid:"Fat & acid"};
+  var BUILDER_SLOT_ORDER = ["liquid","protein","flavor","bulk","vegetable","fat_acid"];
+  var BUILDER_SLOT_LABEL = {liquid:"Liquid", protein:"Protein", flavor:"Flavor", bulk:"Bulk", vegetable:"Vegetable", fat_acid:"Fat & acid"};
   var BUILDER_SLOT_ROLE = {
     liquid: "Thin, water-based liquid. This is what builds pressure — every meal needs exactly one.",
     protein: "Meat, beans, lentils, or eggs. The center of the meal — exactly one per meal.",
     flavor: "Jarred sauce, paste, spice blend, or aromatics. What makes it taste like something — exactly one per meal.",
-    bulk: "Grain, pasta, potato, or frozen vegetable. Optional, up to two — makes it filling.",
+    bulk: "Grain, pasta, or potato. Optional, up to two — makes it filling.",
+    vegetable: "Frozen or canned vegetables, for volume and nutrition. Optional, up to two.",
     fat_acid: "Dairy, oil, coconut milk, citrus, or vinegar. Optional, up to two, stirred in after cooking."
   };
 
@@ -2015,7 +2024,7 @@
 
   function builderCheckedBySlot(checkedMap){
     var checked = checkedMap || loadBuilderChecked();
-    var out = {liquid:[], protein:[], flavor:[], bulk:[], fat_acid:[]};
+    var out = {liquid:[], protein:[], flavor:[], bulk:[], vegetable:[], fat_acid:[]};
     builderItems.forEach(function(it){ if(checked[it.id]) out[it.slot].push(it); });
     return out;
   }
@@ -2053,15 +2062,15 @@
     return Math.min(1, (ft / 5300) * 0.175); // ~17.5% at 5,300 ft, scaled linearly, capped at +100%
   }
 
-  function builderCombo(liquid, protein, flavor, bulkSet, fatSet, settings){
-    var all = [liquid, protein, flavor].concat(bulkSet, fatSet);
+  function builderCombo(liquid, protein, flavor, bulkSet, vegSet, fatSet, settings){
+    var all = [liquid, protein, flavor].concat(bulkSet, vegSet, fatSet);
 
     // liquid: thick items never count toward the minimum; bulk items that
     // are thirsty (rice, beans, pasta) raise the minimum instead.
     var contributed = 0;
     all.forEach(function(it){ if(!it.thick) contributed += (it.liquidCups || 0); });
     var extraNeeded = 0;
-    bulkSet.forEach(function(it){ extraNeeded += (it.liquidNeededPerCup || 0); });
+    bulkSet.concat(vegSet).forEach(function(it){ extraNeeded += (it.liquidNeededPerCup || 0); });
     var potMin = settings.potSize === 8 ? 1.5 : 1;
     var neededTotal = potMin + extraNeeded;
     var shortfall = Math.max(0, Math.round((neededTotal - contributed) * 100) / 100);
@@ -2076,7 +2085,7 @@
     if(baseTime === 0) baseTime = 3;
     var anyFrozen = all.some(function(it){ return it.aisle === 'freezer'; });
     if(anyFrozen) baseTime += 7;
-    var freezerBagSafe = [protein].concat(bulkSet, fatSet).every(builderBagSafe);
+    var freezerBagSafe = [protein].concat(bulkSet, vegSet, fatSet).every(builderBagSafe);
     var freezerBump = 0;
     if(settings.freezerMode) freezerBump = Math.round(baseTime * 0.5);
     var preCorrection = baseTime + freezerBump;
@@ -2095,24 +2104,25 @@
     all.forEach(function(it){ mealCost += it.price / (it.mealsPerPackage || 1); });
     var costPerServing = mealCost / servings;
 
+    var fillerSet = bulkSet.concat(vegSet);
     var steps = [];
     if(settings.freezerMode){
-      steps.push('Bag: ' + protein.name + (bulkSet.length ? ', ' + bulkSet.map(function(b){ return b.name; }).join(', ') : '') + ', ' + flavor.name + '.');
+      steps.push('Bag: ' + protein.name + (fillerSet.length ? ', ' + fillerSet.map(function(b){ return b.name; }).join(', ') : '') + ', ' + flavor.name + '.');
       steps.push('Pour ' + liquid.name.toLowerCase() + ' in last, lay the bag flat, and freeze.');
       steps.push('To cook: dump the frozen block straight into the pot, no thaw needed.');
     } else {
       steps.push(liquid.name + ' in the pot' + (shortfall > 0 ? ' (plus ' + shortfall + ' cup' + (shortfall === 1 ? '' : 's') + ' water to reach the minimum)' : '') + '.');
-      steps.push(protein.name + ' on top of the liquid' + (bulkSet.length ? ', then ' + bulkSet.map(function(b){ return b.name; }).join(' and ') + '.' : '.'));
+      steps.push(protein.name + ' on top of the liquid' + (fillerSet.length ? ', then ' + fillerSet.map(function(b){ return b.name; }).join(' and ') + '.' : '.'));
       steps.push(flavor.name + ' poured on top, not stirred in.');
       if(fatSet.length) steps.push('After cooking: stir in ' + fatSet.map(function(f){ return f.name; }).join(' and ') + '.');
     }
 
     var favored = !!(protein.pairsWith && protein.pairsWith.indexOf(flavor.id) !== -1);
-    var parts = [protein.name].concat(bulkSet.map(function(b){ return b.name; })).concat([flavor.name]);
+    var parts = [protein.name].concat(fillerSet.map(function(b){ return b.name; })).concat([flavor.name]);
 
     return {
       name: parts.join(', '),
-      liquid: liquid, protein: protein, flavor: flavor, bulkSet: bulkSet, fatSet: fatSet,
+      liquid: liquid, protein: protein, flavor: flavor, bulkSet: bulkSet, vegSet: vegSet, fatSet: fatSet,
       handsOnSteps: handsOnSteps,
       favored: favored,
       steps: steps,
@@ -2135,6 +2145,7 @@
     if(!bySlot.liquid.length || !bySlot.protein.length || !bySlot.flavor.length) return out;
 
     var bulkSubsets = subsetsUpTo2(bySlot.bulk);
+    var vegSubsets = subsetsUpTo2(bySlot.vegetable);
     var fatSubsets = subsetsUpTo2(bySlot.fat_acid);
 
     outer:
@@ -2150,14 +2161,18 @@
           for(var bi=0; bi<bulkSubsets.length; bi++){
             var bulkSet = bulkSubsets[bi];
             if(hasConflict([liquid, protein, flavor].concat(bulkSet))) continue;
-            for(var fai=0; fai<fatSubsets.length; fai++){
-              var fatSet = fatSubsets[fai];
-              if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
-              if(hasConflict([liquid, protein, flavor].concat(bulkSet, fatSet))) continue;
-              var combo = builderCombo(liquid, protein, flavor, bulkSet, fatSet, settings);
-              if(settings.freezerMode && !combo.freezerBagSafe) continue;
-              out.push(combo);
-              if(out.length >= BUILDER_COMBO_CAP) break outer;
+            for(var vi=0; vi<vegSubsets.length; vi++){
+              var vegSet = vegSubsets[vi];
+              if(hasConflict([liquid, protein, flavor].concat(bulkSet, vegSet))) continue;
+              for(var fai=0; fai<fatSubsets.length; fai++){
+                var fatSet = fatSubsets[fai];
+                if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
+                if(hasConflict([liquid, protein, flavor].concat(bulkSet, vegSet, fatSet))) continue;
+                var combo = builderCombo(liquid, protein, flavor, bulkSet, vegSet, fatSet, settings);
+                if(settings.freezerMode && !combo.freezerBagSafe) continue;
+                out.push(combo);
+                if(out.length >= BUILDER_COMBO_CAP) break outer;
+              }
             }
           }
         }
@@ -2181,6 +2196,7 @@
     var bySlot = builderCheckedBySlot(checked);
     if(!bySlot.liquid.length || !bySlot.protein.length || !bySlot.flavor.length) return 0;
     var bulkSubsets = subsetsUpTo2(bySlot.bulk);
+    var vegSubsets = subsetsUpTo2(bySlot.vegetable);
     var fatSubsets = subsetsUpTo2(bySlot.fat_acid);
     var n = 0;
     for(var li=0; li<bySlot.liquid.length; li++){
@@ -2193,13 +2209,17 @@
           for(var bi=0; bi<bulkSubsets.length; bi++){
             var bulkSet = bulkSubsets[bi];
             if(hasConflict([liquid, protein, flavor].concat(bulkSet))) continue;
-            for(var fai=0; fai<fatSubsets.length; fai++){
-              var fatSet = fatSubsets[fai];
-              if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
-              if(hasConflict([liquid, protein, flavor].concat(bulkSet, fatSet))) continue;
-              if(settings.freezerMode && ![protein].concat(bulkSet, fatSet).every(builderBagSafe)) continue;
-              n++;
-              if(n >= cap) return n;
+            for(var vi=0; vi<vegSubsets.length; vi++){
+              var vegSet = vegSubsets[vi];
+              if(hasConflict([liquid, protein, flavor].concat(bulkSet, vegSet))) continue;
+              for(var fai=0; fai<fatSubsets.length; fai++){
+                var fatSet = fatSubsets[fai];
+                if(settings.freezerMode && !fatSet.every(builderBagSafe)) continue;
+                if(hasConflict([liquid, protein, flavor].concat(bulkSet, vegSet, fatSet))) continue;
+                if(settings.freezerMode && ![protein].concat(bulkSet, vegSet, fatSet).every(builderBagSafe)) continue;
+                n++;
+                if(n >= cap) return n;
+              }
             }
           }
         }
