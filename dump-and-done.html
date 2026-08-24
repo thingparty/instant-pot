@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dump & Done</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
@@ -445,6 +446,7 @@
     cursor: pointer;
   }
   .item:hover{ background: var(--bg-alt); }
+  .item:focus-visible{ outline: 2px solid var(--accent); outline-offset: -2px; }
   .checkbox{
     width: 20px; height: 20px;
     flex-shrink: 0;
@@ -506,6 +508,187 @@
     color: var(--ink-faint);
     text-align: center;
   }
+
+  /* pantry builder */
+  .wrap:has(#panel-builder.active){ max-width: 1040px; }
+  .builder-intro{
+    color: var(--ink-soft);
+    font-size: 14px;
+    max-width: 62ch;
+    margin: 4px 2px 16px;
+  }
+  .builder-settings{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    align-items: center;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .builder-setting{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .builder-setting select,
+  .builder-setting input[type="number"]{
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 5px 8px;
+  }
+  .builder-setting input[type="number"]{ width: 68px; }
+  .builder-setting-unit{ color: var(--ink-faint); }
+  .builder-setting-toggle{ cursor: pointer; }
+  .builder-setting-toggle input[type="checkbox"]{
+    width: 16px; height: 16px;
+    accent-color: var(--good);
+    cursor: pointer;
+  }
+
+  .builder-layout{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  @media (min-width: 720px){
+    .builder-layout{ grid-template-columns: minmax(0,320px) minmax(0,1fr); align-items: start; }
+    .builder-inventory{ position: sticky; top: 66px; max-height: calc(100vh - 90px); overflow-y: auto; }
+  }
+  @media (max-width: 719px){
+    .builder-results{ order: 1; }
+    .builder-inventory{ order: 2; }
+  }
+  .builder-inventory-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .builder-slot-role{
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: -6px 0 8px;
+  }
+  .builder-item-aisle{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .builder-unlock{
+    background: var(--bg-alt);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-m);
+    padding: 18px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .builder-unlock strong{ color: var(--ink); }
+
+  .builder-summary{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .builder-cards{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .builder-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow);
+    padding: 16px 18px 18px;
+  }
+  .builder-card-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .builder-card-name{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 17.5px;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .builder-card-meta{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin: 8px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .builder-badge{
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--good);
+    background: var(--good-bg);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .builder-steps{
+    margin: 12px 0 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .builder-steps li::marker{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .builder-post-step{ color: var(--ink-soft); }
+  .builder-card-note{
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .builder-show-more{
+    display: block;
+    margin: 14px auto 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .builder-show-more:hover{ border-color: var(--line-strong); }
 </style>
 
 <div class="wrap">
@@ -526,6 +709,7 @@
     <button class="tab-btn" id="tab-recipes" role="tab" aria-selected="true" aria-controls="panel-recipes">Recipes</button>
     <button class="tab-btn" id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">Grocery List</button>
     <button class="tab-btn" id="tab-pantry" role="tab" aria-selected="false" aria-controls="panel-pantry">Pantry Items</button>
+    <button class="tab-btn" id="tab-builder" role="tab" aria-selected="false" aria-controls="panel-builder">Pantry Builder</button>
   </div>
 
   <section class="panel active" id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes">
@@ -578,6 +762,43 @@
       <button class="reset-btn" id="pantry-reset-btn" type="button">Reset</button>
     </div>
     <div id="pantry-groups"></div>
+  </section>
+
+  <section class="panel" id="panel-builder" role="tabpanel" aria-labelledby="tab-builder">
+    <p class="builder-intro">Not a recipe list &mdash; check off what's actually in the house right now, and this tells you what dinners are already possible. No shopping required.</p>
+
+    <div class="builder-settings">
+      <label class="builder-setting">
+        <span>Pot size</span>
+        <select id="builder-pot-size">
+          <option value="6">6 qt (1 cup liquid min)</option>
+          <option value="8">8 qt (1.5 cup liquid min)</option>
+        </select>
+      </label>
+      <label class="builder-setting">
+        <span>Elevation</span>
+        <input type="number" id="builder-elevation" value="5300" step="100" min="0" max="14000">
+        <span class="builder-setting-unit">ft</span>
+      </label>
+      <label class="builder-setting builder-setting-toggle">
+        <input type="checkbox" id="builder-freezer-mode">
+        <span>Freezer-bag mode</span>
+      </label>
+    </div>
+
+    <div class="builder-layout">
+      <div class="builder-inventory">
+        <div class="builder-inventory-head">
+          <span id="builder-checked-count">0 items checked</span>
+          <button class="reset-btn" id="builder-reset-btn" type="button">Reset</button>
+        </div>
+        <div id="builder-slots"></div>
+      </div>
+
+      <div class="builder-results">
+        <div id="builder-results"></div>
+      </div>
+    </div>
   </section>
 
   <footer>Checked items and recipe selections are remembered on this device only. &middot; Recipe sources linked above.</footer>
@@ -1530,6 +1751,276 @@
   var recipeByKey = {};
   recipes.forEach(function(r){ recipeByKey[r.key] = r; });
 
+  /* ---------------------------------------------------------------------
+     Pantry Builder: a combinatorial generator, not a recipe list.
+     A meal = one liquid + one protein + one flavor, plus 0-2 bulk and
+     0-2 fat_acid items. See the model table in the build prompt this was
+     built from for the slot definitions.
+  --------------------------------------------------------------------- */
+  var builderItems = [
+    // liquid — thin, water-based, builds steam. required, exactly one per meal.
+    {id:"chicken-broth-boxed", name:"Chicken broth, boxed", slot:"liquid", aisle:"pantry", price:3.49, unit:"32 oz carton", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"veg-broth-boxed", name:"Vegetable broth, boxed", slot:"liquid", aisle:"pantry", price:3.29, unit:"32 oz carton", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"beef-broth-boxed", name:"Beef broth, boxed", slot:"liquid", aisle:"pantry", price:3.79, unit:"32 oz carton", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"bouillon-chicken-paste", name:"Chicken bouillon paste", slot:"liquid", aisle:"pantry", price:5.49, unit:"8 oz jar, mixed with water", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"bouillon-veg-paste", name:"Vegetable bouillon paste", slot:"liquid", aisle:"pantry", price:6.49, unit:"8 oz jar, mixed with water", cookMinutes:0, release:null, liquidCups:2, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"water-plain", name:"Water", slot:"liquid", aisle:"pantry", price:0, unit:"as needed", cookMinutes:0, release:null, liquidCups:1.5, liquidNeededPerCup:0, thick:false, tags:["free"], pairsWith:[], avoid:[], mealsPerPackage:1},
+
+    // protein — meat, beans, lentils, eggs. required, exactly one per meal.
+    {id:"chicken-thighs-frozen", name:"Chicken thighs, frozen", slot:"protein", aisle:"freezer", price:8.99, unit:"3 lb bag", cookMinutes:12, release:"natural", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:["salsa-jarred","curry-paste-red","enchilada-sauce-canned","teriyaki-sauce-bottled","bbq-sauce-bottled"], avoid:[], mealsPerPackage:3},
+    {id:"chicken-breasts-frozen", name:"Chicken breasts, boneless, frozen", slot:"protein", aisle:"freezer", price:9.99, unit:"2.5 lb bag", cookMinutes:10, release:"natural", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:["salsa-jarred","curry-paste-red","bbq-sauce-bottled","alfredo-sauce-jarred"], avoid:[], mealsPerPackage:3},
+    {id:"ground-beef-frozen", name:"Ground beef, frozen", slot:"protein", aisle:"freezer", price:7.99, unit:"1 lb", cookMinutes:8, release:"natural", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["freezer-bag-safe"], pairsWith:["taco-seasoning-packet","marinara-jarred","curry-paste-red"], avoid:[], mealsPerPackage:2},
+    {id:"kielbasa-precut", name:"Kielbasa, precut rounds", slot:"protein", aisle:"fridge", price:5.99, unit:"14 oz package", cookMinutes:6, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:["bbq-sauce-bottled","marinara-jarred","curry-paste-red","salsa-jarred"], avoid:[], mealsPerPackage:2},
+    {id:"black-beans-canned", name:"Black beans, canned", slot:"protein", aisle:"pantry", price:1.19, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable","no-chop"], pairsWith:["salsa-jarred","enchilada-sauce-canned","curry-paste-red"], avoid:[], mealsPerPackage:1},
+    {id:"chickpeas-canned", name:"Chickpeas, canned", slot:"protein", aisle:"pantry", price:1.09, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:["curry-paste-red","curry-paste-green","salsa-jarred"], avoid:[], mealsPerPackage:1},
+    {id:"red-lentils-dry", name:"Red lentils, dry", slot:"protein", aisle:"pantry", price:2.49, unit:"1 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["shelf-stable","no-chop"], pairsWith:["curry-paste-red","curry-paste-green"], avoid:[], mealsPerPackage:3},
+    {id:"eggs", name:"Eggs", slot:"protein", aisle:"fridge", price:3.99, unit:"1 dozen", cookMinutes:6, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["fridge-staple"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"white-beans-canned", name:"White (cannellini) beans, canned", slot:"protein", aisle:"pantry", price:1.29, unit:"15 oz can", cookMinutes:4, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:["marinara-jarred","salsa-jarred"], avoid:[], mealsPerPackage:1},
+    {id:"shrimp-frozen", name:"Shrimp, frozen (peeled, tail-off)", slot:"protein", aisle:"freezer", price:10.99, unit:"1 lb bag", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["freezer-bag-safe"], pairsWith:["curry-paste-red","curry-paste-green","marinara-jarred"], avoid:[], mealsPerPackage:2},
+    {id:"black-beans-dry", name:"Black beans, dry", slot:"protein", aisle:"pantry", price:1.99, unit:"1 lb bag", cookMinutes:25, release:"natural", liquidCups:0, liquidNeededPerCup:3, thick:false, tags:["shelf-stable","dried-beans","fill-limit-half"], pairsWith:["salsa-jarred","enchilada-sauce-canned"], avoid:[], mealsPerPackage:3},
+
+    // flavor — jarred sauce, paste, spice blend, aromatics. required, exactly one per meal.
+    {id:"salsa-jarred", name:"Salsa, jarred", slot:"flavor", aisle:"pantry", price:3.49, unit:"16 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"curry-paste-red", name:"Red curry paste", slot:"flavor", aisle:"pantry", price:3.99, unit:"4 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"curry-paste-green", name:"Green curry paste", slot:"flavor", aisle:"pantry", price:3.99, unit:"4 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"enchilada-sauce-canned", name:"Enchilada sauce, canned", slot:"flavor", aisle:"pantry", price:2.29, unit:"10 oz can", cookMinutes:0, release:null, liquidCups:1.1, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"marinara-jarred", name:"Marinara sauce, jarred", slot:"flavor", aisle:"pantry", price:3.49, unit:"24 oz jar", cookMinutes:0, release:null, liquidCups:1.5, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"bbq-sauce-bottled", name:"BBQ sauce, bottled", slot:"flavor", aisle:"pantry", price:2.99, unit:"18 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"teriyaki-sauce-bottled", name:"Teriyaki sauce, bottled", slot:"flavor", aisle:"pantry", price:3.49, unit:"10 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"taco-seasoning-packet", name:"Taco seasoning packet", slot:"flavor", aisle:"pantry", price:1.19, unit:"1 oz packet", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:1},
+    {id:"alfredo-sauce-jarred", name:"Alfredo sauce, jarred", slot:"flavor", aisle:"pantry", price:3.99, unit:"15 oz jar", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:["black-beans-canned","black-beans-dry","chickpeas-canned"], mealsPerPackage:3},
+    {id:"diced-tomatoes-canned", name:"Diced tomatoes, canned", slot:"flavor", aisle:"pantry", price:1.29, unit:"14.5 oz can", cookMinutes:0, release:null, liquidCups:1, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:1},
+
+    // bulk — grain, pasta, potato, frozen vegetable. optional, 0-2 per meal.
+    {id:"white-rice", name:"White rice", slot:"bulk", aisle:"pantry", price:2.99, unit:"2 lb bag", cookMinutes:4, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"brown-rice", name:"Brown rice", slot:"bulk", aisle:"pantry", price:3.49, unit:"2 lb bag", cookMinutes:22, release:"natural", liquidCups:0, liquidNeededPerCup:1.25, thick:false, tags:["no-chop","fill-limit-half","family-size"], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"baby-potatoes", name:"Baby potatoes, whole", slot:"bulk", aisle:"produce", price:3.99, unit:"1.5 lb bag", cookMinutes:8, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-mixed-vegetables", name:"Frozen mixed vegetables", slot:"bulk", aisle:"freezer", price:2.49, unit:"12 oz bag", cookMinutes:3, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"frozen-diced-onion", name:"Frozen diced onion", slot:"bulk", aisle:"freezer", price:1.99, unit:"12 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","aromatic","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:6},
+    {id:"short-pasta-dry", name:"Short pasta (penne/rotini), dry", slot:"bulk", aisle:"pantry", price:1.79, unit:"16 oz box", cookMinutes:0, boxMinutes:12, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["pasta","fill-limit-half","family-size"], pairsWith:[], avoid:["curry-paste-red","curry-paste-green"], mealsPerPackage:4},
+    {id:"frozen-spinach", name:"Frozen chopped spinach", slot:"bulk", aisle:"freezer", price:1.79, unit:"10 oz box", cookMinutes:2, release:"quick", liquidCups:0, liquidNeededPerCup:0, thick:false, tags:["no-chop","freezer-bag-safe"], pairsWith:[], avoid:[], mealsPerPackage:3},
+    {id:"quinoa", name:"Quinoa, dry", slot:"bulk", aisle:"pantry", price:4.49, unit:"1 lb bag", cookMinutes:1, release:"quick", liquidCups:0, liquidNeededPerCup:1, thick:false, tags:["no-chop"], pairsWith:[], avoid:[], mealsPerPackage:4},
+
+    // fat_acid — dairy, oil, coconut milk, citrus, vinegar. optional, 0-2 per meal, stirred in after cooking.
+    {id:"coconut-milk-canned", name:"Coconut milk, canned (full-fat)", slot:"fat_acid", aisle:"pantry", price:2.49, unit:"13.5 oz can", cookMinutes:0, release:null, liquidCups:1.6, liquidNeededPerCup:0, thick:false, tags:["shelf-stable"], pairsWith:[], avoid:[], mealsPerPackage:2},
+    {id:"sour-cream", name:"Sour cream", slot:"fat_acid", aisle:"fridge", price:2.29, unit:"16 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"shredded-cheese", name:"Shredded cheese blend", slot:"fat_acid", aisle:"fridge", price:3.49, unit:"8 oz bag", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4},
+    {id:"butter", name:"Butter", slot:"fat_acid", aisle:"fridge", price:4.49, unit:"1 lb (4 sticks)", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:8},
+    {id:"olive-oil", name:"Olive oil", slot:"fat_acid", aisle:"pantry", price:5.99, unit:"16.9 oz bottle", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:12},
+    {id:"lime-juice-bottled", name:"Lime juice, bottled", slot:"fat_acid", aisle:"pantry", price:2.49, unit:"8 oz bottle", cookMinutes:0, release:null, liquidCups:0.25, liquidNeededPerCup:0, thick:false, tags:[], pairsWith:[], avoid:[], mealsPerPackage:6},
+    {id:"plain-yogurt", name:"Plain yogurt", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"32 oz tub", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:5},
+    {id:"heavy-cream", name:"Heavy cream", slot:"fat_acid", aisle:"fridge", price:3.99, unit:"1 pint", cookMinutes:0, release:null, liquidCups:0, liquidNeededPerCup:0, thick:true, tags:[], pairsWith:[], avoid:[], mealsPerPackage:4}
+  ];
+
+  var builderById = {};
+  builderItems.forEach(function(it){ builderById[it.id] = it; });
+  var builderBySlot = {liquid:[], protein:[], flavor:[], bulk:[], fat_acid:[]};
+  builderItems.forEach(function(it){ builderBySlot[it.slot].push(it); });
+
+  var BUILDER_SLOT_ORDER = ["liquid","protein","flavor","bulk","fat_acid"];
+  var BUILDER_SLOT_LABEL = {liquid:"Liquid", protein:"Protein", flavor:"Flavor", bulk:"Bulk", fat_acid:"Fat & acid"};
+  var BUILDER_SLOT_ROLE = {
+    liquid: "Thin, water-based liquid. This is what builds pressure — every meal needs exactly one.",
+    protein: "Meat, beans, lentils, or eggs. The center of the meal — exactly one per meal.",
+    flavor: "Jarred sauce, paste, spice blend, or aromatics. What makes it taste like something — exactly one per meal.",
+    bulk: "Grain, pasta, potato, or frozen vegetable. Optional, up to two — makes it filling.",
+    fat_acid: "Dairy, oil, coconut milk, citrus, or vinegar. Optional, up to two, stirred in after cooking."
+  };
+
+  var BUILDER_KEY = 'dumpAndDoneBuilderInventory';
+  var BUILDER_SETTINGS_KEY = 'dumpAndDoneBuilderSettings';
+
+  function loadBuilderChecked(){
+    try{
+      var raw = localStorage.getItem(BUILDER_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveBuilderChecked(state){
+    try{ localStorage.setItem(BUILDER_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function loadBuilderSettings(){
+    var defaults = {potSize:6, elevation:5300, freezerMode:false};
+    try{
+      var raw = localStorage.getItem(BUILDER_SETTINGS_KEY);
+      return raw ? Object.assign(defaults, JSON.parse(raw)) : defaults;
+    }catch(e){ return defaults; }
+  }
+  function saveBuilderSettings(s){
+    try{ localStorage.setItem(BUILDER_SETTINGS_KEY, JSON.stringify(s)); }catch(e){}
+  }
+
+  function builderCheckedBySlot(){
+    var checked = loadBuilderChecked();
+    var out = {liquid:[], protein:[], flavor:[], bulk:[], fat_acid:[]};
+    builderItems.forEach(function(it){ if(checked[it.id]) out[it.slot].push(it); });
+    return out;
+  }
+
+  // subsets of size 0, 1, and 2 — bulk and fat_acid each allow up to two items
+  function subsetsUpTo2(list){
+    var out = [[]];
+    for(var i=0;i<list.length;i++) out.push([list[i]]);
+    for(var i=0;i<list.length;i++){
+      for(var j=i+1;j<list.length;j++) out.push([list[i], list[j]]);
+    }
+    return out;
+  }
+
+  function hasConflict(items){
+    for(var i=0;i<items.length;i++){
+      for(var j=i+1;j<items.length;j++){
+        var a = items[i], b = items[j];
+        if(a.avoid && a.avoid.indexOf(b.id) !== -1) return true;
+        if(b.avoid && b.avoid.indexOf(a.id) !== -1) return true;
+      }
+    }
+    return false;
+  }
+
+  function builderAltitudeFactor(elevationFeet){
+    var ft = Math.max(0, Number(elevationFeet) || 0);
+    return Math.min(1, (ft / 5300) * 0.175); // ~17.5% at 5,300 ft, scaled linearly, capped at +100%
+  }
+
+  function builderCombo(liquid, protein, flavor, bulkSet, fatSet, settings){
+    var all = [liquid, protein, flavor].concat(bulkSet, fatSet);
+
+    // liquid: thick items never count toward the minimum; bulk items that
+    // are thirsty (rice, beans, pasta) raise the minimum instead.
+    var contributed = 0;
+    all.forEach(function(it){ if(!it.thick) contributed += (it.liquidCups || 0); });
+    var extraNeeded = 0;
+    bulkSet.forEach(function(it){ extraNeeded += (it.liquidNeededPerCup || 0); });
+    var potMin = settings.potSize === 8 ? 1.5 : 1;
+    var neededTotal = potMin + extraNeeded;
+    var shortfall = Math.max(0, Math.round((neededTotal - contributed) * 100) / 100);
+
+    // cook time: the max across chosen items, not the sum. pasta is a
+    // special case (rule: box time / 2, + 1, rounded down).
+    var baseTime = 0;
+    all.forEach(function(it){
+      var m = it.tags && it.tags.indexOf('pasta') !== -1 ? Math.floor((it.boxMinutes || 0) / 2) + 1 : (it.cookMinutes || 0);
+      if(m > baseTime) baseTime = m;
+    });
+    if(baseTime === 0) baseTime = 3;
+    var anyFrozen = all.some(function(it){ return it.aisle === 'freezer'; });
+    if(anyFrozen) baseTime += 7;
+    var freezerBagSafe = [protein].concat(bulkSet).every(function(it){ return it.tags && it.tags.indexOf('freezer-bag-safe') !== -1; }) && fatSet.length === 0;
+    var freezerBump = 0;
+    if(settings.freezerMode) freezerBump = Math.round(baseTime * 0.5);
+    var preCorrection = baseTime + freezerBump;
+    var factor = builderAltitudeFactor(settings.elevation);
+    var correctedTime = Math.round(preCorrection * (1 + factor));
+
+    var release = all.some(function(it){ return it.release === 'natural'; }) ? 'natural' : 'quick';
+    var fillHalf = all.some(function(it){ return it.tags && it.tags.indexOf('fill-limit-half') !== -1; });
+
+    // hands-on steps: dump everything (1), plus a post-cook stir-in if
+    // there's a fat/acid item (1). that's it, per the honest-count rule.
+    var handsOnSteps = 1 + (fatSet.length ? 1 : 0);
+
+    var servings = bulkSet.some(function(it){ return it.tags && it.tags.indexOf('family-size') !== -1; }) ? 6 : 4;
+    var mealCost = 0;
+    all.forEach(function(it){ mealCost += it.price / (it.mealsPerPackage || 1); });
+    var costPerServing = mealCost / servings;
+
+    var steps = [];
+    if(settings.freezerMode){
+      steps.push('Bag: ' + protein.name + (bulkSet.length ? ', ' + bulkSet.map(function(b){ return b.name; }).join(', ') : '') + ', ' + flavor.name + '.');
+      steps.push('Pour ' + liquid.name.toLowerCase() + ' in last, lay the bag flat, and freeze.');
+      steps.push('To cook: dump the frozen block straight into the pot, no thaw needed.');
+    } else {
+      steps.push(liquid.name + ' in the pot' + (shortfall > 0 ? ' (plus ' + shortfall + ' cup' + (shortfall === 1 ? '' : 's') + ' water to reach the minimum)' : '') + '.');
+      steps.push(protein.name + ' on top of the liquid' + (bulkSet.length ? ', then ' + bulkSet.map(function(b){ return b.name; }).join(' and ') + '.' : '.'));
+      steps.push(flavor.name + ' poured on top, not stirred in.');
+      if(fatSet.length) steps.push('After cooking: stir in ' + fatSet.map(function(f){ return f.name; }).join(' and ') + '.');
+    }
+
+    var parts = [protein.name].concat(bulkSet.map(function(b){ return b.name; })).concat([flavor.name]);
+
+    return {
+      name: parts.join(', '),
+      liquid: liquid, protein: protein, flavor: flavor, bulkSet: bulkSet, fatSet: fatSet,
+      handsOnSteps: handsOnSteps,
+      steps: steps,
+      baseTime: baseTime + freezerBump,
+      correctedTime: correctedTime,
+      release: release,
+      fillHalf: fillHalf,
+      freezerBagSafe: freezerBagSafe,
+      costPerServing: costPerServing,
+      servings: servings,
+      shortfall: shortfall
+    };
+  }
+
+  var BUILDER_COMBO_CAP = 600; // safety valve if someone checks nearly everything
+
+  function generateBuilderCombos(settings){
+    var bySlot = builderCheckedBySlot();
+    var out = [];
+    if(!bySlot.liquid.length || !bySlot.protein.length || !bySlot.flavor.length) return out;
+
+    var bulkSubsets = subsetsUpTo2(bySlot.bulk);
+    var fatSubsets = subsetsUpTo2(bySlot.fat_acid);
+
+    outer:
+    for(var li=0; li<bySlot.liquid.length; li++){
+      var liquid = bySlot.liquid[li];
+      for(var pi=0; pi<bySlot.protein.length; pi++){
+        var protein = bySlot.protein[pi];
+        if(hasConflict([liquid, protein])) continue;
+        for(var fi=0; fi<bySlot.flavor.length; fi++){
+          var flavor = bySlot.flavor[fi];
+          if(protein.pairsWith && protein.pairsWith.length && protein.pairsWith.indexOf(flavor.id) === -1) continue;
+          if(hasConflict([liquid, protein, flavor])) continue;
+          for(var bi=0; bi<bulkSubsets.length; bi++){
+            var bulkSet = bulkSubsets[bi];
+            if(hasConflict([liquid, protein, flavor].concat(bulkSet))) continue;
+            for(var fai=0; fai<fatSubsets.length; fai++){
+              var fatSet = fatSubsets[fai];
+              if(settings.freezerMode && fatSet.length) continue; // fat/acid is a fresh, at-serving addition
+              if(hasConflict([liquid, protein, flavor].concat(bulkSet, fatSet))) continue;
+              var combo = builderCombo(liquid, protein, flavor, bulkSet, fatSet, settings);
+              if(settings.freezerMode && !combo.freezerBagSafe) continue;
+              out.push(combo);
+              if(out.length >= BUILDER_COMBO_CAP) break outer;
+            }
+          }
+        }
+      }
+    }
+    return out;
+  }
+
+  function rankBuilderCombos(combos){
+    return combos.slice().sort(function(a, b){
+      if(a.handsOnSteps !== b.handsOnSteps) return a.handsOnSteps - b.handsOnSteps;
+      return a.correctedTime - b.correctedTime;
+    });
+  }
+
+  // empty-state helper: which single unchecked item would unlock the most
+  // combinations, computed by actually testing each one.
+  function builderNextUnlock(settings, currentCount){
+    var checked = loadBuilderChecked();
+    var best = null;
+    builderItems.forEach(function(it){
+      if(checked[it.id]) return;
+      checked[it.id] = true;
+      saveBuilderChecked(checked);
+      var count = generateBuilderCombos(settings).length;
+      checked[it.id] = false;
+      saveBuilderChecked(checked);
+      var delta = count - currentCount;
+      if(delta > 0 && (!best || delta > best.delta || (delta === best.delta && it.price < best.item.price))){
+        best = {item: it, delta: delta};
+      }
+    });
+    return best;
+  }
+
   function el(tag, cls, html){
     var e = document.createElement(tag);
     if(cls) e.className = cls;
@@ -1735,6 +2226,164 @@
     updateCombinedTotal();
   }
 
+  var builderShowCount = 6;
+
+  function renderBuilderInventory(){
+    var container = document.getElementById('builder-slots');
+    container.innerHTML = '';
+    var checked = loadBuilderChecked();
+
+    BUILDER_SLOT_ORDER.forEach(function(slot){
+      var groupEl = el('div', 'group');
+      var titleEl = el('div', 'group-title');
+      titleEl.innerHTML = '<span class="group-title-label">' + BUILDER_SLOT_LABEL[slot] + '</span><span class="group-count" data-slot-count="' + slot + '"></span>';
+      groupEl.appendChild(titleEl);
+      groupEl.appendChild(el('p', 'builder-slot-role', BUILDER_SLOT_ROLE[slot]));
+
+      builderBySlot[slot].forEach(function(item){
+        var row = el('div', 'item');
+        row.setAttribute('data-id', item.id);
+        if(checked[item.id]) row.classList.add('checked');
+        row.tabIndex = 0;
+        row.setAttribute('role', 'checkbox');
+        row.setAttribute('aria-checked', checked[item.id] ? 'true' : 'false');
+        row.innerHTML =
+          '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="item-text"><div class="item-row-top"><span class="item-name">' + item.name + '</span><span class="item-price">' + (item.price > 0 ? fmt(item.price) : 'free') + '</span></div><div class="item-tags"><span class="builder-item-aisle">' + item.aisle + '</span> &middot; ' + item.unit + '</div></span>';
+        function toggle(){
+          var isChecked = row.classList.toggle('checked');
+          row.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+          var st = loadBuilderChecked();
+          st[item.id] = isChecked;
+          saveBuilderChecked(st);
+          builderShowCount = 6;
+          updateBuilderCheckedCount();
+          renderBuilderResults();
+        }
+        row.addEventListener('click', toggle);
+        row.addEventListener('keydown', function(e){
+          if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(); }
+        });
+        groupEl.appendChild(row);
+      });
+
+      container.appendChild(groupEl);
+    });
+
+    updateBuilderSlotCounts();
+    updateBuilderCheckedCount();
+  }
+
+  function updateBuilderSlotCounts(){
+    var checked = loadBuilderChecked();
+    BUILDER_SLOT_ORDER.forEach(function(slot){
+      var count = builderBySlot[slot].filter(function(it){ return checked[it.id]; }).length;
+      var el2 = document.querySelector('[data-slot-count="' + slot + '"]');
+      if(el2) el2.textContent = count + ' / ' + builderBySlot[slot].length + ' checked';
+    });
+  }
+
+  function updateBuilderCheckedCount(){
+    updateBuilderSlotCounts();
+    var checked = loadBuilderChecked();
+    var count = builderItems.filter(function(it){ return checked[it.id]; }).length;
+    document.getElementById('builder-checked-count').textContent = count + ' item' + (count === 1 ? '' : 's') + ' checked';
+  }
+
+  function readBuilderSettingsFromForm(){
+    return {
+      potSize: Number(document.getElementById('builder-pot-size').value) || 6,
+      elevation: Number(document.getElementById('builder-elevation').value) || 0,
+      freezerMode: document.getElementById('builder-freezer-mode').checked
+    };
+  }
+
+  function applyBuilderSettingsToForm(settings){
+    document.getElementById('builder-pot-size').value = String(settings.potSize);
+    document.getElementById('builder-elevation').value = settings.elevation;
+    document.getElementById('builder-freezer-mode').checked = !!settings.freezerMode;
+  }
+
+  function renderBuilderCard(combo, settings){
+    var card = el('div', 'builder-card');
+    var head = el('div', 'builder-card-head');
+    head.innerHTML = '<h3 class="builder-card-name">' + combo.name + '</h3><span class="time-pill">' + combo.correctedTime + ' min &middot; ' + combo.release + '</span>';
+    card.appendChild(head);
+
+    var metaBits = [
+      combo.handsOnSteps + ' hands-on step' + (combo.handsOnSteps === 1 ? '' : 's'),
+      fmt(combo.costPerServing) + ' / serving (' + combo.servings + ' servings)'
+    ];
+    if(combo.freezerBagSafe) metaBits.push('<span class="builder-badge">Freezer-bag safe</span>');
+    var meta = el('div', 'builder-card-meta');
+    meta.innerHTML = metaBits.join(' <span aria-hidden="true">&middot;</span> ');
+    card.appendChild(meta);
+
+    var stepsEl = document.createElement('ol');
+    stepsEl.className = 'builder-steps';
+    combo.steps.forEach(function(s){
+      var li = document.createElement('li');
+      li.textContent = s;
+      stepsEl.appendChild(li);
+    });
+    card.appendChild(stepsEl);
+
+    var noteText = 'Base time ' + combo.baseTime + ' min at sea level, corrected to ' + combo.correctedTime + ' min for ' + settings.elevation + ' ft. ' +
+      (combo.fillHalf ? 'Fill the pot to half at most.' : 'Fill the pot to two-thirds at most.');
+    card.appendChild(el('p', 'builder-card-note', noteText));
+
+    return card;
+  }
+
+  function renderBuilderResults(){
+    var settings = readBuilderSettingsFromForm();
+    saveBuilderSettings(settings);
+    var container = document.getElementById('builder-results');
+    container.innerHTML = '';
+
+    var combos = rankBuilderCombos(generateBuilderCombos(settings));
+
+    if(combos.length === 0){
+      var bySlot = builderCheckedBySlot();
+      var missing = [];
+      if(!bySlot.liquid.length) missing.push('a liquid');
+      if(!bySlot.protein.length) missing.push('a protein');
+      if(!bySlot.flavor.length) missing.push('a flavor');
+      var unlockEl = el('div', 'builder-unlock');
+      if(missing.length){
+        unlockEl.innerHTML = 'Check off at least one item from <strong>' + missing.join(', ') + '</strong> &mdash; liquid, protein, and flavor are required for every meal.';
+      } else {
+        var unlock = builderNextUnlock(settings, 0);
+        if(unlock){
+          unlockEl.innerHTML = 'Check off <strong>' + unlock.item.name + '</strong> (' + (unlock.item.price > 0 ? fmt(unlock.item.price) : 'free') + ') and you unlock <strong>' + unlock.delta + '</strong> more dinner' + (unlock.delta === 1 ? '' : 's') + '.';
+        } else {
+          unlockEl.textContent = "What's checked doesn't pair up yet — try a different protein or flavor.";
+        }
+      }
+      container.appendChild(unlockEl);
+      return;
+    }
+
+    container.appendChild(el('div', 'builder-summary', combos.length + ' dinner' + (combos.length === 1 ? '' : 's') + ' possible right now' + (settings.freezerMode ? ', freezer-bag safe only' : '') + '.'));
+
+    var cardsEl = el('div', 'builder-cards');
+    container.appendChild(cardsEl);
+    combos.slice(0, builderShowCount).forEach(function(combo){ cardsEl.appendChild(renderBuilderCard(combo, settings)); });
+
+    if(combos.length > builderShowCount){
+      var remaining = combos.length - builderShowCount;
+      var moreBtn = document.createElement('button');
+      moreBtn.type = 'button';
+      moreBtn.className = 'builder-show-more';
+      moreBtn.textContent = 'Show ' + Math.min(6, remaining) + ' more (' + remaining + ' left)';
+      moreBtn.addEventListener('click', function(){
+        builderShowCount += 6;
+        renderBuilderResults();
+      });
+      container.appendChild(moreBtn);
+    }
+  }
+
   function recipeNamesFor(keys){
     return keys.map(function(k){
       var r = recipeByKey[k];
@@ -1831,15 +2480,18 @@
     document.getElementById('tab-recipes').setAttribute('aria-selected', tab === 'recipes' ? 'true' : 'false');
     document.getElementById('tab-list').setAttribute('aria-selected', tab === 'list' ? 'true' : 'false');
     document.getElementById('tab-pantry').setAttribute('aria-selected', tab === 'pantry' ? 'true' : 'false');
+    document.getElementById('tab-builder').setAttribute('aria-selected', tab === 'builder' ? 'true' : 'false');
     document.getElementById('panel-recipes').classList.toggle('active', tab === 'recipes');
     document.getElementById('panel-list').classList.toggle('active', tab === 'list');
     document.getElementById('panel-pantry').classList.toggle('active', tab === 'pantry');
+    document.getElementById('panel-builder').classList.toggle('active', tab === 'builder');
   }
 
   function setupControls(){
     document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
     document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
+    document.getElementById('tab-builder').addEventListener('click', function(){ activateTab('builder'); });
     document.getElementById('select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
     document.getElementById('select-none-btn').addEventListener('click', function(){ setAllRecipes(false); });
     document.getElementById('empty-select-all-btn').addEventListener('click', function(){ setAllRecipes(true); });
@@ -1854,13 +2506,28 @@
       document.querySelectorAll('#pantry-groups .item.checked').forEach(function(r){ r.classList.remove('checked'); });
       updatePantryTotals();
     });
+    document.getElementById('builder-reset-btn').addEventListener('click', function(){
+      saveBuilderChecked({});
+      builderShowCount = 6;
+      renderBuilderInventory();
+      renderBuilderResults();
+    });
+    ['builder-pot-size', 'builder-elevation', 'builder-freezer-mode'].forEach(function(id){
+      document.getElementById(id).addEventListener('change', function(){
+        builderShowCount = 6;
+        renderBuilderResults();
+      });
+    });
   }
 
   renderRecipes();
   renderGrocery();
   renderPantry();
+  applyBuilderSettingsToForm(loadBuilderSettings());
+  renderBuilderInventory();
   setupControls();
   updateRecipeCheckboxes();
   applyFilter();
   updatePantryTotals();
+  renderBuilderResults();
 </script>
