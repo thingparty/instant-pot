@@ -743,7 +743,7 @@
         <span class="price-banner-label">Grocery list + pantry, combined</span>
         <span class="price-banner-total" id="combined-total">$0.00</span>
       </div>
-      <p class="price-banner-note">Grocery List and Pantry Items totals added together, both already net of anything checked off as on hand.</p>
+      <p class="price-banner-note">Grocery List total (still needed for selected recipes, net of anything checked off as on hand) plus Pantry Items total (what you've checked off as picked up), added together.</p>
     </div>
   </header>
 
@@ -794,10 +794,10 @@
   <section class="panel" id="panel-pantry" role="tabpanel" aria-labelledby="tab-pantry">
     <div class="price-banner">
       <div class="price-banner-top">
-        <span class="price-banner-label">Estimated total to buy</span>
+        <span class="price-banner-label">Total added</span>
         <span class="price-banner-total" id="pantry-total">$0.00</span>
       </div>
-      <p class="price-banner-note">Household items that aren't tied to a specific recipe. Check off anything already stocked and its price drops out of the total, same as the grocery list. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
+      <p class="price-banner-note">Household items that aren't tied to a specific recipe. Check one off once you've actually picked it up, and its price gets added to the total &mdash; the opposite of the Grocery List tab, where checking something off means you already have it. Modeled on typical Smith's / Kroger-family pricing for the Albuquerque market &mdash; treat as a ballpark, not a receipt.</p>
     </div>
     <div class="progress-bar">
       <span id="pantry-progress-label">0 / 0 checked</span>
@@ -1668,7 +1668,40 @@
     {n:"La Croix Sparkling Water", q:"8-pack cans", p:4.99},
     {n:"Peet's Coffee", q:"12 oz bag", p:9.99},
     {n:"Bacon", q:"1 lb", p:6.99},
-    {n:"Frozen pizza", q:"each", p:6.49}
+    {n:"Frozen pizza", q:"each", p:6.49},
+
+    {n:"Jarred minced garlic", q:"4.5 oz jar", p:3.49},
+    {n:"Jarred minced or grated ginger", q:"4.5 oz jar", p:3.99},
+    {n:"Onion powder", q:"jar", p:2.49},
+    {n:"Garlic powder", q:"jar", p:2.49},
+    {n:"Dried minced garlic", q:"jar", p:3.29},
+    {n:"Chicken bouillon, cubes or paste", q:"box or jar", p:4.49},
+    {n:"Beef bouillon, cubes or paste", q:"box or jar", p:4.79},
+    {n:"Canned diced tomatoes", q:"14.5 oz can", p:1.29},
+    {n:"Canned tomato sauce", q:"15 oz can", p:1.09},
+    {n:"Tomato paste", q:"6 oz can", p:0.89},
+    {n:"Canned black beans", q:"15 oz can", p:1.19},
+    {n:"Canned pinto beans", q:"15 oz can", p:1.19},
+    {n:"Canned kidney beans", q:"15 oz can", p:1.19},
+    {n:"Canned cannellini beans", q:"15 oz can", p:1.29},
+    {n:"Dry beans, a bag or two", q:"1&ndash;2 lb bag", p:3.49},
+    {n:"Neutral cooking oil", q:"48 oz bottle", p:5.49},
+    {n:"Olive oil", q:"16.9 oz bottle", p:5.99},
+    {n:"Soy sauce", q:"15 oz bottle", p:3.29},
+    {n:"Worcestershire sauce", q:"10 oz bottle", p:3.49},
+    {n:"Apple cider vinegar", q:"16 oz bottle", p:3.49},
+    {n:"Rice vinegar", q:"12 oz bottle", p:2.99},
+    {n:"Cornstarch", q:"16 oz box", p:2.49},
+    {n:"All-purpose flour", q:"5 lb bag", p:3.49},
+    {n:"Taco seasoning packet", q:"1 oz packet", p:1.19},
+    {n:"Ranch seasoning packet", q:"1 oz packet", p:1.29},
+    {n:"Italian seasoning packet", q:"1 oz packet", p:1.19},
+    {n:"Rice", q:"2 lb bag", p:2.99},
+    {n:"Short pasta shape", q:"16 oz box", p:1.79},
+    {n:"Frozen chicken breasts or thighs", q:"2.5&ndash;3 lb bag", p:8.99},
+    {n:"Frozen mixed vegetables", q:"12 oz bag", p:2.49},
+    {n:"Frozen mirepoix", q:"12 oz bag", p:3.49},
+    {n:"Frozen Hatch green chile, chopped", q:"1 lb tub", p:4.49}
   ];
 
 
@@ -2382,7 +2415,6 @@
       var id = 'p' + ii;
       if(checked[id]){
         checkedCount++;
-      } else {
         total += item.p;
       }
     });
