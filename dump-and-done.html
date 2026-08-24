@@ -210,6 +210,7 @@
     flex: 1;
     min-width: 0;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 12px;
     padding: 16px 18px 16px 10px;
@@ -228,7 +229,7 @@
     width: 20px;
     flex-shrink: 0;
   }
-  .recipe-titles{ flex: 1; min-width: 0; }
+  .recipe-titles{ flex: 1; min-width: 200px; }
   .recipe-name{
     font-family: 'Fraunces', Georgia, serif;
     font-weight: 600;
@@ -247,6 +248,9 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 4px;
+  }
+  @media (max-width: 480px){
+    .recipe-meta{ flex-direction: row; align-items: center; }
   }
   .time-pill{
     font-family: 'IBM Plex Mono', monospace;
