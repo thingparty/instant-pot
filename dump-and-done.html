@@ -512,6 +512,13 @@
     <div class="eyebrow">Instant Pot &middot; No-Chop Rotation</div>
     <h1>Dump &amp; Done</h1>
     <p class="sub">Twenty-nine Instant Pot dinners (mostly dump-and-go, a few more hands-on), pulled from well-reviewed recipe sources plus your own collection, and six quick references. Check off what you're making this week &mdash; the grocery list and price total narrow to match.</p>
+    <div class="price-banner">
+      <div class="price-banner-top">
+        <span class="price-banner-label">Grocery list + pantry, combined</span>
+        <span class="price-banner-total" id="combined-total">$0.00</span>
+      </div>
+      <p class="price-banner-note">Grocery List and Pantry Items totals added together, both already net of anything checked off as on hand.</p>
+    </div>
   </header>
 
   <div class="tabs" role="tablist">
@@ -1694,6 +1701,12 @@
     container.appendChild(groupEl);
   }
 
+  var groceryGrandTotal = 0;
+  var pantryGrandTotal = 0;
+  function updateCombinedTotal(){
+    document.getElementById('combined-total').textContent = fmt(groceryGrandTotal + pantryGrandTotal);
+  }
+
   function updatePantryTotals(){
     var checked = loadPantryChecked();
     var total = 0;
@@ -1716,6 +1729,9 @@
       groupEl.querySelector('.group-count').textContent = pantryItems.length + ' item' + (pantryItems.length === 1 ? '' : 's');
       groupEl.querySelector('.group-subtotal').textContent = fmt(total);
     }
+
+    pantryGrandTotal = total;
+    updateCombinedTotal();
   }
 
   function recipeNamesFor(keys){
@@ -1767,6 +1783,9 @@
     document.getElementById('grand-total').textContent = fmt(grandTotal);
     document.getElementById('progress-label').textContent = totalCheckedVisible + ' / ' + totalVisible + ' checked';
     document.getElementById('progress-fill').style.width = (totalVisible ? (totalCheckedVisible/totalVisible*100) : 0) + '%';
+
+    groceryGrandTotal = grandTotal;
+    updateCombinedTotal();
 
     var selectedCount = recipes.filter(function(r){ return isSelected(sel, r.key); }).length;
     document.getElementById('list-context-count').textContent = 'Built from ' + selectedCount + ' of ' + recipes.length + ' recipes';
