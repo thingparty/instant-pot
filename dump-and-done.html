@@ -2905,6 +2905,9 @@
     // Costco-tagged items are pulled out of their regular section/group and
     // collected here, so each item appears once, under COSTCO only.
     var costcoLines = [];
+    // Checked-off items -- same "already have it" ones the app moves to the
+    // bottom -- collected here for the CHECKED OFF section at the end.
+    var checkedOffLines = [];
 
     lines.push('');
     lines.push('');
@@ -2916,8 +2919,11 @@
         var visible = item.r.some(function(k){ return isSelected(sel, k); });
         if(!visible) return;
         var id = 'g' + gi + '-' + ii;
-        if(checked[id]) return;
         var line = '- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n);
+        if(checked[id]){
+          checkedOffLines.push('- ' + decodeEntities(group.title) + ' — ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
+          return;
+        }
         if(costco[id]){
           costcoLines.push(line);
         } else {
@@ -2958,7 +2964,8 @@
       if(pantryCostco[item.id]) costcoLines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
     });
 
-    var customUnchecked = loadCustomItems().filter(function(item){ return !item.checked; });
+    var allCustom = loadCustomItems();
+    var customUnchecked = allCustom.filter(function(item){ return !item.checked; });
     var customNonCostco = customUnchecked.filter(function(item){ return !costco[item.id]; });
     if(customNonCostco.length){
       lines.push('');
@@ -2968,11 +2975,20 @@
     customUnchecked.forEach(function(item){
       if(costco[item.id]) costcoLines.push('- ' + decodeEntities(item.n));
     });
+    allCustom.forEach(function(item){
+      if(item.checked) checkedOffLines.push('- Added by you — ' + decodeEntities(item.n));
+    });
 
     if(costcoLines.length){
       lines.push('');
       lines.push('COSTCO');
       lines = lines.concat(costcoLines);
+    }
+
+    if(checkedOffLines.length){
+      lines.push('');
+      lines.push('CHECKED OFF');
+      lines = lines.concat(checkedOffLines);
     }
 
     if(selectedRecipes.length){
