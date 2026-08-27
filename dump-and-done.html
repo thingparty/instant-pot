@@ -511,6 +511,54 @@
     background: var(--accent);
     border-color: var(--accent);
   }
+  .custom-add-row{
+    display: flex;
+    gap: 8px;
+    margin: 4px 0 12px;
+  }
+  .custom-item-input{
+    flex: 1;
+    min-width: 0;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 8px 10px;
+  }
+  .custom-item-input:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .custom-add-btn{
+    flex-shrink: 0;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .custom-add-btn:hover{ background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .custom-add-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .item-delete{
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    border-radius: 6px;
+  }
+  .item-delete:hover{ color: var(--accent); background: var(--bg-alt); }
+  .item-delete:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .empty-state{
     text-align: center;
@@ -848,6 +896,14 @@
       No recipes selected &mdash; there's nothing to shop for yet.
       <br>
       <button type="button" id="empty-select-all-btn">Select all recipes</button>
+    </div>
+    <div class="group" id="custom-group">
+      <div class="group-title"><span class="group-title-label">Added by You <span class="group-count" id="custom-count"></span></span></div>
+      <div class="custom-add-row">
+        <input type="text" id="custom-item-name" class="custom-item-input" placeholder="Add an item&hellip;" maxlength="120">
+        <button type="button" class="custom-add-btn" id="custom-item-add-btn">Add</button>
+      </div>
+      <div id="custom-items"></div>
     </div>
   </section>
 
@@ -2611,6 +2667,23 @@
     try{ localStorage.setItem(PANTRY_COSTCO_KEY, JSON.stringify(state)); }catch(e){}
   }
 
+  // Manually-added grocery items -- not tied to any recipe, so they live in
+  // their own list rather than inside groceryGroups. checked here means
+  // "already have it," same as the recipe-driven items above it.
+  var CUSTOM_KEY = 'dumpAndDoneCustomItems';
+  function loadCustomItems(){
+    try{
+      var raw = localStorage.getItem(CUSTOM_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveCustomItems(items){
+    try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(items)); }catch(e){}
+  }
+  function nextCustomId(){
+    return 'custom-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
   function fmt(n){ return '$' + n.toFixed(2); }
 
   function renderGrocery(){
@@ -2656,6 +2729,70 @@
       });
       container.appendChild(groupEl);
     });
+  }
+
+  function updateCustomCount(){
+    var items = loadCustomItems();
+    document.getElementById('custom-count').textContent = items.length ? (items.length + ' item' + (items.length === 1 ? '' : 's')) : '';
+  }
+
+  function renderCustomItems(){
+    var container = document.getElementById('custom-items');
+    container.innerHTML = '';
+    var items = loadCustomItems();
+    var costco = loadCostco();
+
+    items.forEach(function(item){
+      var row = el('div', 'item');
+      row.setAttribute('data-id', item.id);
+      if(item.checked) row.classList.add('checked');
+      row.innerHTML =
+        '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<span class="item-text"><div class="item-row-top"><span class="item-name">' + item.n +
+        '<button type="button" class="costco-tag' + (costco[item.id] ? ' on' : '') + '" aria-pressed="' + (costco[item.id] ? 'true' : 'false') + '" title="Tag as a Costco item">Costco</button></span></div></span>' +
+        '<button type="button" class="item-delete" title="Remove this item" aria-label="Remove ' + item.n.replace(/"/g, '&quot;') + '">&times;</button>';
+      row.addEventListener('click', function(){
+        var items2 = loadCustomItems();
+        var it = items2.filter(function(x){ return x.id === item.id; })[0];
+        if(!it) return;
+        it.checked = !it.checked;
+        saveCustomItems(items2);
+        row.classList.toggle('checked', it.checked);
+      });
+      var costcoBtn = row.querySelector('.costco-tag');
+      costcoBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var isOn = costcoBtn.classList.toggle('on');
+        costcoBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+        costco[item.id] = isOn;
+        saveCostco(costco);
+      });
+      var delBtn = row.querySelector('.item-delete');
+      delBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var remaining = loadCustomItems().filter(function(x){ return x.id !== item.id; });
+        saveCustomItems(remaining);
+        var c = loadCostco();
+        delete c[item.id];
+        saveCostco(c);
+        renderCustomItems();
+      });
+      container.appendChild(row);
+    });
+
+    updateCustomCount();
+  }
+
+  function addCustomItem(){
+    var input = document.getElementById('custom-item-name');
+    var name = input.value.trim();
+    if(!name) return;
+    var items = loadCustomItems();
+    items.push({id: nextCustomId(), n: name, checked: false});
+    saveCustomItems(items);
+    input.value = '';
+    renderCustomItems();
+    input.focus();
   }
 
   function renderPantry(){
@@ -2711,7 +2848,7 @@
   }
 
   // Plain-text menu + still-needed grocery list, for the "email to myself"
-  // button. Capped well under typical mailto: URL limits.
+  // button. Capped well under typical Gmail compose URL limits.
   // Grocery List section: still-needed (unchecked) items for selected
   // recipes, using that tab's own checked state -- unchanged behavior.
   // Pantry Items section: only items you've checked off on that tab.
@@ -2789,6 +2926,17 @@
       if(pantryCostco[item.id]) costcoLines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
     });
 
+    var customUnchecked = loadCustomItems().filter(function(item){ return !item.checked; });
+    var customNonCostco = customUnchecked.filter(function(item){ return !costco[item.id]; });
+    if(customNonCostco.length){
+      lines.push('');
+      lines.push('ADDED BY YOU');
+      customNonCostco.forEach(function(item){ lines.push('- ' + decodeEntities(item.n)); });
+    }
+    customUnchecked.forEach(function(item){
+      if(costco[item.id]) costcoLines.push('- ' + decodeEntities(item.n));
+    });
+
     if(costcoLines.length){
       lines.push('');
       lines.push('COSTCO');
@@ -2823,7 +2971,8 @@
     var today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'});
     var subject = 'Dump & Done - Menu & Grocery List (' + today + ')';
     var body = buildMenuAndListText();
-    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.open(gmailUrl, '_blank');
   }
 
   function updatePantryTotals(){
@@ -3161,6 +3310,10 @@
 
   function setupControls(){
     document.getElementById('email-preview-send-btn').addEventListener('click', emailMenuAndList);
+    document.getElementById('custom-item-add-btn').addEventListener('click', addCustomItem);
+    document.getElementById('custom-item-name').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); addCustomItem(); }
+    });
     document.getElementById('tab-recipes').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('tab-list').addEventListener('click', function(){ activateTab('list'); });
     document.getElementById('tab-pantry').addEventListener('click', function(){ activateTab('pantry'); });
@@ -3197,6 +3350,7 @@
 
   renderRecipes();
   renderGrocery();
+  renderCustomItems();
   renderPantry();
   renderTechniques();
   applyBuilderSettingsToForm(loadBuilderSettings());
