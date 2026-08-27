@@ -905,6 +905,10 @@
       </div>
       <div id="custom-items"></div>
     </div>
+    <div class="group" id="checked-off-group" style="display:none;">
+      <div class="group-title"><span class="group-title-label">Checked Off <span class="group-count" id="checked-off-count"></span></span></div>
+      <div id="checked-off-items"></div>
+    </div>
   </section>
 
   <section class="panel" id="panel-pantry" role="tabpanel" aria-labelledby="tab-pantry">
@@ -2732,13 +2736,30 @@
   }
 
   function updateCustomCount(){
-    var items = loadCustomItems();
-    document.getElementById('custom-count').textContent = items.length ? (items.length + ' item' + (items.length === 1 ? '' : 's')) : '';
+    var uncheckedCount = loadCustomItems().filter(function(item){ return !item.checked; }).length;
+    document.getElementById('custom-count').textContent = uncheckedCount ? (uncheckedCount + ' item' + (uncheckedCount === 1 ? '' : 's')) : '';
+  }
+
+  // Checked-off items -- from any source (recipe-driven groups or items
+  // added by you) -- all collect into one shared bucket at the bottom of
+  // the Grocery List tab, moved there by appendChild rather than re-created,
+  // so their own state/listeners stay intact.
+  function updateCheckedOffUI(){
+    var container = document.getElementById('checked-off-items');
+    var visibleCount = 0;
+    Array.prototype.forEach.call(container.children, function(row){
+      if(row.style.display !== 'none') visibleCount++;
+    });
+    document.getElementById('checked-off-count').textContent = visibleCount ? (visibleCount + ' item' + (visibleCount === 1 ? '' : 's')) : '';
+    document.getElementById('checked-off-group').style.display = visibleCount ? '' : 'none';
   }
 
   function renderCustomItems(){
-    var container = document.getElementById('custom-items');
-    container.innerHTML = '';
+    var listContainer = document.getElementById('custom-items');
+    var checkedOffContainer = document.getElementById('checked-off-items');
+    listContainer.innerHTML = '';
+    Array.prototype.slice.call(checkedOffContainer.querySelectorAll('.item[data-id^="custom-"]')).forEach(function(r){ r.remove(); });
+
     var items = loadCustomItems();
     var costco = loadCostco();
 
@@ -2749,7 +2770,7 @@
       row.innerHTML =
         '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
         '<span class="item-text"><div class="item-row-top"><span class="item-name">' + item.n +
-        '<button type="button" class="costco-tag' + (costco[item.id] ? ' on' : '') + '" aria-pressed="' + (costco[item.id] ? 'true' : 'false') + '" title="Tag as a Costco item">Costco</button></span></div></span>' +
+        '<button type="button" class="costco-tag' + (costco[item.id] ? ' on' : '') + '" aria-pressed="' + (costco[item.id] ? 'true' : 'false') + '" title="Tag as a Costco item">Costco</button></span><div class="item-tags">' + (item.checked ? 'Added by you' : '') + '</div></span>' +
         '<button type="button" class="item-delete" title="Remove this item" aria-label="Remove ' + item.n.replace(/"/g, '&quot;') + '">&times;</button>';
       row.addEventListener('click', function(){
         var items2 = loadCustomItems();
@@ -2758,6 +2779,10 @@
         it.checked = !it.checked;
         saveCustomItems(items2);
         row.classList.toggle('checked', it.checked);
+        row.querySelector('.item-tags').textContent = it.checked ? 'Added by you' : '';
+        (it.checked ? checkedOffContainer : listContainer).appendChild(row);
+        updateCustomCount();
+        updateCheckedOffUI();
       });
       var costcoBtn = row.querySelector('.costco-tag');
       costcoBtn.addEventListener('click', function(e){
@@ -2775,12 +2800,15 @@
         var c = loadCostco();
         delete c[item.id];
         saveCostco(c);
-        renderCustomItems();
+        row.remove();
+        updateCustomCount();
+        updateCheckedOffUI();
       });
-      container.appendChild(row);
+      (item.checked ? checkedOffContainer : listContainer).appendChild(row);
     });
 
     updateCustomCount();
+    updateCheckedOffUI();
   }
 
   function addCustomItem(){
@@ -2971,8 +2999,30 @@
     var today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'});
     var subject = 'Dump & Done - Menu & Grocery List (' + today + ')';
     var body = buildMenuAndListText();
-    var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    window.open(gmailUrl, '_blank');
+    var gmailWebUrl = 'https://mail.google.com/mail/?view=cm&fs=1&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if(isIOS){
+      // The Gmail iOS app intercepts mail.google.com links via Universal
+      // Links but doesn't read the web compose query params, so it opens
+      // to the inbox with nothing filled in. Its own googlegmail:// scheme
+      // does support subject/body, so try that first -- if the app isn't
+      // installed the scheme silently no-ops and we fall back to the web
+      // compose page after a beat.
+      var gmailAppUrl = 'googlegmail:///co?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      var timer = setTimeout(function(){
+        if(!document.hidden) window.location.href = gmailWebUrl;
+      }, 1500);
+      document.addEventListener('visibilitychange', function onHide(){
+        if(document.hidden){
+          clearTimeout(timer);
+          document.removeEventListener('visibilitychange', onHide);
+        }
+      });
+      window.location.href = gmailAppUrl;
+    } else {
+      window.open(gmailWebUrl, '_blank');
+    }
   }
 
   function updatePantryTotals(){
@@ -3175,6 +3225,7 @@
     var sel = loadSelected();
     var checked = loadChecked();
     var container = document.getElementById('grocery-groups');
+    var checkedOffContainer = document.getElementById('checked-off-items');
     var grandTotal = 0;
     var totalVisible = 0;
     var totalCheckedVisible = 0;
@@ -3182,31 +3233,42 @@
     groceryGroups.forEach(function(group, gi){
       var groupEl = container.querySelector('[data-group="' + gi + '"]');
       var groupSubtotal = 0;
-      var visibleCount = 0;
+      var uncheckedVisibleCount = 0;
 
       group.items.forEach(function(item, ii){
         var id = 'g' + gi + '-' + ii;
-        var row = groupEl.querySelector('[data-id="' + id + '"]');
+        // Rows can live in their category group or in the shared
+        // Checked Off bucket, so look them up globally, not scoped to
+        // groupEl -- a previous pass may have moved this one out.
+        var row = document.querySelector('.item[data-id="' + id + '"]');
         var visible = item.r.some(function(k){ return isSelected(sel, k); });
         row.style.display = visible ? '' : 'none';
+        var isChecked = !!checked[id];
         var tagsEl = row.querySelector('.item-tags');
         var caption = recipeNamesFor(item.r);
         if(item.note) caption += ' — ' + item.note;
-        tagsEl.textContent = caption;
+        tagsEl.textContent = isChecked ? (group.title + ' — ' + caption) : caption;
+
+        if(isChecked){
+          checkedOffContainer.appendChild(row);
+        } else {
+          groupEl.appendChild(row);
+        }
+
         if(visible){
-          visibleCount++;
           totalVisible++;
-          if(checked[id]){
+          if(isChecked){
             totalCheckedVisible++;
           } else {
+            uncheckedVisibleCount++;
             groupSubtotal += item.p;
             grandTotal += item.p;
           }
         }
       });
 
-      groupEl.style.display = visibleCount ? '' : 'none';
-      groupEl.querySelector('.group-count').textContent = visibleCount + ' item' + (visibleCount === 1 ? '' : 's');
+      groupEl.style.display = uncheckedVisibleCount ? '' : 'none';
+      groupEl.querySelector('.group-count').textContent = uncheckedVisibleCount + ' item' + (uncheckedVisibleCount === 1 ? '' : 's');
       groupEl.querySelector('.group-subtotal').textContent = fmt(groupSubtotal);
     });
 
@@ -3224,6 +3286,8 @@
     document.querySelectorAll('#panel-list .price-banner, #panel-list .list-context, #panel-list .progress-bar').forEach(function(elx){
       elx.style.display = totalVisible === 0 ? 'none' : '';
     });
+
+    updateCheckedOffUI();
   }
 
   function updateRecipeCheckboxes(){
@@ -3326,7 +3390,9 @@
     document.getElementById('edit-selection-btn').addEventListener('click', function(){ activateTab('recipes'); });
     document.getElementById('reset-btn').addEventListener('click', function(){
       saveChecked({});
-      document.querySelectorAll('#grocery-groups .item.checked').forEach(function(r){ r.classList.remove('checked'); });
+      document.querySelectorAll('#grocery-groups .item.checked, #checked-off-items .item.checked').forEach(function(r){
+        if(!/^custom-/.test(r.getAttribute('data-id') || '')) r.classList.remove('checked');
+      });
       applyFilter();
     });
     document.getElementById('pantry-reset-btn').addEventListener('click', function(){
