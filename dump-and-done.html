@@ -775,7 +775,7 @@
       <p class="price-banner-note">Grocery List total (still needed for selected recipes, net of anything checked off as on hand) plus Pantry Items total (what you've checked off as picked up), added together.</p>
     </div>
     <button class="email-btn" id="email-menu-btn" type="button">Email this week's menu &amp; list to myself</button>
-    <p class="email-btn-note">Sends the recipe names plus the Grocery List's still-needed items &mdash; not the Pantry Items staples, which stay on that tab so they don't flood the email every week.</p>
+    <p class="email-btn-note">Sends the recipe names, the Grocery List's still-needed items, and any Pantry Items you've checked off &mdash; uncheck something first if you don't want it included.</p>
   </header>
 
   <div class="tabs" role="tablist">
@@ -2653,13 +2653,15 @@
 
   // Plain-text menu + still-needed grocery list, for the "email to myself"
   // button. Capped well under typical mailto: URL limits.
-  // Sourced from the Grocery List (selected-recipe items only, not the
-  // always-present Pantry Items staples -- those would flood a per-week
-  // email with 30+ generic items every time). Uses the Grocery List tab's
-  // own checked state, so this always matches what that tab shows.
+  // Grocery List section: still-needed (unchecked) items for selected
+  // recipes, using that tab's own checked state -- unchanged behavior.
+  // Pantry Items section: only items you've checked off on that tab.
+  // There's no recipe filter there, so checking is the only way to say
+  // "this belongs on my list" -- uncheck one and it drops out of the email.
   function buildMenuAndListText(){
     var sel = loadSelected();
     var checked = loadChecked();
+    var pantryChecked = loadPantryChecked();
     var lines = [];
 
     var menuNames = recipes.filter(function(r){ return isSelected(sel, r.key); }).map(function(r){ return decodeEntities(r.name); });
@@ -2690,6 +2692,26 @@
       }
     });
     if(!sawAny) lines.push('(nothing needed)');
+
+    var pantrySelected = pantryItems.filter(function(item){ return pantryChecked[item.id]; });
+    if(pantrySelected.length){
+      lines.push('');
+      lines.push('PANTRY ITEMS (checked off)');
+      var bySection = {};
+      pantrySelected.forEach(function(item){
+        var sec = item.sec || PANTRY_DEFAULT_SECTION;
+        if(!bySection[sec]) bySection[sec] = [];
+        bySection[sec].push(item);
+      });
+      MASTER_SECTION_ORDER.forEach(function(secTitle){
+        if(!bySection[secTitle]) return;
+        lines.push('');
+        lines.push(decodeEntities(secTitle).toUpperCase());
+        bySection[secTitle].forEach(function(item){
+          lines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
+        });
+      });
+    }
 
     var text = lines.join('\n');
     var LIMIT = 1500;
