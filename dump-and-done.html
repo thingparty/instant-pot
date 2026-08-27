@@ -2656,14 +2656,26 @@
     var pantryChecked = loadPantryChecked();
     var lines = [];
 
-    var menuNames = recipes.filter(function(r){ return isSelected(sel, r.key); }).map(function(r){ return decodeEntities(r.name); });
-    lines.push("THIS WEEK'S MENU (" + menuNames.length + ")");
-    if(menuNames.length){
-      menuNames.forEach(function(n){ lines.push('- ' + n); });
+    var selectedRecipes = recipes.filter(function(r){ return isSelected(sel, r.key); });
+    lines.push("THIS WEEK'S MENU (" + selectedRecipes.length + ")");
+    if(selectedRecipes.length){
+      selectedRecipes.forEach(function(r){ lines.push('- ' + decodeEntities(r.name)); });
     } else {
       lines.push('(nothing selected)');
     }
 
+    selectedRecipes.forEach(function(r){
+      lines.push('');
+      lines.push('=====');
+      lines.push(decodeEntities(r.name) + ' (' + decodeEntities(r.time) + ')');
+      lines.push('');
+      lines.push('Ingredients:');
+      r.ingredients.forEach(function(ing){ lines.push('- ' + decodeEntities(ing)); });
+      lines.push('');
+      lines.push('Method: ' + decodeEntities(r.method));
+    });
+
+    lines.push('');
     lines.push('');
     lines.push('GROCERY LIST (still needed)');
     var sawAny = false;
@@ -2706,9 +2718,9 @@
     }
 
     var text = lines.join('\n');
-    var LIMIT = 1500;
+    var LIMIT = 6000;
     if(text.length > LIMIT){
-      text = text.slice(0, LIMIT) + '\n...(list truncated -- open the app to see the rest)';
+      text = text.slice(0, LIMIT) + '\n...(truncated -- too many recipes/items for one email; open the app to see the rest)';
     }
     return text;
   }
