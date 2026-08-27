@@ -2717,8 +2717,9 @@
           priceHtml + '</div><div class="item-tags"></div></span>';
         row.addEventListener('click', function(){
           var isChecked = row.classList.toggle('checked');
-          checked[id] = isChecked;
-          saveChecked(checked);
+          var current = loadChecked();
+          current[id] = isChecked;
+          saveChecked(current);
           applyFilter();
         });
         var costcoBtn = row.querySelector('.costco-tag');
@@ -2726,8 +2727,9 @@
           e.stopPropagation();
           var isOn = costcoBtn.classList.toggle('on');
           costcoBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-          costco[id] = isOn;
-          saveCostco(costco);
+          var currentCostco = loadCostco();
+          currentCostco[id] = isOn;
+          saveCostco(currentCostco);
         });
         groupEl.appendChild(row);
       });
@@ -2846,8 +2848,9 @@
         priceHtml + '</div></span>';
       row.addEventListener('click', function(){
         var isChecked = row.classList.toggle('checked');
-        checked[id] = isChecked;
-        savePantryChecked(checked);
+        var current = loadPantryChecked();
+        current[id] = isChecked;
+        savePantryChecked(current);
         updatePantryTotals();
       });
       var costcoBtn = row.querySelector('.costco-tag');
@@ -2855,8 +2858,9 @@
         e.stopPropagation();
         var isOn = costcoBtn.classList.toggle('on');
         costcoBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-        costco[id] = isOn;
-        savePantryCostco(costco);
+        var currentCostco = loadPantryCostco();
+        currentCostco[id] = isOn;
+        savePantryCostco(currentCostco);
       });
       groupEl.appendChild(row);
     });
