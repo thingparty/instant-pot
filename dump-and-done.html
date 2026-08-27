@@ -488,6 +488,29 @@
     color: var(--ink-faint);
     margin-top: 2px;
   }
+  .costco-tag{
+    display: inline-block;
+    margin-left: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 1px 7px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .costco-tag:hover{ border-color: var(--accent); color: var(--accent); }
+  .costco-tag:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .costco-tag.on{
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
 
   .empty-state{
     text-align: center;
@@ -2566,11 +2589,34 @@
     try{ localStorage.setItem(PANTRY_CHECK_KEY, JSON.stringify(state)); }catch(e){}
   }
 
+  var COSTCO_KEY = 'dumpAndDoneCostcoItems';
+  function loadCostco(){
+    try{
+      var raw = localStorage.getItem(COSTCO_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveCostco(state){
+    try{ localStorage.setItem(COSTCO_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  var PANTRY_COSTCO_KEY = 'dumpAndDoneCostcoPantry';
+  function loadPantryCostco(){
+    try{
+      var raw = localStorage.getItem(PANTRY_COSTCO_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function savePantryCostco(state){
+    try{ localStorage.setItem(PANTRY_COSTCO_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
   function fmt(n){ return '$' + n.toFixed(2); }
 
   function renderGrocery(){
     var container = document.getElementById('grocery-groups');
     var checked = loadChecked();
+    var costco = loadCostco();
 
     groceryGroups.forEach(function(group, gi){
       var groupEl = el('div', 'group');
@@ -2589,12 +2635,22 @@
         var priceHtml = item.p > 0 ? '<span class="item-price">' + fmt(item.p) + '</span>' : '<span class="item-price">on hand?</span>';
         row.innerHTML =
           '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-          '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div><div class="item-tags"></div></span>';
+          '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n +
+          '<button type="button" class="costco-tag' + (costco[id] ? ' on' : '') + '" aria-pressed="' + (costco[id] ? 'true' : 'false') + '" title="Tag as a Costco item">Costco</button></span>' +
+          priceHtml + '</div><div class="item-tags"></div></span>';
         row.addEventListener('click', function(){
           var isChecked = row.classList.toggle('checked');
           checked[id] = isChecked;
           saveChecked(checked);
           applyFilter();
+        });
+        var costcoBtn = row.querySelector('.costco-tag');
+        costcoBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOn = costcoBtn.classList.toggle('on');
+          costcoBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+          costco[id] = isOn;
+          saveCostco(costco);
         });
         groupEl.appendChild(row);
       });
@@ -2605,6 +2661,7 @@
   function renderPantry(){
     var container = document.getElementById('pantry-groups');
     var checked = loadPantryChecked();
+    var costco = loadPantryCostco();
     var groupEl = el('div', 'group');
     var titleEl = el('div', 'group-title');
     titleEl.innerHTML = '<span class="group-title-label">Pantry &amp; Household <span class="group-count"></span></span><span class="group-subtotal"></span>';
@@ -2619,12 +2676,22 @@
       var priceHtml = item.p > 0 ? '<span class="item-price">' + fmt(item.p) + '</span>' : '<span class="item-price">on hand?</span>';
       row.innerHTML =
         '<span class="checkbox"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-6.5" stroke="var(--card)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-        '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n + '</span>' + priceHtml + '</div></span>';
+        '<span class="item-text"><div class="item-row-top"><span class="item-name"><span class="item-qty">' + item.q + '</span>' + item.n +
+        '<button type="button" class="costco-tag' + (costco[id] ? ' on' : '') + '" aria-pressed="' + (costco[id] ? 'true' : 'false') + '" title="Tag as a Costco item">Costco</button></span>' +
+        priceHtml + '</div></span>';
       row.addEventListener('click', function(){
         var isChecked = row.classList.toggle('checked');
         checked[id] = isChecked;
         savePantryChecked(checked);
         updatePantryTotals();
+      });
+      var costcoBtn = row.querySelector('.costco-tag');
+      costcoBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var isOn = costcoBtn.classList.toggle('on');
+        costcoBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+        costco[id] = isOn;
+        savePantryCostco(costco);
       });
       groupEl.appendChild(row);
     });
@@ -2654,6 +2721,8 @@
     var sel = loadSelected();
     var checked = loadChecked();
     var pantryChecked = loadPantryChecked();
+    var costco = loadCostco();
+    var pantryCostco = loadPantryCostco();
     var lines = [];
 
     var selectedRecipes = recipes.filter(function(r){ return isSelected(sel, r.key); });
@@ -2664,16 +2733,9 @@
       lines.push('(nothing selected)');
     }
 
-    selectedRecipes.forEach(function(r){
-      lines.push('');
-      lines.push('=====');
-      lines.push(decodeEntities(r.name) + ' (' + decodeEntities(r.time) + ')');
-      lines.push('');
-      lines.push('Ingredients:');
-      r.ingredients.forEach(function(ing){ lines.push('- ' + decodeEntities(ing)); });
-      lines.push('');
-      lines.push('Method: ' + decodeEntities(r.method));
-    });
+    // Costco-tagged items are pulled out of their regular section/group and
+    // collected here, so each item appears once, under COSTCO only.
+    var costcoLines = [];
 
     lines.push('');
     lines.push('');
@@ -2686,8 +2748,13 @@
         if(!visible) return;
         var id = 'g' + gi + '-' + ii;
         if(checked[id]) return;
-        groupLines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
-        sawAny = true;
+        var line = '- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n);
+        if(costco[id]){
+          costcoLines.push(line);
+        } else {
+          groupLines.push(line);
+          sawAny = true;
+        }
       });
       if(groupLines.length){
         lines.push('');
@@ -2695,14 +2762,15 @@
         lines = lines.concat(groupLines);
       }
     });
-    if(!sawAny) lines.push('(nothing needed)');
+    if(!sawAny && !costcoLines.length) lines.push('(nothing needed)');
 
     var pantrySelected = pantryItems.filter(function(item){ return pantryChecked[item.id]; });
-    if(pantrySelected.length){
+    var pantrySelectedNonCostco = pantrySelected.filter(function(item){ return !pantryCostco[item.id]; });
+    if(pantrySelectedNonCostco.length){
       lines.push('');
       lines.push('PANTRY ITEMS (checked off)');
       var bySection = {};
-      pantrySelected.forEach(function(item){
+      pantrySelectedNonCostco.forEach(function(item){
         var sec = item.sec || PANTRY_DEFAULT_SECTION;
         if(!bySection[sec]) bySection[sec] = [];
         bySection[sec].push(item);
@@ -2714,6 +2782,32 @@
         bySection[secTitle].forEach(function(item){
           lines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
         });
+      });
+    }
+
+    pantrySelected.forEach(function(item){
+      if(pantryCostco[item.id]) costcoLines.push('- ' + decodeEntities(item.q) + ' ' + decodeEntities(item.n));
+    });
+
+    if(costcoLines.length){
+      lines.push('');
+      lines.push('COSTCO');
+      lines = lines.concat(costcoLines);
+    }
+
+    if(selectedRecipes.length){
+      lines.push('');
+      lines.push('');
+      lines.push('RECIPES');
+      selectedRecipes.forEach(function(r){
+        lines.push('');
+        lines.push('=====');
+        lines.push(decodeEntities(r.name) + ' (' + decodeEntities(r.time) + ')');
+        lines.push('');
+        lines.push('Ingredients:');
+        r.ingredients.forEach(function(ing){ lines.push('- ' + decodeEntities(ing)); });
+        lines.push('');
+        lines.push('Method: ' + decodeEntities(r.method));
       });
     }
 
